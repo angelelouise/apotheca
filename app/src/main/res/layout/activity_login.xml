@@ -1,60 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
 
-    android:background="#E5E5E5"
+    android:background="#FFFFFF"
     tools:context=".LoginActivity">
-
-    <View
-        android:id="@+id/pattern1"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="230.41dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="-110dp"
-        android:background="@drawable/pattern1"
-        />
-    <View
-        android:id="@+id/pattern2"
-        android:layout_width="488.43dp"
-        android:layout_height="223.24dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="-90dp"
-        android:background="@drawable/pattern2"
-        android:alpha="0.2"
-        />
-    <TextView
-        android:id="@+id/apotheca"
-        android:layout_width="139dp"
-        android:layout_height="32dp"
-        android:layout_marginLeft="23dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="48dp"
-        android:text="@string/apotheca"
-        android:textAppearance="@style/apotheca"
-        android:gravity="center_vertical"
-        />
-    
+        android:layout_height="wrap_content">
+        <View
+            android:id="@+id/pattern1"
+            android:layout_width="match_parent"
+            android:layout_height="230.41dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="-110dp"
+            android:background="@drawable/pattern1"
+            />
+        <View
+            android:id="@+id/pattern2"
+            android:layout_width="488.43dp"
+            android:layout_height="223.24dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="-90dp"
+            android:background="@drawable/pattern2"
+            android:alpha="0.2"
+            />
+        <TextView
+            android:id="@+id/apotheca"
+            android:layout_width="139dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="23dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="48dp"
+            android:text="@string/apotheca"
+            android:textAppearance="@style/apotheca"
+            android:gravity="center_vertical"
+            android:fontFamily="@font/aldrichregular"/>
 
+        <View
+            android:id="@+id/line"
+            android:layout_width="74.08dp"
+            android:layout_height="2.74dp"
+            android:layout_below="@+id/apotheca"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/line"
+            android:visibility="visible" />
+    </RelativeLayout>
 
-    <View
-        android:id="@+id/line"
-        android:layout_width="74.08dp"
-        android:layout_height="2.74dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="23dp"
-        android:layout_marginTop="85dp"
-        android:background="@drawable/line"
-        android:visibility="visible" />
 
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/email_login_form"
@@ -72,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="154dp"/>
+                android:layout_marginTop="10dp"/>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -89,7 +90,8 @@
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:visibility="visible" />
+                    android:padding="10dp"
+                    android:elevation="2dp"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -111,7 +113,9 @@
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:layout_marginTop="16dp" />
+                    android:layout_marginTop="16dp"
+                    android:padding="10dp"
+                    android:elevation="2dp"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -133,4 +137,4 @@
         </LinearLayout>
 
     </ScrollView>
-</RelativeLayout>
+</LinearLayout>
