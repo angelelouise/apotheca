@@ -6,8 +6,8 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
 
-    android:background="#FFFFFF"
-    tools:context=".LoginActivity">
+    android:background="#F7F7F7"
+    tools:context=".activity.LoginActivity">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -28,34 +28,14 @@
             android:background="@drawable/pattern2"
             android:alpha="0.2"
             />
-        <TextView
-            android:id="@+id/apotheca"
-            android:layout_width="139dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="23dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="48dp"
-            android:text="@string/apotheca"
-            android:textAppearance="@style/apotheca"
-            android:gravity="center_vertical"
-            android:fontFamily="@font/aldrichregular"/>
 
-        <View
-            android:id="@+id/line"
-            android:layout_width="74.08dp"
-            android:layout_height="2.74dp"
-            android:layout_below="@+id/apotheca"
-            android:layout_marginStart="23dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/line"
-            android:visibility="visible" />
     </RelativeLayout>
 
 
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/email_login_form"
@@ -66,14 +46,27 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin">
-            <ProgressBar
-                android:id="@+id/login_progress"
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"/>
+            <TextView
+                android:id="@+id/apotheca"
+                android:layout_width="139dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="13dp"
+                android:layout_marginTop="38dp"
+                android:text="@string/apotheca"
+                android:textAppearance="@style/apotheca"
+                android:gravity="center_vertical"
+                android:fontFamily="@font/aldrichregular"/>
+
+            <View
+                android:id="@+id/line"
+                android:layout_width="74.08dp"
+                android:layout_height="2.74dp"
+                android:layout_marginStart="13dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/line"
+                android:visibility="visible"
+                android:layout_marginBottom="16dp"/>
+
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -119,6 +112,15 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <ProgressBar
+                android:id="@+id/login_progress"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"/>
+
             <Button
                 android:id="@+id/email_sign_in_button"
                 android:layout_width="match_parent"
@@ -131,7 +133,8 @@
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
-            <!-- layout linha -->
+
+
 
 
         </LinearLayout>
