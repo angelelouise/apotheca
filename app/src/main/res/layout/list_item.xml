@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/post_background"
+    android:layout_margin="8dp">
+
+    <ImageView
+        android:id="@+id/list_avatar"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:scaleType="fitCenter"
+        android:layout_margin="8dp"
+        android:layout_weight="1"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@drawable/list_menu"
+            android:layout_margin="5dp"/>
+        <TextView
+            android:id="@+id/list_titulo"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:textSize="22sp"
+            android:text="Título da postagem"
+            android:layout_weight="1"
+            android:layout_margin="2dp"
+            android:layout_gravity="start"
+            android:textColor="#DE000000"/>
+        <TextView
+            android:id="@+id/list_turma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nome da Turma"
+            android:textSize="10sp"
+            android:background="@drawable/tag"
+            android:gravity="center_horizontal"
+            android:textColor="#DE000000"
+            android:padding="3dp"
+            android:layout_gravity="start"/>
+        <TextView
+            android:id="@+id/list_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2 dias atrás"
+            android:textSize="10sp"
+            android:padding="3dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="16dp"
+            android:textColor="#8A000000"/>
+
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

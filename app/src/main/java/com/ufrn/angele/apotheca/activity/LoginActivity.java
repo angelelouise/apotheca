@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * TODO: remove after connecting to a real authentication system.
      */
     private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
+            "admin", "xuxu"
     };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -172,10 +172,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
         }
 
         if (cancel) {
@@ -191,10 +187,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
+//    private boolean isEmailValid(String email) {
+//        //TODO: Replace this with your own logic
+//        return email.contains("@");
+//    }
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
@@ -317,10 +313,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
 
             for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
+                //String[] pieces = credential.split(":");
+                if (credential.equals(mEmail)) {
                     // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+                    return true;
                 }
             }
 

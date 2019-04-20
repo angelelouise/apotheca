@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     // urls to load navigation header background image
     // and profile image
     private static final String urlNavHeaderBg = "https://api.androidhive.info/images/nav-menu-header-bg.jpg";
-    private static final String urlProfileImg = "https://lh3.googleusercontent.com/eCtE_G34M9ygdkmOpYvCag1vBARCmZwnVS6rS5t4JLzJ6QgQSBquM0nuTsCpLhYbKljoyS-txg";
+    private static final String urlProfileImg = "https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjXreXMvd_hAhUcHLkGHcThDtUQjRx6BAgBEAU&url=https%3A%2F%2Fpt.pngtree.com%2Ffreepng%2Fgray-cat-head-vector_2637751.html&psig=AOvVaw1LhcUhQL7DQKrqYuGxf6b8&ust=1555877521386072";
 
     // index to identify current nav menu item
     public static int navItemIndex = 0;
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                 .into(mViewHolder.imgProfile);
 
         // showing dot next to notifications label
-        mViewHolder.navigationView.getMenu().getItem(3).setActionView(R.layout.menu_dot);
+        mViewHolder.navigationView.getMenu().getItem(0).setActionView(R.layout.menu_dot);
     }
 
     /***

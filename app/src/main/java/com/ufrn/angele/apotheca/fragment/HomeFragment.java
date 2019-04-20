@@ -1,12 +1,14 @@
 package com.ufrn.angele.apotheca.fragment;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 
 import com.ufrn.angele.apotheca.R;
 
@@ -19,6 +21,15 @@ import com.ufrn.angele.apotheca.R;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
+
+    public static class ViewHolder{
+        private RecyclerView recyclerView;
+        private RecyclerView.Adapter mAdapter;
+        private RecyclerView.LayoutManager layoutManager;
+        private View view;
+    }
+    private ViewHolder mViewHolder = new ViewHolder();
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -59,13 +70,37 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+//        mViewHolder.recyclerView = findViewById(R.id.my_recycler_view);
+//
+//        // use this setting to improve performance if you know that changes
+//        // in content do not change the layout size of the RecyclerView
+//        mViewHolder.recyclerView.setHasFixedSize(true);
+//
+//        // use a linear layout manager
+//        mViewHolder.layoutManager = new LinearLayoutManager(this);
+//        mViewHolder.recyclerView.setLayoutManager(layoutManager);
+//
+//        // specify an adapter (see also next example)
+//        mViewHolder.mAdapter = new MyAdapter(mViewHolder.myDataset);
+//        mViewHolder.recyclerView.setAdapter(mViewHolder.mAdapter);
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        mViewHolder.view = inflater.inflate(R.layout.fragment_home, container, false);
+        mViewHolder.recyclerView = mViewHolder.view.findViewById(R.id.lista_postagem);
+
+        mViewHolder.layoutManager = new LinearLayoutManager(getActivity());
+        mViewHolder.recyclerView.setLayoutManager( mViewHolder.layoutManager);
+
+        mViewHolder.mAdapter = new ListAdapter();
+        mViewHolder.recyclerView.setAdapter(mViewHolder.mAdapter);
+
+        return mViewHolder.view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -75,16 +110,16 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
+//    }
 
     @Override
     public void onDetach() {

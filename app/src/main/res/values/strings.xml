@@ -43,7 +43,7 @@
         <item>Sobre nós</item>
         <item>Sair</item>
     </string-array>
-
+    <string name="lista_postagens">Postagens</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
