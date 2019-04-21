@@ -8,9 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 
 import com.ufrn.angele.apotheca.R;
+import com.ufrn.angele.apotheca.adapters.PostAdapter;
+import com.ufrn.angele.apotheca.dominio.Postagem;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,7 +28,7 @@ public class HomeFragment extends Fragment {
 
     public static class ViewHolder{
         private RecyclerView recyclerView;
-        private RecyclerView.Adapter mAdapter;
+        private PostAdapter mAdapter;
         private RecyclerView.LayoutManager layoutManager;
         private View view;
     }
@@ -40,6 +44,7 @@ public class HomeFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private ArrayList<Postagem> posts;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -71,21 +76,11 @@ public class HomeFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-//        mViewHolder.recyclerView = findViewById(R.id.my_recycler_view);
-//
-//        // use this setting to improve performance if you know that changes
-//        // in content do not change the layout size of the RecyclerView
-//        mViewHolder.recyclerView.setHasFixedSize(true);
-//
-//        // use a linear layout manager
-//        mViewHolder.layoutManager = new LinearLayoutManager(this);
-//        mViewHolder.recyclerView.setLayoutManager(layoutManager);
-//
-//        // specify an adapter (see also next example)
-//        mViewHolder.mAdapter = new MyAdapter(mViewHolder.myDataset);
-//        mViewHolder.recyclerView.setAdapter(mViewHolder.mAdapter);
 
-
+        //criar dados para testes
+        posts = new ArrayList<>();
+        posts.add(new Postagem("Lista de exercício 1","Linguagem de Programação",new Date(),R.drawable.user));
+        posts.add(new Postagem("Resolução de exercícios em sala","Controladores",new Date(),R.drawable.user));
     }
 
     @Override
@@ -97,7 +92,7 @@ public class HomeFragment extends Fragment {
         mViewHolder.layoutManager = new LinearLayoutManager(getActivity());
         mViewHolder.recyclerView.setLayoutManager( mViewHolder.layoutManager);
 
-        mViewHolder.mAdapter = new ListAdapter();
+        mViewHolder.mAdapter = new PostAdapter(posts);
         mViewHolder.recyclerView.setAdapter(mViewHolder.mAdapter);
 
         return mViewHolder.view;
