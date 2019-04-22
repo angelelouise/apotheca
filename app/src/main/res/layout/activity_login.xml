@@ -17,17 +17,17 @@
             android:layout_height="230.41dp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="-110dp"
-            android:background="@drawable/pattern1"
+            android:background="@drawable/ic_pattern1"
             />
+
         <View
             android:id="@+id/pattern2"
-            android:layout_width="488.43dp"
-            android:layout_height="223.24dp"
+            android:layout_width="match_parent"
+            android:layout_height="224dp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="-90dp"
-            android:background="@drawable/pattern2"
             android:alpha="0.2"
-            />
+            android:background="@drawable/ic_pattern2" />
 
     </RelativeLayout>
 
