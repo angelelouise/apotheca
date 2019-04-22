@@ -7,7 +7,7 @@
     android:layout_margin="8dp">
 
     <ImageView
-        android:id="@+id/list_avatar"
+        android:id="@+id/notificacoes_avatar"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:scaleType="fitCenter"
@@ -18,46 +18,29 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_weight="7">
-        <ImageButton
-            android:id="@+id/list_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:background="@drawable/list_menu"
-            android:layout_margin="16dp"
-            />
+
         <TextView
-            android:id="@+id/list_titulo"
+            android:id="@+id/notificacoes_titulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="22sp"
+            android:textSize="14sp"
             android:text="Título da postagemgdgadgagasgasgasg afsfasfasffsafsfasfasfasfsfasfsafg dafsafsffasfasf"
-            android:layout_margin="2dp"
+            android:padding="8dp"
             android:layout_gravity="start"
             android:textColor="#DE000000"
-            android:padding="8dp"
             />
+
         <TextView
-            android:id="@+id/list_turma"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nome da Turma"
-            android:textSize="10sp"
-            android:background="@drawable/tag"
-            android:gravity="center_horizontal"
-            android:textColor="#DE000000"
-            android:padding="3dp"
-            android:layout_gravity="start"/>
-        <TextView
-            android:id="@+id/list_timestamp"
+            android:id="@+id/notificacoes_timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2 dias atrás"
             android:textSize="12sp"
             android:padding="8dp"
-            android:layout_gravity="right"
+            android:layout_gravity="bottom"
             android:layout_marginTop="16dp"
-            android:textColor="#8A000000"/>
+            android:textColor="#8A000000"
+            />
 
 
 

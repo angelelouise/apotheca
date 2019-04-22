@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.fragment.HomeFragment;
+import com.ufrn.angele.apotheca.fragment.NotificacoesFragment;
 import com.ufrn.angele.apotheca.fragment.PerfilFragment;
 import com.ufrn.angele.apotheca.fragment.PostsFragment;
 import com.ufrn.angele.apotheca.fragment.TurmasFragment;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG_PERFIL = "perfil";
     private static final String TAG_TURMAS = "turmas";
     private static final String TAG_POSTS = "posts";
+    private static final String TAG_NOTIFICACAO = "notificacoes";
     public static String CURRENT_TAG = TAG_HOME;
 
     // toolbar titles respected to selected nav menu item
@@ -191,21 +193,20 @@ public class MainActivity extends AppCompatActivity {
     private Fragment getHomeFragment() {
         switch (navItemIndex) {
             case 0:
-                // home
                 HomeFragment homeFragment = new HomeFragment();
                 return homeFragment;
             case 1:
-                // photos
                 PerfilFragment perfilFragment = new PerfilFragment();
                 return perfilFragment;
             case 2:
-                // movies fragment
                 PostsFragment postsFragment = new PostsFragment();
                 return postsFragment;
             case 3:
-                // notifications fragment
                 TurmasFragment turmasFragment = new TurmasFragment();
                 return turmasFragment;
+            case 4:
+                NotificacoesFragment notificacoesFragment = new NotificacoesFragment();
+                return notificacoesFragment;
 
             default:
                 return new HomeFragment();
@@ -246,6 +247,10 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_posts:
                         navItemIndex = 3;
                         CURRENT_TAG = TAG_POSTS;
+                        break;
+                    case R.id.nav_notificacoes:
+                        navItemIndex = 4;
+                        CURRENT_TAG = TAG_NOTIFICACAO;
                         break;
                     case R.id.nav_sobre:
                         // launch new intent instead of loading fragment

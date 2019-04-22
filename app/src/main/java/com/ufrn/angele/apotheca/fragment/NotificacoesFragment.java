@@ -3,11 +3,18 @@ package com.ufrn.angele.apotheca.fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ufrn.angele.apotheca.R;
+import com.ufrn.angele.apotheca.adapters.NotificacaoAdapter;
+import com.ufrn.angele.apotheca.dominio.Notificacao;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,8 +34,17 @@ public class NotificacoesFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private ArrayList<Notificacao> notificacoes;
     private OnFragmentInteractionListener mListener;
+    private ArrayList<String> frases;
 
+    public static class ViewHolder{
+        private RecyclerView recyclerView;
+        private NotificacaoAdapter mAdapter;
+        private RecyclerView.LayoutManager layoutManager;
+        private View view;
+    }
+    private ViewHolder mViewHolder = new ViewHolder();
     public NotificacoesFragment() {
         // Required empty public constructor
     }
@@ -58,13 +74,32 @@ public class NotificacoesFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        notificacoes =  new ArrayList<>();
+        frases = new ArrayList<>();
+
+        //modificar para pegar da API
+        notificacoes.add(new Notificacao(0,1,0,0,new Date(),0,false));
+        notificacoes.add(new Notificacao(0,0,0,0,new Date(),1,false));
+        notificacoes.add(new Notificacao(0,1,0,0,new Date(),2,false));
+        notificacoes.add(new Notificacao(0,1,0,0,new Date(),3,false));
+        notificacoes.add(new Notificacao(0,1,0,0,new Date(),4,false));
+        frases = composeFrases(notificacoes);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notificacoes, container, false);
+        mViewHolder.view = inflater.inflate(R.layout.fragment_notificacoes, container, false);
+        mViewHolder.recyclerView = mViewHolder.view.findViewById(R.id.lista_notificacoes);
+
+        mViewHolder.layoutManager = new LinearLayoutManager(getActivity());
+        mViewHolder.recyclerView.setLayoutManager( mViewHolder.layoutManager);
+
+        mViewHolder.mAdapter = new NotificacaoAdapter(notificacoes,frases);
+        mViewHolder.recyclerView.setAdapter(mViewHolder.mAdapter);
+
+        return mViewHolder.view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -104,5 +139,43 @@ public class NotificacoesFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+/*
+Tipos de notificações
+0 curtir
+1 comentar
+2 negativar
+3 ranking
+4 reporte
+*/
+    private ArrayList<String> composeFrases(ArrayList<Notificacao> notificacoes){
+        ArrayList<Notificacao> aux = new ArrayList<>();
+        aux=notificacoes;
+
+        for (Notificacao i:aux) {
+            if(i.getTipo_notificacao() == 0){
+                //consultar nome autor
+                frases.add(i.getId_autor() + " Curtiu sua postagem.");
+                //consultar foto do autor
+                i.setAvatar(R.drawable.user);
+            }else if(i.getTipo_notificacao() == 1){
+                frases.add(i.getId_autor() + " Comentou em sua postagem.");
+                //consultar foto do autor
+                i.setAvatar(R.drawable.user);
+            }else if(i.getTipo_notificacao() == 2){
+                frases.add("Sua postagem foi negativada.");
+                //consultar foto do autor
+                i.setAvatar(R.drawable.thumbsdown);
+            }else if(i.getTipo_notificacao() == 3){
+                frases.add("Seu ranking subiu.");
+                //consultar foto do autor
+                i.setAvatar(R.drawable.trophy);
+            }else if(i.getTipo_notificacao() == 4){
+                frases.add("Sua postagem foi reportada, dessa forma ela não está mais disponível para visualização.");
+                //consultar foto do autor
+                i.setAvatar(R.drawable.report);
+            }
+        }
+        return frases;
     }
 }
