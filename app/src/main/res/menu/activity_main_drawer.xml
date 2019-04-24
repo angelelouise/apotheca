@@ -21,7 +21,7 @@
             android:title="@string/menu_posts" />
         <item
             android:id="@+id/nav_notificacoes"
-            android:icon="@drawable/meus_posts"
+            android:icon="@drawable/ic_notificacoes"
             android:title="@string/notificacoes" />
 
     </group>

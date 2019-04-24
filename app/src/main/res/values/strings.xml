@@ -28,18 +28,20 @@
 
     <!-- Navigation Drawer menu labels -->
     <string name="menu_home">Home</string>
-    <string name="menu_turmas">Minhas turmas</string>
-    <string name="menu_posts">Meus posts</string>
     <string name="menu_perfil">Perfil</string>
+    <string name="menu_turmas">Minhas turmas</string>
+    <string name="menu_posts">Minhas postagens</string>
+    <string name="menu_notificacoes">Notificações</string>
     <string name="menu_sobre">Sobre nós</string>
     <string name="menu_sair">Sair</string>
 
     <!-- Toolbar titles when navigation menu item is selected -->
     <string-array name="nav_item_activity_titles">
         <item>Home</item>
-        <item>Minhas turmas</item>
-        <item>Meus posts</item>
         <item>Perfil</item>
+        <item>Minhas turmas</item>
+        <item>Minhas postagens</item>
+        <item>Notificações</item>
         <item>Sobre nós</item>
         <item>Sair</item>
     </string-array>

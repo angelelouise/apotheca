@@ -193,20 +193,15 @@ public class MainActivity extends AppCompatActivity {
     private Fragment getHomeFragment() {
         switch (navItemIndex) {
             case 0:
-                HomeFragment homeFragment = new HomeFragment();
-                return homeFragment;
+                return new HomeFragment();
             case 1:
-                PerfilFragment perfilFragment = new PerfilFragment();
-                return perfilFragment;
+                return new PerfilFragment();
             case 2:
-                PostsFragment postsFragment = new PostsFragment();
-                return postsFragment;
+                return new TurmasFragment();
             case 3:
-                TurmasFragment turmasFragment = new TurmasFragment();
-                return turmasFragment;
+                return new PostsFragment();
             case 4:
-                NotificacoesFragment notificacoesFragment = new NotificacoesFragment();
-                return notificacoesFragment;
+                return  new NotificacoesFragment();
 
             default:
                 return new HomeFragment();
