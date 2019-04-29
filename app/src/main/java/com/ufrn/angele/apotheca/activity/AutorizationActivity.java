@@ -11,8 +11,12 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.ufrn.angele.apotheca.R;
+import com.ufrn.angele.apotheca.api.UsuarioServiceUFRN;
+import com.ufrn.angele.apotheca.dominio.Usuario;
+import com.ufrn.angele.apotheca.dominio.UsuarioUFRN;
 import com.ufrn.angele.apotheca.outros.Constants;
 
 import java.io.IOException;
@@ -21,12 +25,22 @@ import java.util.Map;
 
 import ca.mimic.oauth2library.OAuth2Client;
 import ca.mimic.oauth2library.OAuthResponse;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AutorizationActivity extends AppCompatActivity {
     private static final String CLIENT_ID_VALUE = "app-imd0033-id";
     private static final String SECRET_KEY = "segredo";
+    private static final String STATE = "PNAGndLwyjQh3SifoO840HH7FrhWwHOhR9FssfxK";
+    private static final String STATE_PARAM = "state";
 
-    private static final String REDIRECT_URI = "https://api.info.ufrn.br";
+    private static final String REDIRECT_URI = "http://api.info.ufrn.br";
     private static final String AUTHORIZATION_URL = "https://autenticacao.info.ufrn.br/authz-server/oauth/authorize";
     private static final String ACCESS_TOKEN_URL = "https://autenticacao.info.ufrn.br/authz-server/oauth/token";
     private static final String RESPONSE_TYPE_PARAM = "response_type";
@@ -39,8 +53,14 @@ public class AutorizationActivity extends AppCompatActivity {
     private static final String AMPERSAND = "&";
     private static final String EQUALS = "=";
 
+    private final String urlBase = "https://api.info.ufrn.br/";
+    private final String apiKey = "PNAGndLwyjQh3SifoO840HH7FrhWwHOhR9FssfxK";
+
     private WebView webView;
     private ProgressDialog pd;
+    private Usuario user;
+    private String cpf;
+    Retrofit retrofit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +68,9 @@ public class AutorizationActivity extends AppCompatActivity {
 
         webView = findViewById(R.id.main_activity_web_view);
         webView.requestFocus(View.FOCUS_DOWN);
+
+        //pegar no itent o cpf
+        cpf="10461573458";
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -78,12 +101,57 @@ public class AutorizationActivity extends AppCompatActivity {
 
         String authUrl = getAuthorizationUrl();
         webView.loadUrl(authUrl);
+
+
+
     }
     private static String getAuthorizationUrl(){
         return AUTHORIZATION_URL
                 + QUESTION_MARK + CLIENT_ID_PARAM + EQUALS + CLIENT_ID_VALUE
                 + AMPERSAND + RESPONSE_TYPE_PARAM + EQUALS + RESPONSE_TYPE_VALUE
                 + AMPERSAND  + REDIRECT_URI_PARAM + EQUALS + REDIRECT_URI;
+    }
+//    private static String getAuthorizationUrl() {
+//        return AUTHORIZATION_URL
+//                + QUESTION_MARK + RESPONSE_TYPE_PARAM + EQUALS + RESPONSE_TYPE_VALUE
+//                + AMPERSAND + CLIENT_ID_PARAM + EQUALS + CLIENT_ID_VALUE
+//                + AMPERSAND + STATE_PARAM + EQUALS + STATE
+//                + AMPERSAND + REDIRECT_URI_PARAM + EQUALS + REDIRECT_URI;
+//    }
+    private void requestUser(){
+        final UsuarioServiceUFRN service = retrofit.create(UsuarioServiceUFRN.class);
+
+        final Call<UsuarioUFRN> getUsuario = service.getUser(cpf_builder(cpf));
+
+        getUsuario.enqueue(new Callback<UsuarioUFRN>() {
+            @Override
+            public void onResponse(Call<UsuarioUFRN> call, Response<UsuarioUFRN> response_user) {
+
+                if (response_user.body() !=null){
+                    Log.d("response", response_user.body().toString());
+
+                    user.setLogin(response_user.body().getLogin());
+                    user.setNome(response_user.body().getNome_pessoa());
+                    user.setCpf_cnpj((int)response_user.body().getCpf_cnpj());
+                    user.setUrl_foto(response_user.body().getUrl_foto());
+                    user.setEmail(response_user.body().getEmail());
+                    user.setId_usuario(response_user.body().getId_usuario());
+
+                    Log.d("user", user.toString());
+
+                    Intent startProfileActivity = new Intent(AutorizationActivity.this, MainActivity.class);
+                    startActivity(startProfileActivity);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<UsuarioUFRN> call, Throwable t) {
+                Toast.makeText(AutorizationActivity.this,
+                        "Usuario não existe",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     private class PostRequestAsyncTask extends AsyncTask<String, Void, Boolean> {
 
@@ -106,10 +174,33 @@ public class AutorizationActivity extends AppCompatActivity {
                         .parameters(map)
                         .build();
 
-                OAuthResponse response = client.requestAccessToken();
+                final OAuthResponse response = client.requestAccessToken();
                 if (response.isSuccessful()) {
                     savePreferences(response);
+
+                    OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+                    httpClient.addInterceptor(new Interceptor() {
+                                                  @Override
+                                                  public okhttp3.Response intercept(Chain chain) throws IOException {
+                                                      Request original = chain.request();
+
+                                                      Request request = original.newBuilder()
+                                                              .header("Authorization", "bearer " + response.getAccessToken())
+                                                              .header("x-api-key", apiKey)
+                                                              .method(original.method(), original.body())
+                                                              .build();
+
+                                                      return chain.proceed(request);
+                                                  }
+                                                  });
+                    OkHttpClient client2 = httpClient.build();
+                    retrofit = new Retrofit.Builder()
+                            .baseUrl(urlBase)
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .client(client2)
+                            .build();
                     //executa serviço para trazer informações do usuário
+                    requestUser();
                     return true;
                 }
             } catch (IOException e) {
@@ -142,5 +233,9 @@ public class AutorizationActivity extends AppCompatActivity {
         editor.putString(Constants.KEY_REFRESH_TOKEN, refreshToken);
         editor.putLong(Constants.KEY_EXPIRES_IN, expiresIn);
         editor.commit();
+        Log.d("token", accessToken);
+    }
+    private String cpf_builder(String cpf){
+        return "?cpf-cnpj="+cpf;
     }
 }
