@@ -11,9 +11,9 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 import com.ufrn.angele.apotheca.R;
+import com.ufrn.angele.apotheca.api.RetrofitBuilder;
 import com.ufrn.angele.apotheca.api.UsuarioServiceUFRN;
 import com.ufrn.angele.apotheca.dominio.Usuario;
 import com.ufrn.angele.apotheca.dominio.UsuarioUFRN;
@@ -25,14 +25,6 @@ import java.util.Map;
 
 import ca.mimic.oauth2library.OAuth2Client;
 import ca.mimic.oauth2library.OAuthResponse;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AutorizationActivity extends AppCompatActivity {
     private static final String CLIENT_ID_VALUE = "app-imd0033-id";
@@ -58,9 +50,10 @@ public class AutorizationActivity extends AppCompatActivity {
 
     private WebView webView;
     private ProgressDialog pd;
-    private Usuario user;
+    private Usuario user ;
     private String cpf;
-    Retrofit retrofit;
+    private String accessToken;
+    RetrofitBuilder retrofit = new RetrofitBuilder();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,41 +111,87 @@ public class AutorizationActivity extends AppCompatActivity {
 //                + AMPERSAND + STATE_PARAM + EQUALS + STATE
 //                + AMPERSAND + REDIRECT_URI_PARAM + EQUALS + REDIRECT_URI;
 //    }
-    private void requestUser(){
-        final UsuarioServiceUFRN service = retrofit.create(UsuarioServiceUFRN.class);
+//    private void requestUser(OAuthResponse response){
+//
+//        final UsuarioServiceUFRN service = retrofit.retroBuilder(response,apiKey,urlBase).create(UsuarioServiceUFRN.class);
+//
+//        final Call<UsuarioUFRN> getUsuario = service.getUser(cpf_builder(cpf));
+//
+//        getUsuario.enqueue(new Callback<UsuarioUFRN>() {
+//            @Override
+//            public void onResponse(Call<UsuarioUFRN> call, Response<UsuarioUFRN> response_user) {
+//
+//                if (response_user.body() !=null){
+//                    Log.d("response", response_user.body().toString());
+//
+//                    user.setLogin(response_user.body().getLogin());
+//                    user.setNome(response_user.body().getNome_pessoa());
+//                    user.setCpf_cnpj((int)response_user.body().getCpf_cnpj());
+//                    user.setUrl_foto(response_user.body().getUrl_foto());
+//                    user.setEmail(response_user.body().getEmail());
+//                    user.setId_usuario(response_user.body().getId_usuario());
+//
+//                    Log.d("user", user.toString());
+//
+//                    Intent startProfileActivity = new Intent(AutorizationActivity.this, MainActivity.class);
+//                    startActivity(startProfileActivity);
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<UsuarioUFRN> call, Throwable t) {
+//                Toast.makeText(AutorizationActivity.this,
+//                        "Usuario não existe",
+//                        Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+    private class ServiceTask extends AsyncTask<String, Void, UsuarioUFRN> {
 
-        final Call<UsuarioUFRN> getUsuario = service.getUser(cpf_builder(cpf));
+    protected void onPreExecute() {
+        //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+    }
 
-        getUsuario.enqueue(new Callback<UsuarioUFRN>() {
-            @Override
-            public void onResponse(Call<UsuarioUFRN> call, Response<UsuarioUFRN> response_user) {
+    protected UsuarioUFRN doInBackground(String... params) {
+        try {
+            UsuarioServiceUFRN get = new UsuarioServiceUFRN();
+            try {
+                UsuarioUFRN aux = get.getUsuario(urlBase, params[0], apiKey, cpf);
+                Log.d("aux", aux.toString());
+                return aux;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-                if (response_user.body() !=null){
-                    Log.d("response", response_user.body().toString());
+        return null;
+    }
 
-                    user.setLogin(response_user.body().getLogin());
-                    user.setNome(response_user.body().getNome_pessoa());
-                    user.setCpf_cnpj((int)response_user.body().getCpf_cnpj());
-                    user.setUrl_foto(response_user.body().getUrl_foto());
-                    user.setEmail(response_user.body().getEmail());
-                    user.setId_usuario(response_user.body().getId_usuario());
+    @Override
+    protected void onPostExecute(UsuarioUFRN result) {
+        super.onPostExecute(result);
+        pd.dismiss();
+        Log.d("result", result.toString());
+        if (result != null) {
+
+
+                    user.setLogin(result.getLogin());
+                    user.setNome(result.getNome_pessoa());
+                    user.setCpf_cnpj((int)result.getCpf_cnpj());
+                    user.setUrl_foto(result.getUrl_foto());
+                    user.setEmail(result.getEmail());
+                    user.setId_usuario(result.getId_usuario());
 
                     Log.d("user", user.toString());
 
-                    Intent startProfileActivity = new Intent(AutorizationActivity.this, MainActivity.class);
-                    startActivity(startProfileActivity);
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<UsuarioUFRN> call, Throwable t) {
-                Toast.makeText(AutorizationActivity.this,
-                        "Usuario não existe",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+        }
+        Intent startProfileActivity = new Intent(AutorizationActivity.this, MainActivity.class);
+        startActivity(startProfileActivity);
     }
+}
     private class PostRequestAsyncTask extends AsyncTask<String, Void, Boolean> {
 
         @Override
@@ -176,31 +215,12 @@ public class AutorizationActivity extends AppCompatActivity {
 
                 final OAuthResponse response = client.requestAccessToken();
                 if (response.isSuccessful()) {
+                    Log.d("acesso",response.getBody().toString());
                     savePreferences(response);
 
-                    OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-                    httpClient.addInterceptor(new Interceptor() {
-                                                  @Override
-                                                  public okhttp3.Response intercept(Chain chain) throws IOException {
-                                                      Request original = chain.request();
-
-                                                      Request request = original.newBuilder()
-                                                              .header("Authorization", "bearer " + response.getAccessToken())
-                                                              .header("x-api-key", apiKey)
-                                                              .method(original.method(), original.body())
-                                                              .build();
-
-                                                      return chain.proceed(request);
-                                                  }
-                                                  });
-                    OkHttpClient client2 = httpClient.build();
-                    retrofit = new Retrofit.Builder()
-                            .baseUrl(urlBase)
-                            .addConverterFactory(GsonConverterFactory.create())
-                            .client(client2)
-                            .build();
+                    new ServiceTask().execute(accessToken);
                     //executa serviço para trazer informações do usuário
-                    requestUser();
+                    //requestUser(response);
                     return true;
                 }
             } catch (IOException e) {
@@ -215,15 +235,15 @@ public class AutorizationActivity extends AppCompatActivity {
                 pd.dismiss();
             }
             if (status) {
-                Intent startProfileActivity = new Intent(AutorizationActivity.this, MainActivity.class);
-                startActivity(startProfileActivity);
+
+
             }
         }
 
     }
 
     private void savePreferences(OAuthResponse response) {
-        String accessToken = response.getAccessToken();
+        accessToken = response.getAccessToken();
         String refreshToken = response.getRefreshToken();
         Long expiresIn = response.getExpiresIn();
 
@@ -234,6 +254,7 @@ public class AutorizationActivity extends AppCompatActivity {
         editor.putLong(Constants.KEY_EXPIRES_IN, expiresIn);
         editor.commit();
         Log.d("token", accessToken);
+        Log.d("refresh_token", refreshToken);
     }
     private String cpf_builder(String cpf){
         return "?cpf-cnpj="+cpf;
