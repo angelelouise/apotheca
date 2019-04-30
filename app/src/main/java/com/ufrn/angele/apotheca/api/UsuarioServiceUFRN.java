@@ -2,6 +2,7 @@ package com.ufrn.angele.apotheca.api;
 
 import android.util.Log;
 
+import com.ufrn.angele.apotheca.dominio.Usuario;
 import com.ufrn.angele.apotheca.dominio.UsuarioUFRN;
 
 import org.json.JSONArray;
@@ -16,8 +17,8 @@ import okhttp3.Response;
 
 public class UsuarioServiceUFRN {
     private String caminhoUsuarios = "usuario/v1/usuarios?cpf-cnpj=";
-    private static UsuarioUFRN mUser = new UsuarioUFRN();
-    public UsuarioUFRN getUsuario(String urlBase, String token, String apiKey, String cpf) throws IOException {
+    private static Usuario mUser = new Usuario();
+    public Usuario getUsuario(String urlBase, String token, String apiKey, String cpf) throws IOException {
         String url = urlBase + caminhoUsuarios + cpf;
 
         OkHttpClient client = new OkHttpClient();
@@ -33,64 +34,27 @@ public class UsuarioServiceUFRN {
         Response response = client.newCall(request).execute();
 
         JSONArray mArray;
-                                                try {
-                                                    final String responseData = response.body().string();
-                                                    mArray = new JSONArray(responseData);
-                                                    UsuarioUFRN user = new UsuarioUFRN();
-                                                    for (int i = 0; i < mArray.length(); i++) {
-                                                        JSONObject mJsonObject = mArray.getJSONObject(i);
-                                                        user.setLogin(mJsonObject.getString("login"));
-                                                        user.setNome_pessoa(mJsonObject.getString("nome-pessoa"));
-                                                        user.setCpf_cnpj(mJsonObject.getInt("cpf-cnpj"));
-                                                        user.setUrl_foto(mJsonObject.getString("url-foto"));
-                                                        user.setEmail(mJsonObject.getString("email"));
-                                                        user.setId_usuario(mJsonObject.getInt("id-usuario"));
-                                                        Log.d("user2", user.toString());
-                                                        mUser = user;
-                                                    }
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-        //String result = response.body();
+        try {
+            String responseData = response.body().string();
+            Log.d("responseData", responseData);
+            mArray = new JSONArray(responseData);
+            Log.d("mArray", mArray.toString());
+            Usuario user = new Usuario();
+            for (int i = 0; i < mArray.length(); i++) {
+                 JSONObject mJsonObject = mArray.getJSONObject(i);
+                 user.setLogin(mJsonObject.getString("login"));
+                 user.setNome(mJsonObject.getString("nome-pessoa"));
+                 user.setCpf_cnpj( mJsonObject.getLong("cpf-cnpj"));
+                 user.setUrl_foto(mJsonObject.getString("url-foto"));
+                 user.setEmail(mJsonObject.getString("email"));
+                 user.setId_usuario(mJsonObject.getInt("id-usuario"));
+                 Log.d("user2", user.toString());
+                 mUser = user; }
+          } catch (JSONException e) {
+                 e.printStackTrace();
+          }
 
-       // Get a handler that can be used to post to the main thread
-
-//        Response response = client.newCall(request).enqueue(new Callback() {
-//                                            @Override
-//                                            public void onFailure(Call call, IOException e) {
-//                                                Log.d("falhou", "falha");
-//                                            }
-//
-//                                            // Parse response using gson deserializer
-//
-//                                            @Override
-//                                            public void onResponse(Call call, final Response response) throws IOException {
-//                                                Log.d("response", response.toString());
-//
-//                                                JSONArray mArray;
-//                                                try {
-//                                                    final String responseData = response.body().string();
-//                                                    mArray = new JSONArray(responseData);
-//                                                    UsuarioUFRN user = new UsuarioUFRN();
-//                                                    for (int i = 0; i < mArray.length(); i++) {
-//                                                        JSONObject mJsonObject = mArray.getJSONObject(i);
-//                                                        user.setLogin(mJsonObject.getString("login"));
-//                                                        user.setNome_pessoa(mJsonObject.getString("nome-pessoa"));
-//                                                        user.setCpf_cnpj(mJsonObject.getInt("cpf-cnpj"));
-//                                                        user.setUrl_foto(mJsonObject.getString("url-foto"));
-//                                                        user.setEmail(mJsonObject.getString("email"));
-//                                                        user.setId_usuario(mJsonObject.getInt("id-usuario"));
-//                                                        Log.d("user2", user.toString());
-//                                                        mUser = user;
-//                                                    }
-//                                                } catch (JSONException e) {
-//                                                    e.printStackTrace();
-//                                                }
-//                                            }
-//
-//                                            });
-
-        Log.d("userUFRN", mUser.toString());
+        Log.d("userService", mUser.toString());
         return mUser;
     }
 }

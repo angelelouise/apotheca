@@ -2,7 +2,7 @@ package com.ufrn.angele.apotheca.dominio;
 
 public class Usuario {
     private int id;
-    private int cpf_cnpj;
+    private Long cpf_cnpj;
     private String email;
     private int id_usuario;
     private String login;
@@ -38,11 +38,11 @@ public class Usuario {
         this.id = id;
     }
 
-    public int getCpf_cnpj() {
+    public Long getCpf_cnpj() {
         return cpf_cnpj;
     }
 
-    public void setCpf_cnpj(int cpf_cnpj) {
+    public void setCpf_cnpj(Long cpf_cnpj) {
         this.cpf_cnpj = cpf_cnpj;
     }
 

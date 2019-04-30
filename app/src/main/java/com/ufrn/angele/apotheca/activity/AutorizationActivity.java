@@ -13,7 +13,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.ufrn.angele.apotheca.R;
-import com.ufrn.angele.apotheca.api.RetrofitBuilder;
 import com.ufrn.angele.apotheca.api.UsuarioServiceUFRN;
 import com.ufrn.angele.apotheca.dominio.Usuario;
 import com.ufrn.angele.apotheca.dominio.UsuarioUFRN;
@@ -53,7 +52,7 @@ public class AutorizationActivity extends AppCompatActivity {
     private Usuario user = new Usuario();
     private String cpf;
     private String accessToken;
-    RetrofitBuilder retrofit = new RetrofitBuilder();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,95 +103,52 @@ public class AutorizationActivity extends AppCompatActivity {
                 + AMPERSAND + RESPONSE_TYPE_PARAM + EQUALS + RESPONSE_TYPE_VALUE
                 + AMPERSAND  + REDIRECT_URI_PARAM + EQUALS + REDIRECT_URI;
     }
-//    private static String getAuthorizationUrl() {
-//        return AUTHORIZATION_URL
-//                + QUESTION_MARK + RESPONSE_TYPE_PARAM + EQUALS + RESPONSE_TYPE_VALUE
-//                + AMPERSAND + CLIENT_ID_PARAM + EQUALS + CLIENT_ID_VALUE
-//                + AMPERSAND + STATE_PARAM + EQUALS + STATE
-//                + AMPERSAND + REDIRECT_URI_PARAM + EQUALS + REDIRECT_URI;
-//    }
-//    private void requestUser(OAuthResponse response){
-//
-//        final UsuarioServiceUFRN service = retrofit.retroBuilder(response,apiKey,urlBase).create(UsuarioServiceUFRN.class);
-//
-//        final Call<UsuarioUFRN> getUsuario = service.getUser(cpf_builder(cpf));
-//
-//        getUsuario.enqueue(new Callback<UsuarioUFRN>() {
-//            @Override
-//            public void onResponse(Call<UsuarioUFRN> call, Response<UsuarioUFRN> response_user) {
-//
-//                if (response_user.body() !=null){
-//                    Log.d("response", response_user.body().toString());
-//
-//                    user.setLogin(response_user.body().getLogin());
-//                    user.setNome(response_user.body().getNome_pessoa());
-//                    user.setCpf_cnpj((int)response_user.body().getCpf_cnpj());
-//                    user.setUrl_foto(response_user.body().getUrl_foto());
-//                    user.setEmail(response_user.body().getEmail());
-//                    user.setId_usuario(response_user.body().getId_usuario());
-//
-//                    Log.d("user", user.toString());
-//
-//                    Intent startProfileActivity = new Intent(AutorizationActivity.this, MainActivity.class);
-//                    startActivity(startProfileActivity);
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<UsuarioUFRN> call, Throwable t) {
-//                Toast.makeText(AutorizationActivity.this,
-//                        "Usuario não existe",
-//                        Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-    private class ServiceTask extends AsyncTask<String, Void, UsuarioUFRN> {
 
-    protected void onPreExecute() {
-        //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
-    }
+    private class ServiceTask extends AsyncTask<String, Void, Usuario> {
 
-    protected UsuarioUFRN doInBackground(String... params) {
-        try {
-            UsuarioServiceUFRN get = new UsuarioServiceUFRN();
+        protected void onPreExecute() {
+            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+        }
+
+        protected Usuario doInBackground(String... params) {
             try {
-                UsuarioUFRN aux = get.getUsuario(urlBase, params[0], apiKey, cpf);
-                Log.d("aux", aux.toString());
-                return aux;
-            } catch (IOException e) {
+                UsuarioServiceUFRN get = new UsuarioServiceUFRN();
+                try {
+                    Usuario aux = get.getUsuario(urlBase, params[0], apiKey, cpf);
+                    Log.d("aux", aux.toString());
+                    return aux;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            return null;
         }
 
-        return null;
-    }
+        @Override
+        protected void onPostExecute(Usuario result) {
+            super.onPostExecute(result);
+            pd.dismiss();
+            Log.d("result", result.toString());
+            if (result != null) {
 
-    @Override
-    protected void onPostExecute(UsuarioUFRN result) {
-        super.onPostExecute(result);
-        pd.dismiss();
-        Log.d("result", result.toString());
-        if (result != null) {
+    //                    user.setLogin(result.getLogin());
+    //                    user.setNome(result.getNome_pessoa());
+    //                    user.setCpf_cnpj((int)result.getCpf_cnpj());
+    //                    user.setUrl_foto(result.getUrl_foto());
+    //                    user.setEmail(result.getEmail());
+    //          user.setId_usuario(result.getId_usuario());
+                user= result;
+                Log.d("user", user.toString());
 
-                    Log.d("login", result.getLogin());
-                    user.setLogin(result.getLogin());
-                    user.setNome(result.getNome_pessoa());
-                    user.setCpf_cnpj((int)result.getCpf_cnpj());
-                    user.setUrl_foto(result.getUrl_foto());
-                    user.setEmail(result.getEmail());
-                    user.setId_usuario(result.getId_usuario());
-
-                    Log.d("user", user.toString());
-
+            }
+            //envia o user
+            Intent startProfileActivity = new Intent(AutorizationActivity.this, MainActivity.class);
+            startActivity(startProfileActivity);
         }
-        //envia o user
-        Intent startProfileActivity = new Intent(AutorizationActivity.this, MainActivity.class);
-        startActivity(startProfileActivity);
     }
-}
     private class PostRequestAsyncTask extends AsyncTask<String, Void, Boolean> {
 
         @Override
