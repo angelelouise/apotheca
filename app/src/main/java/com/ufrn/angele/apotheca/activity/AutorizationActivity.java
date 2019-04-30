@@ -50,7 +50,7 @@ public class AutorizationActivity extends AppCompatActivity {
 
     private WebView webView;
     private ProgressDialog pd;
-    private Usuario user ;
+    private Usuario user = new Usuario();
     private String cpf;
     private String accessToken;
     RetrofitBuilder retrofit = new RetrofitBuilder();
@@ -177,7 +177,7 @@ public class AutorizationActivity extends AppCompatActivity {
         Log.d("result", result.toString());
         if (result != null) {
 
-
+                    Log.d("login", result.getLogin());
                     user.setLogin(result.getLogin());
                     user.setNome(result.getNome_pessoa());
                     user.setCpf_cnpj((int)result.getCpf_cnpj());
@@ -188,6 +188,7 @@ public class AutorizationActivity extends AppCompatActivity {
                     Log.d("user", user.toString());
 
         }
+        //envia o user
         Intent startProfileActivity = new Intent(AutorizationActivity.this, MainActivity.class);
         startActivity(startProfileActivity);
     }
