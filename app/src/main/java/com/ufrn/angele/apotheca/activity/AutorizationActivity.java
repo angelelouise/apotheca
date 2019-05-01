@@ -13,12 +13,17 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.ufrn.angele.apotheca.R;
+import com.ufrn.angele.apotheca.api.DiscenteServiceUFRN;
+import com.ufrn.angele.apotheca.api.TurmaServiceUFRN;
 import com.ufrn.angele.apotheca.api.UsuarioServiceUFRN;
+import com.ufrn.angele.apotheca.dominio.Discente;
+import com.ufrn.angele.apotheca.dominio.InformacoesUFRN;
+import com.ufrn.angele.apotheca.dominio.Turma;
 import com.ufrn.angele.apotheca.dominio.Usuario;
-import com.ufrn.angele.apotheca.dominio.UsuarioUFRN;
 import com.ufrn.angele.apotheca.outros.Constants;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +54,9 @@ public class AutorizationActivity extends AppCompatActivity {
 
     private WebView webView;
     private ProgressDialog pd;
-    private Usuario user = new Usuario();
+    private Usuario mUser = new Usuario();
+    private ArrayList<Discente> mDiscentes= new ArrayList<>();
+    private ArrayList<Turma> mTurmas = new ArrayList<>();
     private String cpf;
     private String accessToken;
 
@@ -104,19 +111,34 @@ public class AutorizationActivity extends AppCompatActivity {
                 + AMPERSAND  + REDIRECT_URI_PARAM + EQUALS + REDIRECT_URI;
     }
 
-    private class ServiceTask extends AsyncTask<String, Void, Usuario> {
+    private class ServiceTask extends AsyncTask<String, Void, InformacoesUFRN> {
 
         protected void onPreExecute() {
             //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
         }
 
-        protected Usuario doInBackground(String... params) {
+        protected InformacoesUFRN doInBackground(String... params) {
             try {
-                UsuarioServiceUFRN get = new UsuarioServiceUFRN();
+                UsuarioServiceUFRN usuarioServiceUFRN = new UsuarioServiceUFRN();
+                DiscenteServiceUFRN discenteServiceUFRN = new DiscenteServiceUFRN();
+                TurmaServiceUFRN turmaServiceUFRN = new TurmaServiceUFRN();
+
                 try {
-                    Usuario aux = get.getUsuario(urlBase, params[0], apiKey, cpf);
+
+                    InformacoesUFRN info = new InformacoesUFRN();
+                    Usuario aux = usuarioServiceUFRN.getUsuario(urlBase, params[0], apiKey, cpf);
+                    ArrayList<Discente> dis = discenteServiceUFRN.getDiscentes(urlBase, params[0], apiKey, cpf);
+                    ArrayList<Turma> turmas = null;
+
+                    if (dis != null) {
+                        turmas = turmaServiceUFRN.getTurmas(urlBase, params[0], apiKey, dis);
+                    }
                     Log.d("aux", aux.toString());
-                    return aux;
+                    info.setUsuario(aux);
+                    info.setDiscentes(dis);
+                    info.setTurmas(turmas);
+
+                    return info;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -128,21 +150,19 @@ public class AutorizationActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Usuario result) {
+        protected void onPostExecute(InformacoesUFRN result) {
             super.onPostExecute(result);
             pd.dismiss();
             Log.d("result", result.toString());
             if (result != null) {
 
-    //                    user.setLogin(result.getLogin());
-    //                    user.setNome(result.getNome_pessoa());
-    //                    user.setCpf_cnpj((int)result.getCpf_cnpj());
-    //                    user.setUrl_foto(result.getUrl_foto());
-    //                    user.setEmail(result.getEmail());
-    //          user.setId_usuario(result.getId_usuario());
-                user= result;
-                Log.d("user", user.toString());
+                mUser= result.getUsuario();
+                mDiscentes = result.getDiscentes();
+                mTurmas = result.getTurmas();
 
+                Log.d("user", mUser.toString());
+                Log.d("discentes", mDiscentes.toString());
+                Log.d("turmas", mTurmas.toString());
             }
             //envia o user
             Intent startProfileActivity = new Intent(AutorizationActivity.this, MainActivity.class);
@@ -175,9 +195,6 @@ public class AutorizationActivity extends AppCompatActivity {
                     Log.d("acesso",response.getBody().toString());
                     savePreferences(response);
 
-                    new ServiceTask().execute(accessToken);
-                    //executa serviço para trazer informações do usuário
-                    //requestUser(response);
                     return true;
                 }
             } catch (IOException e) {
@@ -192,7 +209,8 @@ public class AutorizationActivity extends AppCompatActivity {
                 pd.dismiss();
             }
             if (status) {
-
+                //executa serviço para trazer informações do usuário
+                new ServiceTask().execute(accessToken);
 
             }
         }
