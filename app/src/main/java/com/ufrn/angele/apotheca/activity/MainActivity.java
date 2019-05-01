@@ -207,7 +207,13 @@ public class MainActivity extends AppCompatActivity {
             case 0:
                 return new HomeFragment();
             case 1:
-                return new PerfilFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("usuario", usuario);
+                bundle.putSerializable("discente", discentes);
+
+                PerfilFragment perfilFragment =new PerfilFragment();
+                perfilFragment.setArguments(bundle);
+                return perfilFragment;
             case 2:
                 return new TurmasFragment();
             case 3:
