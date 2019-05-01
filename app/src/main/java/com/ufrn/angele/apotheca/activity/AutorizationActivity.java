@@ -23,6 +23,7 @@ import com.ufrn.angele.apotheca.dominio.Usuario;
 import com.ufrn.angele.apotheca.outros.Constants;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,6 +60,7 @@ public class AutorizationActivity extends AppCompatActivity {
     private ArrayList<Turma> mTurmas = new ArrayList<>();
     private String cpf;
     private String accessToken;
+    private boolean flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +71,9 @@ public class AutorizationActivity extends AppCompatActivity {
         webView.requestFocus(View.FOCUS_DOWN);
 
         //pegar no itent o cpf
-        cpf="10461573458";
+        Intent itent = getIntent();
+        flag =  itent.getBooleanExtra("flag",false);
+        cpf= itent.getStringExtra("cpf");
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -166,6 +170,9 @@ public class AutorizationActivity extends AppCompatActivity {
             }
             //envia o user
             Intent startProfileActivity = new Intent(AutorizationActivity.this, MainActivity.class);
+            startProfileActivity.putExtra("usuario", (Serializable) mUser);
+            startProfileActivity.putExtra("discentes",  mDiscentes);
+            startProfileActivity.putExtra("turmas",  mTurmas);
             startActivity(startProfileActivity);
         }
     }

@@ -1,6 +1,10 @@
 package com.ufrn.angele.apotheca.dominio;
 
-public class Usuario {
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+public class Usuario implements Serializable {
     private int id;
     private Long cpf_cnpj;
     private String email;

@@ -1,5 +1,6 @@
 package com.ufrn.angele.apotheca.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -20,12 +21,17 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ufrn.angele.apotheca.R;
+import com.ufrn.angele.apotheca.dominio.Discente;
+import com.ufrn.angele.apotheca.dominio.Turma;
+import com.ufrn.angele.apotheca.dominio.Usuario;
 import com.ufrn.angele.apotheca.fragment.HomeFragment;
 import com.ufrn.angele.apotheca.fragment.NotificacoesFragment;
 import com.ufrn.angele.apotheca.fragment.PerfilFragment;
 import com.ufrn.angele.apotheca.fragment.PostsFragment;
 import com.ufrn.angele.apotheca.fragment.TurmasFragment;
 import com.ufrn.angele.apotheca.outros.CircleTransform;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static class ViewHolder{
@@ -41,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
     // urls to load navigation header background image
     // and profile image
     private static final String urlNavHeaderBg = "https://api.androidhive.info/images/nav-menu-header-bg.jpg";
-    private static final String urlProfileImg = "https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjXreXMvd_hAhUcHLkGHcThDtUQjRx6BAgBEAU&url=https%3A%2F%2Fpt.pngtree.com%2Ffreepng%2Fgray-cat-head-vector_2637751.html&psig=AOvVaw1LhcUhQL7DQKrqYuGxf6b8&ust=1555877521386072";
-
+    private static String urlProfileImg = "";
     // index to identify current nav menu item
     public static int navItemIndex = 0;
 
@@ -60,12 +65,19 @@ public class MainActivity extends AppCompatActivity {
     // flag to load home fragment when user presses back key
     private boolean shouldLoadHomeFragOnBackPress = true;
     private Handler mHandler;
-
+    private Usuario usuario = new Usuario();
+    private ArrayList<Discente> discentes = new ArrayList<>();
+    private ArrayList<Turma> turmas = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+        usuario = (Usuario) intent.getSerializableExtra("usuario");
+        discentes = (ArrayList<Discente>) intent.getSerializableExtra("discentes");
+        turmas = (ArrayList<Turma>) intent.getSerializableExtra("turmas");
 
         mViewHolder.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mViewHolder.toolbar);
@@ -115,10 +127,10 @@ public class MainActivity extends AppCompatActivity {
      */
     private void loadNavHeader() {
         // trocar pela consulta do nome
-        mViewHolder.txtName.setText("Angele Louise");
+        mViewHolder.txtName.setText(usuario.getNome());
         //trocar pela consulta do rank
         mViewHolder.txtRank.setText("Universitário Sofrido");
-
+        urlProfileImg = usuario.getUrl_foto();
         // loading header background image
         Glide.with(this).load(urlNavHeaderBg)
                 .crossFade()

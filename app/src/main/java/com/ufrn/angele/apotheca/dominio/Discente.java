@@ -1,6 +1,8 @@
 package com.ufrn.angele.apotheca.dominio;
 
-public class Discente {
+import java.io.Serializable;
+
+public class Discente implements Serializable {
     private int id;
     private String cpf;
     private int id_usuario;

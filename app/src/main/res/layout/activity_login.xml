@@ -88,29 +88,29 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible">
+            <!--<android.support.design.widget.TextInputLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:visibility="visible">-->
 
-                <EditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/retangulo_login"
-                    android:gravity="center_vertical"
-                    android:hint="@string/prompt_password"
-                    android:imeActionId="6"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:layout_marginTop="16dp"
-                    android:padding="10dp"
-                    android:elevation="2dp"/>
+                <!--<EditText-->
+                    <!--android:id="@+id/password"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="@drawable/retangulo_login"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:hint="@string/prompt_password"-->
+                    <!--android:imeActionId="6"-->
+                    <!--android:imeActionLabel="@string/action_sign_in_short"-->
+                    <!--android:imeOptions="actionUnspecified"-->
+                    <!--android:inputType="textPassword"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:layout_marginTop="16dp"-->
+                    <!--android:padding="10dp"-->
+                    <!--android:elevation="2dp"/>-->
 
-            </android.support.design.widget.TextInputLayout>
+            <!--</android.support.design.widget.TextInputLayout>-->
 
             <ProgressBar
                 android:id="@+id/login_progress"

@@ -4,9 +4,9 @@
     <string name="title_activity_login">Entre na sua conta</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Usuário</string>
+    <string name="prompt_email">CPF</string>
     <string name="prompt_password">Senha</string>
-    <string name="action_sign_in">Login</string>
+    <string name="action_sign_in">AUTENTICAR</string>
     <string name="action_sign_in_short">Logar</string>
     <string name="error_invalid_email">Esse usuário é inválido.</string>
     <string name="error_invalid_password">This password is too short</string>
@@ -46,9 +46,8 @@
         <item>Sair</item>
     </string-array>
     <string name="lista_postagens">Postagens</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="notificacoes">Notificações</string>
     <string name="curso">Curso</string>
     <string name="sobre_mim">Sobre mim</string>
+    <string name="hello_blank_fragment">Teste</string>
 </resources>

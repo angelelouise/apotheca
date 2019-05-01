@@ -1,6 +1,8 @@
 package com.ufrn.angele.apotheca.dominio;
 
-public class Turma {
+import java.io.Serializable;
+
+public class Turma implements Serializable {
 
     private int id;
     private int id_discente;
