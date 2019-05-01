@@ -36,8 +36,8 @@ public class PerfilFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
 
-    private Usuario mUsuario =  new Usuario();
-    private ArrayList<Discente> mDiscente = new ArrayList<>();
+
+    private ArrayList<Discente> discentes = new ArrayList<>();
     private String urlProfileImg;
     private static final String urlNavHeaderBg = "https://api.androidhive.info/images/nav-menu-header-bg.jpg";
     private OnFragmentInteractionListener mListener;
@@ -76,12 +76,7 @@ public class PerfilFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mUsuario = (Usuario) getArguments().getSerializable("usuario");
-            mDiscente = (ArrayList<Discente>) getArguments().getParcelable("discentes");
-            urlProfileImg = mUsuario.getUrl_foto();
 
-        }
 
 
     }
@@ -89,7 +84,7 @@ public class PerfilFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d("Discentes_fragment", mUsuario.toString());
+        Log.d("Discentes_fragment", usuario.toString());
         mViewHolder.view =inflater.inflate(R.layout.fragment_perfil, container, false);
 
         mViewHolder.txtNome =  mViewHolder.view.findViewById(R.id.perfil_nome);
@@ -108,14 +103,23 @@ public class PerfilFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        if (getArguments() != null) {
+            usuario = (Usuario) getArguments().getSerializable("usuario");
+            discentes = (ArrayList<Discente>) getArguments().getSerializable("discentes");
+            urlProfileImg = usuario.getUrl_foto();
+
+        }
+        String nome =usuario.getNome().toString();
+        mViewHolder.txtNome.setText(nome);
         mViewHolder.txtPosts.setText("2");
         mViewHolder.txtPontos.setText("35");
 
         StringBuilder builder = new StringBuilder();
 
-        //Log.d("Discentes_fragment", mDiscente.toString());
-        if(mDiscente!=null){
-            for (Discente discente : mDiscente) {
+        //Log.d("Discentes_fragment", discentes.toString());
+        if(discentes!=null){
+            for (Discente discente : discentes) {
                 builder.append(discente.getNome_curso() + "\n");
             }
         }
@@ -166,7 +170,7 @@ public class PerfilFragment extends Fragment {
 
     private void loadNavHeader() {
         // trocar pela consulta do nome
-        mViewHolder.txtNome.setText(usuario.getNome());
+
         //trocar pela consulta do rank
         mViewHolder.txtRank.setText("Universitário Sofrido");
         urlProfileImg = usuario.getUrl_foto();

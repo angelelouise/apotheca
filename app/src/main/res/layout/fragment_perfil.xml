@@ -50,6 +50,7 @@
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:textColor="@color/colorText"
                     android:text="Nome"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     />
             </LinearLayout>
 

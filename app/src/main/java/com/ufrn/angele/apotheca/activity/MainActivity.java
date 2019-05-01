@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -207,11 +208,13 @@ public class MainActivity extends AppCompatActivity {
             case 0:
                 return new HomeFragment();
             case 1:
+                Log.d("discentesMain",discentes.toString());
+                PerfilFragment perfilFragment =new PerfilFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("usuario", usuario);
                 bundle.putSerializable("discente", discentes);
 
-                PerfilFragment perfilFragment =new PerfilFragment();
+
                 perfilFragment.setArguments(bundle);
                 return perfilFragment;
             case 2:
