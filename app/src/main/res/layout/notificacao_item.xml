@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@drawable/post_background"
+    android:background="@drawable/notificacoes_background"
     android:layout_margin="8dp">
 
     <ImageView
@@ -38,7 +38,7 @@
             android:textSize="12sp"
             android:padding="8dp"
             android:layout_gravity="bottom"
-            android:layout_marginTop="16dp"
+
             android:textColor="#8A000000"
             />
 

@@ -50,4 +50,6 @@
     <string name="curso">Curso</string>
     <string name="sobre_mim">Sobre mim</string>
     <string name="hello_blank_fragment">Teste</string>
+    <string name="titulo_da_postagem">Título da postagem</string>
+    <string name="nome_da_turma">Nome da Turma</string>
 </resources>

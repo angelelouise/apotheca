@@ -12,7 +12,8 @@
         android:layout_height="50dp"
         android:scaleType="fitCenter"
         android:layout_margin="8dp"
-        android:layout_gravity="center_vertical"/>
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/user"/>
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -31,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="22sp"
-            android:text="Título da postagemgdgadgagasgasgasg afsfasfasffsafsfasfasfasfsfasfsafg dafsafsffasfasf"
+            android:text="@string/titulo_da_postagem"
             android:layout_margin="2dp"
             android:layout_gravity="start"
             android:textColor="#DE000000"
@@ -41,12 +42,13 @@
             android:id="@+id/list_turma"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nome da Turma"
+            android:text="@string/nome_da_turma"
             android:textSize="10sp"
             android:background="@drawable/tag"
             android:gravity="center_horizontal"
             android:textColor="#DE000000"
             android:padding="3dp"
+            android:layout_marginLeft="8dp"
             android:layout_gravity="start"/>
         <TextView
             android:id="@+id/list_timestamp"
