@@ -204,13 +204,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Fragment getHomeFragment() {
+        Bundle bundle = new Bundle();
         switch (navItemIndex) {
             case 0:
                 return new HomeFragment();
             case 1:
                 Log.d("discentesMain",discentes.toString());
                 PerfilFragment perfilFragment =new PerfilFragment();
-                Bundle bundle = new Bundle();
+
                 bundle.putSerializable("usuario", usuario);
                 bundle.putSerializable("discente", discentes);
 
@@ -218,7 +219,12 @@ public class MainActivity extends AppCompatActivity {
                 perfilFragment.setArguments(bundle);
                 return perfilFragment;
             case 2:
-                return new TurmasFragment();
+                TurmasFragment turmasFragment = new TurmasFragment();
+
+                bundle.putSerializable("turma",turmas);
+
+                turmasFragment.setArguments(bundle);
+                return turmasFragment;
             case 3:
                 return new PostsFragment();
             case 4:

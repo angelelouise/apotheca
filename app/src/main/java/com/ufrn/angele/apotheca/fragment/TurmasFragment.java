@@ -2,12 +2,20 @@ package com.ufrn.angele.apotheca.fragment;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ufrn.angele.apotheca.R;
+import com.ufrn.angele.apotheca.adapters.PostAdapter;
+import com.ufrn.angele.apotheca.adapters.TurmaAdapter;
+import com.ufrn.angele.apotheca.dominio.Turma;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,8 +34,17 @@ public class TurmasFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private ArrayList<Turma> turmas = new ArrayList<>();
     private OnFragmentInteractionListener mListener;
+
+    public static class ViewHolder{
+        private View view;
+        private RecyclerView recyclerView;
+        private TurmaAdapter mAdapter;
+        private RecyclerView.LayoutManager layoutManager;
+
+    }
+    private ViewHolder mViewHolder = new ViewHolder();
 
     public TurmasFragment() {
         // Required empty public constructor
@@ -54,17 +71,26 @@ public class TurmasFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
+            turmas = (ArrayList<Turma>) getArguments().getSerializable("turma");
+
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_turmas, container, false);
+        mViewHolder.view = inflater.inflate(R.layout.fragment_turmas, container, false);
+        mViewHolder.recyclerView = mViewHolder.view.findViewById(R.id.lista_turmas);
+
+        mViewHolder.layoutManager = new LinearLayoutManager(getActivity());
+        mViewHolder.recyclerView.setLayoutManager( mViewHolder.layoutManager);
+
+        mViewHolder.mAdapter = new TurmaAdapter(turmas);
+        mViewHolder.recyclerView.setAdapter(mViewHolder.mAdapter);
+        return mViewHolder.view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -104,5 +130,13 @@ public class TurmasFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+
+
     }
 }
