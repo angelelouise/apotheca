@@ -106,7 +106,7 @@ public class PerfilFragment extends Fragment {
 
         if (getArguments() != null) {
             usuario = (Usuario) getArguments().getSerializable("usuario");
-            discentes = (ArrayList<Discente>) getArguments().getSerializable("discentes");
+            discentes = (ArrayList<Discente>) getArguments().getSerializable("discente");
             urlProfileImg = usuario.getUrl_foto();
 
         }
