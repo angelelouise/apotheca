@@ -24,6 +24,7 @@ import android.widget.EditText;
 
 import com.ufrn.angele.apotheca.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -299,12 +300,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
 
+            Runtime runtime = Runtime.getRuntime();
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
+                Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+                int     exitValue = ipProcess.waitFor();
+                return (exitValue == 0);
             }
+            catch (IOException e)          { e.printStackTrace();
+                return false;}
+            catch (InterruptedException e) { e.printStackTrace();
+                return false;}
+
+
 
 //            for (String credential : DUMMY_CREDENTIALS) {
 //                //String[] pieces = credential.split(":");
@@ -313,9 +320,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //                    return true;
 //                }
 //            }
-            //se não existir correspondente no banco, indica na flag
-            necessitaCadastro=true;
-            return true;
+
         }
 
         @Override
@@ -326,11 +331,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (success) {
                 //finish();
                 Intent data = new Intent(LoginActivity.this, AutorizationActivity.class);
-                data.putExtra("flag",necessitaCadastro);
+                //data.putExtra("flag",necessitaCadastro);
                 data.putExtra("cpf",credencial);
                 startActivity(data);
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.setError(getString(R.string.error_no_internet));
                 mPasswordView.requestFocus();
             }
         }

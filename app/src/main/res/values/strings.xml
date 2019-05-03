@@ -10,7 +10,7 @@
     <string name="action_sign_in_short">Logar</string>
     <string name="error_invalid_email">Esse usuário é inválido.</string>
     <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">Essa senha está incorreta.</string>
+    <string name="error_no_internet">Não há conexão com a internet.</string>
     <string name="error_field_required">Esse campo é obrigatório</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."

@@ -3,7 +3,6 @@ package com.ufrn.angele.apotheca.api;
 import android.util.Log;
 
 import com.ufrn.angele.apotheca.dominio.Usuario;
-import com.ufrn.angele.apotheca.dominio.UsuarioUFRN;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -1,16 +1,25 @@
 package com.ufrn.angele.apotheca.dominio;
 
-import android.os.Parcelable;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
+@Entity(tableName = "usuario")
 public class Usuario implements Serializable {
+    @PrimaryKey(autoGenerate = true)
     private int id;
+    @NonNull
     private Long cpf_cnpj;
+    @NonNull
     private String email;
+    @NonNull
     private int id_usuario;
+    @NonNull
     private String login;
     private String url_foto;
+    @NonNull
     private String nome;
 
     @Override

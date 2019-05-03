@@ -1,14 +1,24 @@
 package com.ufrn.angele.apotheca.dominio;
 
+import android.arch.persistence.room.Entity;
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 
+@Entity(tableName = "discente")
 public class Discente implements Serializable {
+
     private int id;
+    @NonNull
     private String cpf;
+    @NonNull
     private int id_usuario;
+    @NonNull
     private int id_discente;
     private int matricula;
+    @NonNull
     private int id_curso;
+    @NonNull
     private String nome_curso;
     private int id_tipo_discente;
     private String tipo_vinculo;

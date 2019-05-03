@@ -1,15 +1,27 @@
 package com.ufrn.angele.apotheca.dominio;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 
+@Entity(tableName = "turma")
 public class Turma implements Serializable {
 
+    @PrimaryKey(autoGenerate = true)
     private int id;
+    @NonNull
     private int id_discente;
+    @NonNull
     private int ano;
+    @NonNull
     private int id_turma;
+    @NonNull
     private int id_componente;
+    @NonNull
     private String codigo_componente;
+    @NonNull
     private String nome_componente;
 
     @Override
