@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private ViewHolder mViewHolder = new ViewHolder();
     // urls to load navigation header background image
     // and profile image
-    private static final String urlNavHeaderBg = "https://api.androidhive.info/images/nav-menu-header-bg.jpg";
+    private static final String urlNavHeaderBg = "https://backgrounddownload.com/wp-content/uploads/2018/09/beautiful-plain-background-hd-5.jpg";
+            //"https://api.androidhive.info/images/nav-menu-header-bg.jpg";
     private static String urlProfileImg = "";
     // index to identify current nav menu item
     public static int navItemIndex = 0;
