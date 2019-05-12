@@ -8,6 +8,8 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -24,7 +26,6 @@ import android.widget.EditText;
 
 import com.ufrn.angele.apotheca.R;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -302,14 +303,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             Runtime runtime = Runtime.getRuntime();
             try {
-                Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-                int     exitValue = ipProcess.waitFor();
-                return (exitValue == 0);
+//                Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+//                int     exitValue = ipProcess.waitFor();
+//                return (exitValue == 0);
+                ConnectivityManager cm;
+                cm =(ConnectivityManager) getApplication()
+                        .getSystemService(getApplication().CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                return activeNetwork != null &&
+                        activeNetwork.isConnectedOrConnecting();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
             }
-            catch (IOException e)          { e.printStackTrace();
-                return false;}
-            catch (InterruptedException e) { e.printStackTrace();
-                return false;}
 
 
 
@@ -335,8 +341,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 data.putExtra("cpf",credencial);
                 startActivity(data);
             } else {
-                mPasswordView.setError(getString(R.string.error_no_internet));
-                mPasswordView.requestFocus();
+
+                mEmailView.setError(getString(R.string.error_no_internet));
+                mEmailView.requestFocus();
             }
         }
 
