@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -22,6 +21,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ufrn.angele.apotheca.R;
+import com.ufrn.angele.apotheca.bd.DiscenteRepository;
+import com.ufrn.angele.apotheca.bd.TurmaRepository;
+import com.ufrn.angele.apotheca.bd.UsuarioRepository;
 import com.ufrn.angele.apotheca.dominio.Discente;
 import com.ufrn.angele.apotheca.dominio.Turma;
 import com.ufrn.angele.apotheca.dominio.Usuario;
@@ -31,6 +33,8 @@ import com.ufrn.angele.apotheca.fragment.PerfilFragment;
 import com.ufrn.angele.apotheca.fragment.PostsFragment;
 import com.ufrn.angele.apotheca.fragment.TurmasFragment;
 import com.ufrn.angele.apotheca.outros.CircleTransform;
+import com.ufrn.angele.apotheca.outros.Constants;
+import com.ufrn.angele.apotheca.viewmodel.UsuarioViewModel;
 
 import java.util.ArrayList;
 
@@ -70,6 +74,12 @@ public class MainActivity extends AppCompatActivity {
     private Usuario usuario = new Usuario();
     private ArrayList<Discente> discentes = new ArrayList<>();
     private ArrayList<Turma> turmas = new ArrayList<>();
+    public static int NOVA_POSTAGEM = 1;
+    public static int DETALHES_POSTAGEM = 2;
+    private UsuarioViewModel usuarioViewModel;
+    private UsuarioRepository usuarioRepository;
+    private TurmaRepository turmaRepository;
+    private DiscenteRepository discenteRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +87,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Intent intent = getIntent();
-        usuario = (Usuario) intent.getSerializableExtra("usuario");
-        discentes = (ArrayList<Discente>) intent.getSerializableExtra("discentes");
-        turmas = (ArrayList<Turma>) intent.getSerializableExtra("turmas");
+        usuario = (Usuario) intent.getSerializableExtra(Constants.INTENT_USER);
+        Log.d("mainUser", usuario.toString());
+        discentes = (ArrayList<Discente>) intent.getSerializableExtra(Constants.INTENT_DISCENTE);
+        turmas = (ArrayList<Turma>) intent.getSerializableExtra(Constants.INTENT_TURMA);
+
+        usuarioRepository= new UsuarioRepository(getApplication());
+        turmaRepository = new TurmaRepository(getApplication());
+        discenteRepository = new DiscenteRepository(getApplication());
+
+        dataCheck();
 
         mViewHolder.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mViewHolder.toolbar);
@@ -102,8 +119,10 @@ public class MainActivity extends AppCompatActivity {
         mViewHolder.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent =  new Intent(MainActivity.this, CadastrarPostActivity.class);
+                intent.putExtra("turmas", turmas);
+                intent.putExtra("usuario", usuario);
+                startActivity(intent);
             }
         });
 
@@ -118,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
             CURRENT_TAG = TAG_HOME;
             loadHomeFragment();
         }
+
 
 
     }
@@ -203,7 +223,20 @@ public class MainActivity extends AppCompatActivity {
         // refresh toolbar menu
         invalidateOptionsMenu();
     }
+    private boolean dataCheck(){
+        //verificar aqui se não houve atualização de dados do usuário
+        //usuarioViewModel.findByLogin(user.getCpf_cnpj());
 
+        usuarioRepository.inserir(usuario);
+        for (Turma t: turmas) {
+            turmaRepository.inserir(t);
+        }
+        for (Discente d: discentes) {
+            discenteRepository.inserir(d);
+        }
+
+        return true;
+    }
     private Fragment getHomeFragment() {
         Bundle bundle = new Bundle();
         switch (navItemIndex) {

@@ -170,9 +170,9 @@ public class AutorizationActivity extends AppCompatActivity {
             }
             //envia o user
             Intent startProfileActivity = new Intent(AutorizationActivity.this, MainActivity.class);
-            startProfileActivity.putExtra("usuario", (Serializable) mUser);
-            startProfileActivity.putExtra("discentes",  mDiscentes);
-            startProfileActivity.putExtra("turmas",  mTurmas);
+            startProfileActivity.putExtra(Constants.INTENT_USER, (Serializable) mUser);
+            startProfileActivity.putExtra(Constants.INTENT_DISCENTE,  mDiscentes);
+            startProfileActivity.putExtra(Constants.INTENT_TURMA,  mTurmas);
             startActivity(startProfileActivity);
         }
     }

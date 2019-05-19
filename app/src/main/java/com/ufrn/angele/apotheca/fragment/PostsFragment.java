@@ -76,8 +76,8 @@ public class PostsFragment extends Fragment {
         }
         //criar dados para testes
         posts = new ArrayList<>();
-        posts.add(new Postagem("Lista de exercício 1","Linguagem de Programação",new Date(),R.drawable.user));
-        posts.add(new Postagem("Resolução de exercícios em sala","Controladores",new Date(),R.drawable.user));
+        posts.add(new Postagem("Lista de exercício 1","Linguagem de Programação",new Date().toString()));
+        posts.add(new Postagem("Resolução de exercícios em sala","Controladores",new Date().toString()));
     }
 
     @Override

@@ -26,15 +26,16 @@ public class Turma implements Serializable {
 
     @Override
     public String toString() {
-        return "Turma{" +
-                "id=" + id +
-                ", id_discente=" + id_discente +
-                ", ano=" + ano +
-                ", id_turma=" + id_turma +
-                ", id_componente=" + id_componente +
-                ", codigo_componente='" + codigo_componente + '\'' +
-                ", nome_componente='" + nome_componente + '\'' +
-                '}';
+//        return "Turma{" +
+//                "id=" + id +
+//                ", id_discente=" + id_discente +
+//                ", ano=" + ano +
+//                ", id_turma=" + id_turma +
+//                ", id_componente=" + id_componente +
+//                ", codigo_componente='" + codigo_componente + '\'' +
+//                ", nome_componente='" + nome_componente + '\'' +
+//                '}';
+        return nome_componente;
     }
 
     public int getId() {

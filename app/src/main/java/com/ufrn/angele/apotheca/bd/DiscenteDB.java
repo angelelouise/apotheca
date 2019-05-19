@@ -7,7 +7,7 @@ import android.content.Context;
 
 import com.ufrn.angele.apotheca.dominio.Discente;
 
-@Database(entities = { Discente.class},version = 1)
+@Database(entities = { Discente.class},version = 1, exportSchema = false)
 public abstract class DiscenteDB extends RoomDatabase {
     private static DiscenteDB INSTANCE;
     public abstract DiscenteDAO discenteDAO();

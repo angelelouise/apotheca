@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- drawable/bg_light.xml -->
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="343dp"
+    android:height="49dp"
+    android:viewportWidth="343"
+    android:viewportHeight="49"
+    >
+
+    <group>
+
+        <clip-path
+            android:pathData="M3 0H340C341.657 0 343 1.34315 343 3V46C343 47.6569 341.657 49 340 49H3C1.34315 49 0 47.6569 0 46V3C0 1.34315 1.34315 0 3 0Z"
+            />
+
+        <path
+            android:pathData="M0 0V49H343V0"
+            android:fillColor="#7963FF"
+            />
+
+    </group>
+
+</vector>

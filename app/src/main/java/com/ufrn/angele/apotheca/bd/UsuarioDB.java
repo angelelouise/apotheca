@@ -8,7 +8,7 @@ import android.content.Context;
 import com.ufrn.angele.apotheca.dominio.Usuario;
 
 
-@Database(entities = { Usuario.class},version = 1)
+@Database(entities = { Usuario.class},version = 1, exportSchema = false)
 public abstract class UsuarioDB extends RoomDatabase {
 
     private static UsuarioDB INSTANCE;

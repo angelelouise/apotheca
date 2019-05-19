@@ -1,5 +1,6 @@
 package com.ufrn.angele.apotheca.bd;
 
+import android.app.Application;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -15,6 +16,11 @@ public class DiscenteRepository {
 
     private ConnectivityManager cm;
 
+    public DiscenteRepository(Application app) {
+        discenteDAO = DiscenteDB.getInstance(app).discenteDAO();
+        cm =(ConnectivityManager)app
+                .getSystemService(app.CONNECTIVITY_SERVICE);
+    }
     public void inserir (Discente discente){
         new InsertASync(discenteDAO).execute(discente);
     }

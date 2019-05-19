@@ -1,10 +1,15 @@
 package com.ufrn.angele.apotheca.fragment;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +17,11 @@ import android.view.ViewGroup;
 import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.adapters.PostAdapter;
 import com.ufrn.angele.apotheca.dominio.Postagem;
+import com.ufrn.angele.apotheca.viewmodel.PostagemViewModel;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +52,7 @@ public class HomeFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private ArrayList<Postagem> posts;
+    private PostagemViewModel postagemViewModel;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -79,8 +87,9 @@ public class HomeFragment extends Fragment {
 
         //criar dados para testes
         posts = new ArrayList<>();
-        posts.add(new Postagem("Lista de exercício 1","Linguagem de Programação",new Date(),R.drawable.user));
-        posts.add(new Postagem("Resolução de exercícios em sala","Controladores",new Date(),R.drawable.user));
+        posts.add(new Postagem("","",new Date().toString()));
+        //posts.add(new Postagem("Resolução de exercícios em sala","Controladores",new Date()));
+
     }
 
     @Override
@@ -115,6 +124,23 @@ public class HomeFragment extends Fragment {
 //                    + " must implement OnFragmentInteractionListener");
 //        }
 //    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        postagemViewModel = ViewModelProviders.of(this).get(PostagemViewModel.class);
+        postagemViewModel.getListaPostagem().observe(this, new Observer<List<Postagem>>() {
+            @Override
+            public void onChanged(@Nullable List<Postagem> post) {
+                //postagemAdapter.setPalavras(post);
+                Log.d("post","post" +post);
+                posts.clear();
+                posts.addAll(post);
+                mViewHolder.mAdapter.notifyDataSetChanged();
+            }
+        });
+    }
 
     @Override
     public void onDetach() {

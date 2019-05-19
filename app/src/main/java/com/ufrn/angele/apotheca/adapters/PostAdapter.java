@@ -62,7 +62,7 @@ public class PostAdapter extends RecyclerView.Adapter{
             list_titulo.setText(mPostagens.get(position).getTitulo());
             list_turma.setText(mPostagens.get(position).getTurma());
             list_timestamp.setText(mPostagens.get(position).getData_cadastro().toString());
-            list_avatar.setImageResource(mPostagens.get(position).getAvatar());
+            //list_avatar.setImageResource(mPostagens.get(position).getAvatar());
         }
         @Override
         public void onClick(View view) {

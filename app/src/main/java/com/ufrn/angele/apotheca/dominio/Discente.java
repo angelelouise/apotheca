@@ -1,13 +1,14 @@
 package com.ufrn.angele.apotheca.dominio;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
 @Entity(tableName = "discente")
 public class Discente implements Serializable {
-
+    @PrimaryKey(autoGenerate = true)
     private int id;
     @NonNull
     private String cpf;

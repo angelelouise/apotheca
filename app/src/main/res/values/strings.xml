@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">apotheca</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_login">Entre na sua conta</string>
+    <string name="title_activity_login">Apotheca</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">CPF</string>
@@ -52,4 +52,11 @@
     <string name="hello_blank_fragment">Teste</string>
     <string name="titulo_da_postagem">Título da postagem</string>
     <string name="nome_da_turma">Nome da Turma</string>
+    <string name="publicar">Publicar</string>
+    <string name="titulo">Título</string>
+    <string name="descricao">Descrição</string>
+    <string name="tipo_da_postagem">Tipo da postagem</string>
+    <string name="turma">Turma</string>
+    <string name="tags">Tags</string>
+    <string name="anexos">Anexos</string>
 </resources>

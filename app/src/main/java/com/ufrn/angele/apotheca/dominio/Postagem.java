@@ -1,29 +1,89 @@
 package com.ufrn.angele.apotheca.dominio;
 
-import java.util.Date;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
+@Entity(tableName = "postagem")
 public class Postagem {
 
+    @PrimaryKey(autoGenerate = true)
+    private int id_postagem;
+    private int id_autor;
+    private int tipo_postagem;
     private String titulo;
+    private int id_turma;
     private String turma;
-    private Date data_cadastro;
-    private int avatar;
+    private String data_cadastro;
+    private boolean ativo;
+    private String descricao;
 
     @Override
     public String toString() {
         return "Postagem{" +
-                "titulo='" + titulo + '\'' +
+                "id_postagem=" + id_postagem +
+                ", id_autor=" + id_autor +
+                ", tipo_postagem=" + tipo_postagem +
+                ", titulo='" + titulo + '\'' +
+                ", id_turma=" + id_turma +
                 ", turma='" + turma + '\'' +
                 ", data_cadastro=" + data_cadastro +
-                ", avatar=" + avatar +
+                ", avatar=" +
+                ", ativo=" + ativo +
                 '}';
     }
 
-    public Postagem(String titulo, String turma, Date data_cadastro, int avatar) {
+    public Postagem(String titulo, String turma, String data_cadastro) {
         this.titulo = titulo;
         this.turma = turma;
         this.data_cadastro = data_cadastro;
-        this.avatar = avatar;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public int getId_postagem() {
+        return id_postagem;
+    }
+
+    public void setId_postagem(int id_postagem) {
+        this.id_postagem = id_postagem;
+    }
+
+    public int getId_autor() {
+        return id_autor;
+    }
+
+    public void setId_autor(int id_autor) {
+        this.id_autor = id_autor;
+    }
+
+    public int getTipo_postagem() {
+        return tipo_postagem;
+    }
+
+    public void setTipo_postagem(int tipo_postagem) {
+        this.tipo_postagem = tipo_postagem;
+    }
+
+    public int getId_turma() {
+        return id_turma;
+    }
+
+    public void setId_turma(int id_turma) {
+        this.id_turma = id_turma;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 
     public String getTitulo() {
@@ -42,19 +102,12 @@ public class Postagem {
         this.turma = turma;
     }
 
-    public Date getData_cadastro() {
+    public String getData_cadastro() {
         return data_cadastro;
     }
 
-    public void setData_cadastro(Date data_cadastro) {
+    public void setData_cadastro(String data_cadastro) {
         this.data_cadastro = data_cadastro;
     }
 
-    public int getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(int avatar) {
-        this.avatar = avatar;
-    }
 }
