@@ -2,6 +2,7 @@ package com.ufrn.angele.apotheca.fragment;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -53,6 +54,7 @@ public class HomeFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private ArrayList<Postagem> posts;
     private PostagemViewModel postagemViewModel;
+    private Context context;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -101,7 +103,7 @@ public class HomeFragment extends Fragment {
         mViewHolder.layoutManager = new LinearLayoutManager(getActivity());
         mViewHolder.recyclerView.setLayoutManager( mViewHolder.layoutManager);
 
-        mViewHolder.mAdapter = new PostAdapter(posts);
+        mViewHolder.mAdapter = new PostAdapter(context,posts);
         mViewHolder.recyclerView.setAdapter(mViewHolder.mAdapter);
 
         return mViewHolder.view;
@@ -114,16 +116,17 @@ public class HomeFragment extends Fragment {
         }
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context =context;
 //        if (context instanceof OnFragmentInteractionListener) {
 //            mListener = (OnFragmentInteractionListener) context;
 //        } else {
 //            throw new RuntimeException(context.toString()
 //                    + " must implement OnFragmentInteractionListener");
 //        }
-//    }
+    }
 
 
     @Override

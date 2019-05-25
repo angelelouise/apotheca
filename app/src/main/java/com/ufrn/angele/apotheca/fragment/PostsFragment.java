@@ -1,5 +1,6 @@
 package com.ufrn.angele.apotheca.fragment;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,6 +34,7 @@ public class PostsFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private Context mContext;
 
     private OnFragmentInteractionListener mListener;
 
@@ -89,8 +91,9 @@ public class PostsFragment extends Fragment {
         mViewHolder.layoutManager = new LinearLayoutManager(getActivity());
         mViewHolder.recyclerView.setLayoutManager( mViewHolder.layoutManager);
 
-        mViewHolder.mAdapter = new PostAdapter(posts);
+        mViewHolder.mAdapter = new PostAdapter(container.getContext(),posts);
         mViewHolder.recyclerView.setAdapter(mViewHolder.mAdapter);
+
         return mViewHolder.view;
     }
 
@@ -101,16 +104,11 @@ public class PostsFragment extends Fragment {
         }
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.mContext=context;
+    }
 
     @Override
     public void onDetach() {

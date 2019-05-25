@@ -1,5 +1,6 @@
 package com.ufrn.angele.apotheca.fragment;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ufrn.angele.apotheca.R;
-import com.ufrn.angele.apotheca.adapters.PostAdapter;
 import com.ufrn.angele.apotheca.adapters.TurmaAdapter;
 import com.ufrn.angele.apotheca.dominio.Turma;
 
@@ -36,6 +36,7 @@ public class TurmasFragment extends Fragment {
     private String mParam2;
     private ArrayList<Turma> turmas = new ArrayList<>();
     private OnFragmentInteractionListener mListener;
+    private Context mContext;
 
     public static class ViewHolder{
         private View view;
@@ -88,7 +89,7 @@ public class TurmasFragment extends Fragment {
         mViewHolder.layoutManager = new LinearLayoutManager(getActivity());
         mViewHolder.recyclerView.setLayoutManager( mViewHolder.layoutManager);
 
-        mViewHolder.mAdapter = new TurmaAdapter(turmas);
+        mViewHolder.mAdapter = new TurmaAdapter(mContext,turmas);
         mViewHolder.recyclerView.setAdapter(mViewHolder.mAdapter);
         return mViewHolder.view;
     }
@@ -100,16 +101,11 @@ public class TurmasFragment extends Fragment {
         }
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.mContext=context;
+    }
 
     @Override
     public void onDetach() {

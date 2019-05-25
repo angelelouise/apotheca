@@ -3,8 +3,10 @@ package com.ufrn.angele.apotheca.dominio;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "postagem")
-public class Postagem {
+public class Postagem implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int id_postagem;

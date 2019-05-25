@@ -14,20 +14,24 @@ import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.dominio.Postagem;
 import com.ufrn.angele.apotheca.dominio.Turma;
 import com.ufrn.angele.apotheca.dominio.Usuario;
+import com.ufrn.angele.apotheca.outros.Constants;
 import com.ufrn.angele.apotheca.viewmodel.PostagemViewModel;
 
 import java.util.ArrayList;
 import java.util.Date;
 
+import static com.ufrn.angele.apotheca.outros.Constants.TIPO0;
+import static com.ufrn.angele.apotheca.outros.Constants.TIPO1;
+
 public class CadastrarPostActivity extends AppCompatActivity {
 
     private ArrayList<Turma> mTurmas;
     private ArrayList<String> mTipos;
-    private static String TIPO0 = "Perguntas e Respostas";
-    private static String TIPO1 = "Livre";
+
     private PostagemViewModel postagemViewModel;
     private Postagem p;
     private Usuario mUser;
+    private int mSelecionada =-1;
 
     private static class ViewHolder{
         TextView mTituloView, mDescricaoView, mTagView;
@@ -43,8 +47,9 @@ public class CadastrarPostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cadastrar_post);
         postagemViewModel = new PostagemViewModel(getApplication());
         Intent intent = getIntent();
-        mTurmas = (ArrayList<Turma>) intent.getSerializableExtra("turmas");
-        mUser = (Usuario) intent.getSerializableExtra("usuario");
+        mTurmas = (ArrayList<Turma>) intent.getSerializableExtra(Constants.INTENT_TURMA);
+        mSelecionada = (int) intent.getSerializableExtra("selecionada"); //pega posição da turma selecionada na lista de turma
+        mUser = (Usuario) intent.getSerializableExtra(Constants.INTENT_USER);
 
         mTipos = new ArrayList<>();
         mTipos.add(TIPO0);
@@ -64,6 +69,9 @@ public class CadastrarPostActivity extends AppCompatActivity {
         tipoDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // attaching data adapter to spinner
         mViewHolder.mTurma.setAdapter(turmaDataAdapter);
+        if(mSelecionada > 0){
+            mViewHolder.mTurma.setSelection(mSelecionada);
+        }
         mViewHolder.mTipo.setAdapter(tipoDataAdapter);
 
         mViewHolder.mPublicar.setOnClickListener(new View.OnClickListener() {

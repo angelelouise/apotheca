@@ -1,5 +1,7 @@
 package com.ufrn.angele.apotheca.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,16 +12,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ufrn.angele.apotheca.R;
+import com.ufrn.angele.apotheca.activity.DetalharPerguntaActivity;
+import com.ufrn.angele.apotheca.activity.DetalharPostActivity;
 import com.ufrn.angele.apotheca.dominio.Postagem;
+import com.ufrn.angele.apotheca.outros.Constants;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class PostAdapter extends RecyclerView.Adapter{
 
     private final ArrayList<Postagem> mPostagens;
+    private Context mContext;
 
-    public PostAdapter(ArrayList posts){
-        mPostagens=posts;
+
+    public PostAdapter(Context context, ArrayList posts){
+        this.mPostagens=posts;
+        this.mContext=context;
     }
 
     @NonNull
@@ -56,7 +65,29 @@ public class PostAdapter extends RecyclerView.Adapter{
             list_avatar = view.findViewById(R.id.list_avatar);
             list_menu = view.findViewById(R.id.list_menu);
 
-            view.setOnClickListener(this);
+            //view.setOnClickListener(this);
+            view.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    // get position
+                    int pos = getAdapterPosition();
+
+                    // check if item still exists
+                    if(pos != RecyclerView.NO_POSITION){
+                        Postagem clickedDataItem = mPostagens.get(pos);
+                        if(clickedDataItem.getTipo_postagem() == 1){//do tipo livre
+                            Intent send = new Intent(mContext, DetalharPostActivity.class);
+                            send.putExtra(Constants.INTENT_POSTAGEM, (Serializable) clickedDataItem);
+                            mContext.startActivity(send);
+                        }else{//do tipo perguntas e respostas
+                            Intent send = new Intent(mContext, DetalharPerguntaActivity.class);
+                            send.putExtra(Constants.INTENT_POSTAGEM, (Serializable) clickedDataItem);
+                            mContext.startActivity(send);
+                        }
+
+                    }
+                }
+            });
         }
         public void bindView(int position){
             list_titulo.setText(mPostagens.get(position).getTitulo());

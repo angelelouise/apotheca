@@ -15,7 +15,8 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.DetalharPostActivity"></activity>
+        <activity android:name=".activity.DetalharPerguntaActivity"></activity>
+        <activity android:name=".activity.DetalharPostActivity" />
         <activity android:name=".activity.CadastrarPostActivity" />
         <activity android:name=".activity.AutorizationActivity" />
         <activity android:name=".activity.MainActivity" />

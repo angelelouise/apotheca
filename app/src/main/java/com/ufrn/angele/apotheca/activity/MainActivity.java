@@ -120,8 +120,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent =  new Intent(MainActivity.this, CadastrarPostActivity.class);
-                intent.putExtra("turmas", turmas);
-                intent.putExtra("usuario", usuario);
+                intent.putExtra(Constants.INTENT_TURMA, turmas);
+                intent.putExtra(Constants.INTENT_USER, usuario);
                 startActivity(intent);
             }
         });
