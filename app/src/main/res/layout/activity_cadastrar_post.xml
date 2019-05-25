@@ -171,7 +171,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:padding="@dimen/activity_vertical_margin"
-                app:srcCompat="@drawable/post_button" />
+                app:srcCompat="@drawable/post_button"
+                android:background="@color/colorText"/>
 
         </LinearLayout>
 
