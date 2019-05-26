@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         usuario = (Usuario) intent.getSerializableExtra(Constants.INTENT_USER);
-        Log.d("mainUser", usuario.toString());
+        //Log.d("mainUser", usuario.toString());
         discentes = (ArrayList<Discente>) intent.getSerializableExtra(Constants.INTENT_DISCENTE);
         turmas = (ArrayList<Turma>) intent.getSerializableExtra(Constants.INTENT_TURMA);
 

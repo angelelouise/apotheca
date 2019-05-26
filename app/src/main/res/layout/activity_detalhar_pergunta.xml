@@ -5,11 +5,305 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".activity.DetalharPerguntaActivity">
+    tools:context=".activity.DetalharPostActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout_det_pergunta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar2_det_pergunta"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/layout_postagem_det_pergunta"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/cadastrar_background"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2_det_pergunta">
+
+        <TextView
+            android:id="@+id/detalhes_turma_det_pergunta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toTopOf="@+id/detalhar_post_titulo_det_pergunta"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <ImageButton
+            android:id="@+id/detalhes_editar_det_pergunta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="30dp"
+            android:background="@color/colorText"
+            app:layout_constraintEnd_toStartOf="@+id/detalhes_excluir_det_pergunta"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/editar" />
+
+        <ImageButton
+            android:id="@+id/detalhes_excluir_det_pergunta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:background="@color/colorText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/excluir" />
+
+        <TextView
+            android:id="@+id/detalhar_post_titulo_det_pergunta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/titulo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detalhes_editar_det_pergunta" />
+
+        <View
+            android:id="@+id/line_det_pergunta"
+            android:layout_width="match_parent"
+            android:layout_height="2.74dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/line"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detalhar_post_titulo_det_pergunta" />
+
+        <TextView
+            android:id="@+id/detalhar_post_descricao_det_pergunta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/detalhe_descricao"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line_det_pergunta" />
+
+        <View
+            android:id="@+id/line2_det_pergunta"
+            android:layout_width="match_parent"
+            android:layout_height="2.74dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/line"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detalhar_post_descricao_det_pergunta" />
+
+        <ImageButton
+            android:id="@+id/post_vote_det_pergunta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@color/colorText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line2_det_pergunta"
+            app:srcCompat="@drawable/votar" />
+
+        <ImageButton
+            android:id="@+id/post_downvote_det_pergunta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@color/colorText"
+            app:layout_constraintStart_toEndOf="@+id/post_vote_det_pergunta"
+            app:layout_constraintTop_toBottomOf="@+id/line2_det_pergunta"
+            app:srcCompat="@drawable/negativar" />
+
+        <ImageButton
+            android:id="@+id/post_share_det_pergunta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@color/colorText"
+            app:layout_constraintStart_toEndOf="@+id/post_downvote_det_pergunta"
+            app:layout_constraintTop_toBottomOf="@+id/line2_det_pergunta"
+            app:srcCompat="@drawable/compartilhar" />
+
+        <ImageButton
+            android:id="@+id/post_report_det_pergunta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/colorText"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line2_det_pergunta"
+            app:srcCompat="@drawable/reportar" />
+
+        <Button
+            android:id="@+id/ver_comentarios_det_pergunta"
+            android:layout_width="113dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/colorText"
+            android:text="@string/ver_comentarios"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/post_share_det_pergunta" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ver_comentarios_det_pergunta">
+
+            <ImageView
+                android:id="@+id/comentario_avatar_det_pergunta"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/user"
+                android:scaleType="fitCenter" />
+
+            <EditText
+                android:id="@+id/comentario_descricao_det_pergunta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:inputType="textMultiLine"
+                android:padding="8dp"
+                android:hint="Adicione um comentário"
+                android:textColor="#DE000000"
+                android:textSize="14sp"
+                />
+
+            <ImageButton
+                android:id="@+id/publica_det_pergunta"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical|end"
+                android:background="@drawable/ic_menu_send">
+
+            </ImageButton>
+
+        </LinearLayout>
+
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layout_comentarios_det_pergunta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="108dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/cadastrar_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_postagem_det_pergunta">
+
+        <LinearLayout
+            android:id="@+id/linearLayoutResposta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/resposta_avatar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/user"
+                android:scaleType="fitCenter" />
+
+            <EditText
+                android:id="@+id/resposta_descricao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:hint="Adicione uma resposta"
+                android:inputType="textMultiLine"
+                android:padding="8dp"
+                android:textColor="#DE000000"
+                android:textSize="14sp" />
+
+            <ImageButton
+                android:id="@+id/publicar_resposta"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical|end"
+                android:background="@drawable/ic_menu_send">
+
+            </ImageButton>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/lista_perguntas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:scrollbars="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutResposta"
+            tools:layout_editor_absoluteX="0dp">
+
+        </android.support.v7.widget.RecyclerView>
+
 
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

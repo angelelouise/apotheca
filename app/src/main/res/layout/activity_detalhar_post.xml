@@ -7,19 +7,48 @@
     android:background="@color/background"
     tools:context=".activity.DetalharPostActivity">
 
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/AppTheme.PopupOverlay" />
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/layout_postagem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_vertical_margin"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:background="@drawable/cadastrar_background"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2">
+
+        <TextView
+            android:id="@+id/detalhes_turma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toTopOf="@+id/detalhar_post_titulo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
         <ImageButton
             android:id="@+id/detalhes_editar"
@@ -36,11 +65,11 @@
             android:id="@+id/detalhes_excluir"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:background="@color/colorText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/excluir"
-            android:background="@color/colorText"
-            android:layout_margin="@dimen/activity_horizontal_margin"/>
+            app:srcCompat="@drawable/excluir" />
 
         <TextView
             android:id="@+id/detalhar_post_titulo"
@@ -159,30 +188,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_postagem">
 
-        <Button
-            android:id="@+id/ver_comentarios"
-            android:layout_width="139dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/colorText"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingEnd="@dimen/activity_horizontal_margin"
-            android:text="@string/ver_comentarios"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ver_comentarios">
+            app:layout_constraintStart_toStartOf="parent">
 
             <ImageView
                 android:id="@+id/comentario_avatar"
@@ -200,28 +215,36 @@
                 android:id="@+id/comentario_descricao"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:hint="Adicione um comentário"
                 android:inputType="textMultiLine"
                 android:padding="8dp"
-                android:text="Adicione um comentário"
                 android:textColor="#DE000000"
-                android:textSize="14sp"
-                />
+                android:textSize="14sp" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/button3"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_gravity="center_vertical|end"
-                android:background="@color/colorText"
-                android:text="@string/publicar"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                android:background="@drawable/ic_menu_send">
+
+            </ImageButton>
 
         </LinearLayout>
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/lista_comentarios"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:scrollbars="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+        </android.support.v7.widget.RecyclerView>
 
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

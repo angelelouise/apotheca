@@ -32,6 +32,7 @@ public class CadastrarPostActivity extends AppCompatActivity {
     private Postagem p;
     private Usuario mUser;
     private int mSelecionada =-1;
+    private int tipo_activity =-1;
 
     private static class ViewHolder{
         TextView mTituloView, mDescricaoView, mTagView;
@@ -47,8 +48,9 @@ public class CadastrarPostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cadastrar_post);
         postagemViewModel = new PostagemViewModel(getApplication());
         Intent intent = getIntent();
+
         mTurmas = (ArrayList<Turma>) intent.getSerializableExtra(Constants.INTENT_TURMA);
-        mSelecionada = (int) intent.getSerializableExtra("selecionada"); //pega posição da turma selecionada na lista de turma
+        mSelecionada =  intent.getIntExtra("selecionada",-1); //pega posição da turma selecionada na lista de turma
         mUser = (Usuario) intent.getSerializableExtra(Constants.INTENT_USER);
 
         mTipos = new ArrayList<>();
@@ -79,11 +81,13 @@ public class CadastrarPostActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 Turma t = (Turma) mViewHolder.mTurma.getSelectedItem();
-                String tipo = mViewHolder.mTurma.getSelectedItem().toString();
+                String turma = mViewHolder.mTurma.getSelectedItem().toString();
+                String tipo = mViewHolder.mTipo.getSelectedItem().toString();
                 p = new Postagem(mViewHolder.mTituloView.getText().toString(), t.getNome_componente() , new Date().toString());
                 p.setDescricao(mViewHolder.mDescricaoView.getText().toString());
                 p.setAtivo(true);
                 p.setId_turma(t.getId_turma());
+                p.setTurma(turma);
                 if(tipo == TIPO0){
                     p.setTipo_postagem(0);
                 }else{

@@ -79,10 +79,10 @@ public class PostAdapter extends RecyclerView.Adapter{
                             Intent send = new Intent(mContext, DetalharPostActivity.class);
                             send.putExtra(Constants.INTENT_POSTAGEM, (Serializable) clickedDataItem);
                             mContext.startActivity(send);
-                        }else{//do tipo perguntas e respostas
-                            Intent send = new Intent(mContext, DetalharPerguntaActivity.class);
-                            send.putExtra(Constants.INTENT_POSTAGEM, (Serializable) clickedDataItem);
-                            mContext.startActivity(send);
+                        }else if (clickedDataItem.getTipo_postagem() == 0){//do tipo perguntas e respostas
+                            Intent sendP = new Intent(mContext, DetalharPerguntaActivity.class);
+                            sendP.putExtra(Constants.INTENT_POSTAGEM, (Serializable) clickedDataItem);
+                            mContext.startActivity(sendP);
                         }
 
                     }
