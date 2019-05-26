@@ -28,6 +28,12 @@ public class UsuarioRepository {
         usuario = usuarioDAO.findByCPF(cpf);
         return usuario;
     }
+    public Usuario findById(int id_usuario){
+
+        //if(netOn) > consulta usuário no serviço
+        usuario = usuarioDAO.findById(id_usuario);
+        return usuario;
+    }
     private class InsertASync extends AsyncTask<Usuario, Void, Void> {
         private UsuarioDAO usuarioDAO;
 
