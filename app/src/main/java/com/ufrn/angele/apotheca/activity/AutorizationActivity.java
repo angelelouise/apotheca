@@ -132,6 +132,10 @@ public class AutorizationActivity extends AppCompatActivity {
                     InformacoesUFRN info = new InformacoesUFRN();
                     Usuario aux = usuarioServiceUFRN.getUsuario(urlBase, params[0], apiKey, cpf);
                     ArrayList<Discente> dis = discenteServiceUFRN.getDiscentes(urlBase, params[0], apiKey, cpf);
+                    for (Discente d:dis
+                         ) {
+                        d.setId_usuario(aux.getId_usuario());
+                    }
                     ArrayList<Turma> turmas = null;
 
                     if (dis != null) {

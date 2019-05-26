@@ -228,10 +228,17 @@ public class MainActivity extends AppCompatActivity {
         //usuarioViewModel.findByLogin(user.getCpf_cnpj());
 
         usuarioRepository.inserir(usuario);
+        //Usuario teste=usuarioRepository.findByCPF(usuario.getCpf_cnpj());
+        //Usuario teste2=usuarioRepository.findById(usuario.getId_usuario());
+
+        //Log.d("teste1", teste.toString());
+        //Log.d("teste2", teste2.toString());
         for (Turma t: turmas) {
+            Log.d("turmaBanco", t.toString());
             turmaRepository.inserir(t);
         }
         for (Discente d: discentes) {
+            Log.d("discenteBanco", d.toString());
             discenteRepository.inserir(d);
         }
 
@@ -241,7 +248,10 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         switch (navItemIndex) {
             case 0:
-                return new HomeFragment();
+                HomeFragment homeFragment = new HomeFragment();
+                bundle.putSerializable("usuario", usuario);
+                homeFragment.setArguments(bundle);
+                return homeFragment;
             case 1:
                 Log.d("discentesMain",discentes.toString());
                 PerfilFragment perfilFragment =new PerfilFragment();
@@ -260,7 +270,10 @@ public class MainActivity extends AppCompatActivity {
                 turmasFragment.setArguments(bundle);
                 return turmasFragment;
             case 3:
-                return new PostsFragment();
+                PostsFragment postsFragment = new PostsFragment();
+                bundle.putSerializable("usuario", usuario);
+                postsFragment.setArguments(bundle);
+                return postsFragment;
             case 4:
                 return  new NotificacoesFragment();
 

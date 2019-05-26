@@ -11,24 +11,33 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.activity.DetalharPerguntaActivity;
 import com.ufrn.angele.apotheca.activity.DetalharPostActivity;
 import com.ufrn.angele.apotheca.dominio.Postagem;
+import com.ufrn.angele.apotheca.dominio.Usuario;
+import com.ufrn.angele.apotheca.outros.CircleTransform;
 import com.ufrn.angele.apotheca.outros.Constants;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class PostAdapter extends RecyclerView.Adapter{
 
     private final ArrayList<Postagem> mPostagens;
     private Context mContext;
+    private Usuario actualUser;
+    private Map<Postagem,Usuario> map;
 
 
-    public PostAdapter(Context context, ArrayList posts){
+    public PostAdapter(Context context, ArrayList posts, Usuario actualUser, Map<Postagem,Usuario> map){
         this.mPostagens=posts;
         this.mContext=context;
+        this.actualUser= actualUser;
+        this.map=map;
     }
 
     @NonNull
@@ -78,10 +87,12 @@ public class PostAdapter extends RecyclerView.Adapter{
                         if(clickedDataItem.getTipo_postagem() == 1){//do tipo livre
                             Intent send = new Intent(mContext, DetalharPostActivity.class);
                             send.putExtra(Constants.INTENT_POSTAGEM, (Serializable) clickedDataItem);
+                            send.putExtra(Constants.INTENT_USER, actualUser);
                             mContext.startActivity(send);
                         }else if (clickedDataItem.getTipo_postagem() == 0){//do tipo perguntas e respostas
                             Intent sendP = new Intent(mContext, DetalharPerguntaActivity.class);
                             sendP.putExtra(Constants.INTENT_POSTAGEM, (Serializable) clickedDataItem);
+                            sendP.putExtra(Constants.INTENT_USER, actualUser);
                             mContext.startActivity(sendP);
                         }
 
@@ -94,6 +105,14 @@ public class PostAdapter extends RecyclerView.Adapter{
             list_turma.setText(mPostagens.get(position).getTurma());
             list_timestamp.setText(mPostagens.get(position).getData_cadastro().toString());
             //list_avatar.setImageResource(mPostagens.get(position).getAvatar());
+            if(map!=null){
+                Glide.with(mContext).load(map.get(mPostagens.get(position)).getUrl_foto())
+                        .crossFade()
+                        .thumbnail(0.5f)
+                        .bitmapTransform(new CircleTransform(mContext))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(list_avatar);
+            }
         }
         @Override
         public void onClick(View view) {

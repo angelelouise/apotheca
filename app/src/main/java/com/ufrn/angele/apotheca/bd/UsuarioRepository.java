@@ -4,6 +4,7 @@ import android.app.Application;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.ufrn.angele.apotheca.dominio.Usuario;
 
@@ -29,9 +30,8 @@ public class UsuarioRepository {
         return usuario;
     }
     public Usuario findById(int id_usuario){
-
         //if(netOn) > consulta usuário no serviço
-        usuario = usuarioDAO.findById(id_usuario);
+        usuario = usuarioDAO.findByIdUsuario(id_usuario);
         return usuario;
     }
     private class InsertASync extends AsyncTask<Usuario, Void, Void> {
@@ -43,11 +43,16 @@ public class UsuarioRepository {
         }
         @Override
         protected Void doInBackground(Usuario... usuarios){
-            Usuario p = usuarios[0];
-            if(p.getId_usuario() == 0)
-                usuarioDAO.inserir(p);
-            else
-                usuarioDAO.atualizar(p);
+//            Usuario p = usuarios[0];
+////            if(p.getId_usuario() == 0)
+////                usuarioDAO.inserir(p);
+////            else
+////                usuarioDAO.atualizar(p);
+            try {
+                usuarioDAO.inserir(usuarios[0]);
+            }catch(Exception e){
+                Log.e(UsuarioRepository.class.getName(), "ERRO", e);
+            }
             return null;
         }
     }

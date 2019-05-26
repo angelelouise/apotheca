@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,10 +19,12 @@ import android.view.ViewGroup;
 import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.adapters.PostAdapter;
 import com.ufrn.angele.apotheca.dominio.Postagem;
+import com.ufrn.angele.apotheca.dominio.Usuario;
 import com.ufrn.angele.apotheca.viewmodel.PostagemViewModel;
+import com.ufrn.angele.apotheca.viewmodel.UsuarioViewModel;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -55,6 +58,9 @@ public class HomeFragment extends Fragment {
     private ArrayList<Postagem> posts;
     private PostagemViewModel postagemViewModel;
     private Context context;
+    private Usuario usuario;
+    private UsuarioViewModel usuarioViewModel;
+    private HashMap<Postagem, Usuario> mapPostagem = new HashMap<>();
 
     public HomeFragment() {
         // Required empty public constructor
@@ -86,10 +92,24 @@ public class HomeFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
+        if (getArguments() != null) {
+            usuario = (Usuario) getArguments().getSerializable("usuario");
+        }
         //criar dados para testes
+        usuarioViewModel = ViewModelProviders.of(this).get(UsuarioViewModel.class);
+        postagemViewModel = ViewModelProviders.of(this).get(PostagemViewModel.class);
         posts = new ArrayList<>();
-        posts.add(new Postagem("","",new Date().toString()));
+        //posts.add(new Postagem("","",new Date().toString()));
+        //mapPostagem.put(new Postagem("","",new Date().toString()), new Usuario());
+        postagemViewModel.getListaPostagem().observe(this, new Observer<List<Postagem>>() {
+            @Override
+            public void onChanged(@Nullable List<Postagem> post) {
+                Log.d("post","post" +post);
+                posts.clear();
+                posts.addAll(post);
+                new getAutor().execute(post);
+            }
+        });
         //posts.add(new Postagem("Resolução de exercícios em sala","Controladores",new Date()));
 
     }
@@ -103,7 +123,7 @@ public class HomeFragment extends Fragment {
         mViewHolder.layoutManager = new LinearLayoutManager(getActivity());
         mViewHolder.recyclerView.setLayoutManager( mViewHolder.layoutManager);
 
-        mViewHolder.mAdapter = new PostAdapter(context,posts);
+        mViewHolder.mAdapter = new PostAdapter(context,posts,usuario, mapPostagem);
         mViewHolder.recyclerView.setAdapter(mViewHolder.mAdapter);
 
         return mViewHolder.view;
@@ -132,15 +152,14 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        postagemViewModel = ViewModelProviders.of(this).get(PostagemViewModel.class);
+
         postagemViewModel.getListaPostagem().observe(this, new Observer<List<Postagem>>() {
             @Override
             public void onChanged(@Nullable List<Postagem> post) {
-                //postagemAdapter.setPalavras(post);
                 Log.d("post","post" +post);
                 posts.clear();
                 posts.addAll(post);
-                mViewHolder.mAdapter.notifyDataSetChanged();
+                new getAutor().execute(post);
             }
         });
     }
@@ -164,5 +183,43 @@ public class HomeFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+    private class getAutor extends AsyncTask<List<Postagem>, Void, Boolean> {
+        protected void onPreExecute() {
+            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+        }
+
+        protected Boolean doInBackground(List<Postagem>... params) {
+
+            try {
+                for (Postagem c : params[0]) {
+
+                    try {
+                        Usuario user = usuarioViewModel.findById(c.getId_autor());
+                        Log.d("user comentario", user.toString());
+                        mapPostagem.put(c, user);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("autor", mapPostagem.toString());
+                }
+
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+
+            if (result) {
+                mViewHolder.mAdapter.notifyDataSetChanged();
+                Log.d("id", "deu certo");
+            }
+
+        }
     }
 }

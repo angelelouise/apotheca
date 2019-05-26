@@ -10,17 +10,24 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.dominio.Comentario;
+import com.ufrn.angele.apotheca.dominio.Usuario;
+import com.ufrn.angele.apotheca.outros.CircleTransform;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class ComentarioAdapter extends RecyclerView.Adapter {
 
     private List<Comentario> comentarios;
     private Context context;
+    private HashMap<Comentario, Usuario> map;
 
-    public ComentarioAdapter( Context context,List<Comentario> comentarios) {
+    public ComentarioAdapter( Context context,HashMap<Comentario, Usuario> map, List<Comentario> comentarios) {
+        this.map = map;
         this.comentarios = comentarios;
         this.context = context;
     }
@@ -56,7 +63,17 @@ public class ComentarioAdapter extends RecyclerView.Adapter {
         }
         public void bindView(int position){
             comentario_titulo.setText(comentarios.get(position).getTitulo());
-            comentario_autor.setText( Integer.toString(comentarios.get(position).getId_autor()));
+            if(map!=null){
+                comentario_autor.setText(map.get(comentarios.get(position)).getNome());
+
+                Glide.with(context).load(map.get(comentarios.get(position)).getUrl_foto())
+                        .crossFade()
+                        .thumbnail(0.5f)
+                        .bitmapTransform(new CircleTransform(context))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(comentario_user);
+            }
+
 
         }
         @Override

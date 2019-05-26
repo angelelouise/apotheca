@@ -13,9 +13,11 @@ import android.view.ViewGroup;
 import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.adapters.PostAdapter;
 import com.ufrn.angele.apotheca.dominio.Postagem;
+import com.ufrn.angele.apotheca.dominio.Usuario;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,8 +37,9 @@ public class PostsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private Context mContext;
-
+    private Usuario mUser;
     private OnFragmentInteractionListener mListener;
+    private HashMap<Postagem,Usuario> map;
 
     public PostsFragment() {
         // Required empty public constructor
@@ -76,6 +79,9 @@ public class PostsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        if (getArguments() != null) {
+            mUser = (Usuario) getArguments().getSerializable("usuario");
+        }
         //criar dados para testes
         posts = new ArrayList<>();
         posts.add(new Postagem("Lista de exercício 1","Linguagem de Programação",new Date().toString()));
@@ -91,7 +97,7 @@ public class PostsFragment extends Fragment {
         mViewHolder.layoutManager = new LinearLayoutManager(getActivity());
         mViewHolder.recyclerView.setLayoutManager( mViewHolder.layoutManager);
 
-        mViewHolder.mAdapter = new PostAdapter(container.getContext(),posts);
+        mViewHolder.mAdapter = new PostAdapter(container.getContext(),posts,mUser, map);
         mViewHolder.recyclerView.setAdapter(mViewHolder.mAdapter);
 
         return mViewHolder.view;

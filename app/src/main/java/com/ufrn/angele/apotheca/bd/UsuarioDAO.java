@@ -24,5 +24,5 @@ public interface UsuarioDAO {
     public Usuario findByCPF(Long cpf);
 
     @Query("SELECT * FROM usuario WHERE id_usuario = :id_usuario LIMIT 1")
-    public  Usuario findById(int id_usuario);
+    public Usuario findByIdUsuario(int id_usuario);
 }
