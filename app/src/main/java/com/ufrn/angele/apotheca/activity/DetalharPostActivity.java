@@ -48,11 +48,11 @@ public class DetalharPostActivity extends AppCompatActivity {
     private VotoViewModel votoViewModel;
     private Usuario mUser;
     private class ViewHolder{
-        TextView titulo, descricao, turma;
+        TextView titulo, descricao, turma, post_count_votos, post_count_negativacoes;
         android.support.v7.widget.Toolbar toolbar;
         RecyclerView lista_comentarios;
         ComentarioAdapter comentarioAdapter;
-        ImageButton cadastrar_comentario;
+        ImageButton cadastrar_comentario, post_vote, post_downvote;
         EditText titulo_comentario;
         ImageView avatar;
     }
@@ -71,6 +71,10 @@ public class DetalharPostActivity extends AppCompatActivity {
         mViewHolder.turma = findViewById(R.id.detalhes_turma);
         mViewHolder.titulo= findViewById(R.id.detalhar_post_titulo);
         mViewHolder.descricao= findViewById(R.id.detalhar_post_descricao);
+        mViewHolder.post_vote = findViewById(R.id.post_vote);
+        mViewHolder.post_downvote = findViewById(R.id.post_downvote);
+        mViewHolder.post_count_votos = findViewById(R.id.post_count_vote);
+        mViewHolder.post_count_negativacoes = findViewById(R.id.post_count_downvote);
         mViewHolder.titulo_comentario = findViewById(R.id.detalhar_post_comentario_descricao);
         mViewHolder.cadastrar_comentario = findViewById(R.id.detalhar_post_publicar_comentario);
         //set postagem
@@ -81,6 +85,7 @@ public class DetalharPostActivity extends AppCompatActivity {
         setSupportActionBar(mViewHolder.toolbar);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setHomeButtonEnabled(true);
+        //atualizar contadores
 
         //set comentario adapter
         mViewHolder.avatar = findViewById(R.id.detalhar_post_comentario_avatar);
@@ -162,7 +167,38 @@ public class DetalharPostActivity extends AppCompatActivity {
                     }
                 }
         );
-        //set votos
+        new atualizarVotoPostagem().execute(mPostagem);
+        new atualizarNegativacaoPostagem().execute(mPostagem);
+        //listener dos votos/downvotes do post
+        mViewHolder.post_vote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Voto post_vote = new Voto(0,
+                        mPostagem.getId_postagem(),
+                        -1,
+                        true,
+                        false,
+                        mUser.getId_usuario(),
+                        new Date().toString());
+                votoViewModel.inserir(post_vote);
+                new atualizarVotoPostagem().execute(mPostagem);
+            }
+        });
+        mViewHolder.post_downvote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Voto post_vote = new Voto(0,
+                        mPostagem.getId_postagem(),
+                        -1,
+                        false,
+                        true,
+                        mUser.getId_usuario(),
+                        new Date().toString());
+                votoViewModel.inserir(post_vote);
+                new atualizarNegativacaoPostagem().execute(mPostagem);
+            }
+        });
+
 
 
     }
@@ -394,4 +430,62 @@ public class DetalharPostActivity extends AppCompatActivity {
         }
     }
 
+    private class atualizarVotoPostagem extends AsyncTask<Postagem, Void, Integer>{
+        protected void onPreExecute() {
+            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+        }
+
+        protected Integer doInBackground(Postagem... params) {
+
+            try {
+                int count_votos =  votoViewModel.getCountVotosPostagem(mPostagem.getId_postagem());
+
+                return count_votos;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return 0;
+        }
+        @Override
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+
+            if (result>0) {
+                mViewHolder.post_count_votos.setText(String.valueOf(result));
+                Log.d("id", "executou atualizar voto postagem");
+            }
+
+        }
+    }
+    private class atualizarNegativacaoPostagem extends AsyncTask<Postagem, Void, Integer>{
+        protected void onPreExecute() {
+            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+        }
+
+        protected Integer doInBackground(Postagem... params) {
+
+            try {
+
+                int count_negativacoes =  votoViewModel.getCountNegativacoesPostagem(mPostagem.getId_postagem());
+
+                return count_negativacoes;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return 0;
+        }
+        @Override
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+
+            if (result>0) {
+                mViewHolder.post_count_negativacoes.setText(String.valueOf(result));
+
+                Log.d("id", "executou atualizar negativação postagem");
+            }
+
+        }
+    }
 }

@@ -20,10 +20,10 @@ public interface VotoDAO {
     @Delete
     public void deletar (Voto voto);
 
-    @Query("SELECT COUNT(id) FROM voto WHERE id_postagem = :id_postagem and id_comentario is null and voto = 1")
+    @Query("SELECT COUNT(id) FROM voto WHERE id_postagem = :id_postagem and id_comentario <0 and voto = 1")
     public int countVotosPostagem(int id_postagem);
 
-    @Query("SELECT COUNT(id) FROM voto WHERE id_postagem = :id_postagem and id_comentario is null and negativacao = 1")
+    @Query("SELECT COUNT(id) FROM voto WHERE id_postagem = :id_postagem and id_comentario <0 and negativacao = 1")
     public int countNegativacoesPostagem(int id_postagem);
 
     @Query("SELECT COUNT(*) FROM voto WHERE id_postagem = :id_postagem and id_comentario = :id_comentario and voto = 1 and negativacao =0")
