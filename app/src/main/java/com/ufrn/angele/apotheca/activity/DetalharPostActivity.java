@@ -1,5 +1,6 @@
 package com.ufrn.angele.apotheca.activity;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -20,14 +21,19 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.adapters.ComentarioAdapter;
+import com.ufrn.angele.apotheca.adapters.ComentarioAdapterListener;
+import com.ufrn.angele.apotheca.bd.ComentarioRepository;
 import com.ufrn.angele.apotheca.bd.UsuarioRepository;
+import com.ufrn.angele.apotheca.bd.VotoRepository;
 import com.ufrn.angele.apotheca.dominio.Comentario;
 import com.ufrn.angele.apotheca.dominio.Postagem;
 import com.ufrn.angele.apotheca.dominio.Usuario;
+import com.ufrn.angele.apotheca.dominio.Voto;
 import com.ufrn.angele.apotheca.outros.CircleTransform;
 import com.ufrn.angele.apotheca.outros.Constants;
 import com.ufrn.angele.apotheca.viewmodel.ComentarioViewModel;
 import com.ufrn.angele.apotheca.viewmodel.UsuarioViewModel;
+import com.ufrn.angele.apotheca.viewmodel.VotoViewModel;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,8 +45,10 @@ public class DetalharPostActivity extends AppCompatActivity {
     private List<Comentario> comentarios;
     private ComentarioViewModel comentarioViewModel;
     private HashMap<Comentario, Usuario> mapComentario = new HashMap<>();
+    private HashMap<Comentario, Integer> mapVotos = new HashMap<>();
+    private HashMap<Comentario, Integer> mapNegativacoes = new HashMap<>();
     private UsuarioViewModel usuarioViewModel;
-    private UsuarioRepository usuarioRepository;
+    private VotoViewModel votoViewModel;
     private Usuario mUser;
     private class ViewHolder{
         TextView titulo, descricao, turma;
@@ -87,11 +95,41 @@ public class DetalharPostActivity extends AppCompatActivity {
                 .into(mViewHolder.avatar);
         mViewHolder.lista_comentarios = findViewById(R.id.detalhar_post_lista_comentarios);
         comentarios = new ArrayList<Comentario>();
-        mViewHolder.comentarioAdapter = new ComentarioAdapter(DetalharPostActivity.this, mapComentario,comentarios);
+        votoViewModel = ViewModelProviders.of(this).get(VotoViewModel.class);
+        mViewHolder.comentarioAdapter = new ComentarioAdapter(DetalharPostActivity.this,
+                mapComentario,
+                comentarios,
+                mapVotos,
+                new ComentarioAdapterListener() {
+                    @Override
+                    public void voteOnClick(View v, int position) {
+                        Voto voto = new Voto(0,
+                                mPostagem.getId_postagem(),
+                                comentarios.get(position).getId(),
+                                true,
+                                false,
+                                mUser.getId_usuario(),
+                                new Date().toString());
+                        votoViewModel.inserir(voto);
+                        atualizarVotos();
+
+                    }
+
+                    @Override
+                    public void downvoteOnClick(View v, int position) {
+                        Voto downvote = new Voto(0,
+                                mPostagem.getId_postagem(),
+                                comentarios.get(position).getId(),
+                                false,
+                                true,
+                                mUser.getId_usuario(),
+                                new Date().toString());
+                        votoViewModel.inserir(downvote);
+                    }
+                });
         mViewHolder.lista_comentarios.setAdapter(mViewHolder.comentarioAdapter);
         mViewHolder.lista_comentarios.setLayoutManager(new LinearLayoutManager(this));
         //set comentario viewmodel live data
-        usuarioRepository =new UsuarioRepository(this.getApplication());
         usuarioViewModel = ViewModelProviders.of(this).get(UsuarioViewModel.class);
         comentarioViewModel = ViewModelProviders.of(this).get(ComentarioViewModel.class);
         comentarioViewModel.getListaComentarios(mPostagem.getId_postagem()).observe(this, new Observer<List<Comentario>>() {
@@ -100,6 +138,7 @@ public class DetalharPostActivity extends AppCompatActivity {
                 //postagemAdapter.setPalavras(post);
                 comentarios.clear();
                 comentarios.addAll(comentario);
+                atualizarVotos();
                 new getAutor().execute(comentario);
             }
         });
@@ -122,6 +161,9 @@ public class DetalharPostActivity extends AppCompatActivity {
                     }
                 }
         );
+        //set votos
+
+
     }
     @Override
     public boolean onSupportNavigateUp(){
@@ -129,6 +171,19 @@ public class DetalharPostActivity extends AppCompatActivity {
         return true;
     }
 
+    private void atualizarVotos(){
+        mapVotos.clear();
+        for (final Comentario c:comentarios) {
+            votoViewModel.getCountVotosComentarios(mPostagem.getId_postagem(),c.getId()).observe(this, new Observer<Integer>() {
+                @Override
+                public void onChanged(@Nullable Integer integer) {
+                    mapVotos.put(c,integer);
+                    Log.d("voto",mapVotos.toString() + "Size: " + mapVotos.size());
+                }
+            });
+        }
+        mViewHolder.comentarioAdapter.notifyDataSetChanged();
+    }
     private class getAutor extends AsyncTask<List<Comentario>, Void, Boolean>{
         protected void onPreExecute() {
             //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
@@ -144,6 +199,7 @@ public class DetalharPostActivity extends AppCompatActivity {
                         Usuario user = usuarioViewModel.findById(c.getId_autor());
                         //Log.d("user comentario", user.toString());
                         mapComentario.put(c, user);
+
                     }catch (Exception e){
                         e.printStackTrace();
                     }

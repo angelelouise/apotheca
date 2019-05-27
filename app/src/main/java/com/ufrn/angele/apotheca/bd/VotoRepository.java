@@ -15,7 +15,10 @@ public class VotoRepository {
     private LiveData<List<Integer>> listaComentario;
     private LiveData<Integer> comentario;
     private VotoDAO votoDAO;
-
+    private LiveData<Integer> countVotosComentarios;
+    private LiveData<Integer> countNegativacoesComentarios;
+    private LiveData<Integer> countVotosPostagem;
+    private LiveData<Integer> countNegativacoesPostagem;
     private ConnectivityManager cm;
     private boolean hasNet;
 
@@ -35,6 +38,31 @@ public class VotoRepository {
     public void atualizar (Voto voto){
         new VotoRepository.InsertASync(votoDAO).execute(voto);
         //postagemDAOFirestore.atualizar(postagem);
+    }
+
+    public LiveData<Integer> getCountVotosComentario(int id_postagem, int id_comentario) {
+        if (countVotosComentarios==null){
+            countVotosComentarios = votoDAO.countVotosComentario(id_postagem,id_comentario);
+        }
+        return countVotosComentarios;
+    }
+    public LiveData<Integer> getCountNegativacoesComentarios(int id_postagem, int id_comentario) {
+        if (countVotosComentarios==null){
+            countNegativacoesComentarios = votoDAO.countNegativacoesComentario(id_postagem,id_comentario);
+        }
+        return countVotosComentarios;
+    }
+    public LiveData<Integer> getCountVotosPostagem(int id_postagem) {
+        if (countVotosComentarios==null){
+            countVotosPostagem = votoDAO.countVotosPostagem(id_postagem);
+        }
+        return countVotosComentarios;
+    }
+    public LiveData<Integer> getCountNegativacoesPostagem(int id_postagem) {
+        if (countVotosComentarios==null){
+            countNegativacoesPostagem = votoDAO.countNegativacoesPostagem(id_postagem);
+        }
+        return countVotosComentarios;
     }
 
     private class InsertASync extends AsyncTask<Voto, Void, Void> {

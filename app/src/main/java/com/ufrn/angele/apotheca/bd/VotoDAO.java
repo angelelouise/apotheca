@@ -27,11 +27,11 @@ public interface VotoDAO {
     public LiveData<Integer> countVotosPostagem(int id_postagem);
 
     @Query("SELECT COUNT(id) FROM voto WHERE id_postagem = :id_postagem and id_comentario is null and negativacao is not null")
-    public LiveData<List<Integer>> countNegativacoesPostagem(int id_postagem);
+    public LiveData<Integer> countNegativacoesPostagem(int id_postagem);
 
     @Query("SELECT COUNT(id) FROM voto WHERE id_postagem = :id_postagem and id_comentario = :id_comentario and voto is not null")
     public LiveData<Integer> countVotosComentario(int id_postagem, int id_comentario);
 
     @Query("SELECT COUNT(id) FROM voto WHERE id_postagem = :id_postagem and id_comentario = :id_comentario and negativacao is not null")
-    public LiveData<List<Integer>> countNegativacoesPostagem(int id_postagem, int id_comentario);
+    public LiveData<Integer> countNegativacoesComentario(int id_postagem, int id_comentario);
 }
