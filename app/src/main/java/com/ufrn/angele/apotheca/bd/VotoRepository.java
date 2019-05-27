@@ -15,10 +15,10 @@ public class VotoRepository {
     private LiveData<List<Integer>> listaComentario;
     private LiveData<Integer> comentario;
     private VotoDAO votoDAO;
-    private LiveData<Integer> countVotosComentarios;
-    private LiveData<Integer> countNegativacoesComentarios;
-    private LiveData<Integer> countVotosPostagem;
-    private LiveData<Integer> countNegativacoesPostagem;
+    private int countVotosComentarios;
+    private int countNegativacoesComentarios;
+    private int countVotosPostagem;
+    private int countNegativacoesPostagem;
     private ConnectivityManager cm;
     private boolean hasNet;
 
@@ -40,29 +40,21 @@ public class VotoRepository {
         //postagemDAOFirestore.atualizar(postagem);
     }
 
-    public LiveData<Integer> getCountVotosComentario(int id_postagem, int id_comentario) {
-        if (countVotosComentarios==null){
-            countVotosComentarios = votoDAO.countVotosComentario(id_postagem,id_comentario);
-        }
+    public int getCountVotosComentario(int id_postagem, int id_comentario) {
+        countVotosComentarios = votoDAO.countVotosComentario(id_postagem,id_comentario);
         return countVotosComentarios;
     }
-    public LiveData<Integer> getCountNegativacoesComentarios(int id_postagem, int id_comentario) {
-        if (countVotosComentarios==null){
-            countNegativacoesComentarios = votoDAO.countNegativacoesComentario(id_postagem,id_comentario);
-        }
-        return countVotosComentarios;
+    public int getCountNegativacoesComentarios(int id_postagem, int id_comentario) {
+        countNegativacoesComentarios = votoDAO.countNegativacoesComentario(id_postagem,id_comentario);
+        return countNegativacoesComentarios;
     }
-    public LiveData<Integer> getCountVotosPostagem(int id_postagem) {
-        if (countVotosComentarios==null){
-            countVotosPostagem = votoDAO.countVotosPostagem(id_postagem);
-        }
-        return countVotosComentarios;
+    public int getCountVotosPostagem(int id_postagem) {
+        countVotosPostagem = votoDAO.countVotosPostagem(id_postagem);
+        return countVotosPostagem;
     }
-    public LiveData<Integer> getCountNegativacoesPostagem(int id_postagem) {
-        if (countVotosComentarios==null){
-            countNegativacoesPostagem = votoDAO.countNegativacoesPostagem(id_postagem);
-        }
-        return countVotosComentarios;
+    public int getCountNegativacoesPostagem(int id_postagem) {
+        countNegativacoesPostagem = votoDAO.countNegativacoesPostagem(id_postagem);
+        return countNegativacoesPostagem;
     }
 
     private class InsertASync extends AsyncTask<Voto, Void, Void> {

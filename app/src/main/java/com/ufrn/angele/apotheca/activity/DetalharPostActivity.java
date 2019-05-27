@@ -1,10 +1,10 @@
 package com.ufrn.angele.apotheca.activity;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -22,9 +22,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.adapters.ComentarioAdapter;
 import com.ufrn.angele.apotheca.adapters.ComentarioAdapterListener;
-import com.ufrn.angele.apotheca.bd.ComentarioRepository;
-import com.ufrn.angele.apotheca.bd.UsuarioRepository;
-import com.ufrn.angele.apotheca.bd.VotoRepository;
 import com.ufrn.angele.apotheca.dominio.Comentario;
 import com.ufrn.angele.apotheca.dominio.Postagem;
 import com.ufrn.angele.apotheca.dominio.Usuario;
@@ -100,6 +97,7 @@ public class DetalharPostActivity extends AppCompatActivity {
                 mapComentario,
                 comentarios,
                 mapVotos,
+                mapNegativacoes,
                 new ComentarioAdapterListener() {
                     @Override
                     public void voteOnClick(View v, int position) {
@@ -111,7 +109,7 @@ public class DetalharPostActivity extends AppCompatActivity {
                                 mUser.getId_usuario(),
                                 new Date().toString());
                         votoViewModel.inserir(voto);
-                        atualizarVotos();
+                        new atualizarVoto().execute(comentarios.get(position));
 
                     }
 
@@ -125,6 +123,7 @@ public class DetalharPostActivity extends AppCompatActivity {
                                 mUser.getId_usuario(),
                                 new Date().toString());
                         votoViewModel.inserir(downvote);
+                        new atualizarNegativacao().execute(comentarios.get(position));
                     }
                 });
         mViewHolder.lista_comentarios.setAdapter(mViewHolder.comentarioAdapter);
@@ -138,8 +137,10 @@ public class DetalharPostActivity extends AppCompatActivity {
                 //postagemAdapter.setPalavras(post);
                 comentarios.clear();
                 comentarios.addAll(comentario);
-                atualizarVotos();
+                //atualizarVotos();
                 new getAutor().execute(comentario);
+                new atualizarVotos().execute(comentario);
+                new atualizarNegativacoes().execute(comentario);
             }
         });
 
@@ -171,19 +172,186 @@ public class DetalharPostActivity extends AppCompatActivity {
         return true;
     }
 
-    private void atualizarVotos(){
-        mapVotos.clear();
-        for (final Comentario c:comentarios) {
-            votoViewModel.getCountVotosComentarios(mPostagem.getId_postagem(),c.getId()).observe(this, new Observer<Integer>() {
-                @Override
-                public void onChanged(@Nullable Integer integer) {
-                    mapVotos.put(c,integer);
-                    Log.d("voto",mapVotos.toString() + "Size: " + mapVotos.size());
-                }
-            });
-        }
-        mViewHolder.comentarioAdapter.notifyDataSetChanged();
+
+    private class atualizarVotos extends AsyncTask<List<Comentario>, Void, Boolean>{
+    protected void onPreExecute() {
+        //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
     }
+
+    protected Boolean doInBackground(List<Comentario>... params) {
+
+        try {
+            for (Comentario c:params[0]) {
+
+                try{
+                    int count_votos =  votoViewModel.getCountVotosComentarios(mPostagem.getId_postagem(),c.getId());
+                    //Log.d("user comentario", user.toString());
+                    if(mapVotos.get(c)==null){
+                        mapVotos.put(c, count_votos);
+                        Log.d("map",mapVotos.toString() + "total: " + count_votos);
+                    }else{
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            mapVotos.replace(c, count_votos);
+                        }else {
+                            mapVotos.put(c, count_votos);
+                        }
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+    @Override
+    protected void onPostExecute(Boolean result) {
+        super.onPostExecute(result);
+
+        if (result) {
+            mViewHolder.comentarioAdapter.notifyDataSetChanged();
+            Log.d("id", "deu certo");
+        }
+
+    }
+}
+
+    private class atualizarVoto extends AsyncTask<Comentario, Void, Boolean>{
+        protected void onPreExecute() {
+            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+        }
+
+        protected Boolean doInBackground(Comentario... params) {
+
+            try {
+
+                int count_votos =  votoViewModel.getCountVotosComentarios(mPostagem.getId_postagem(),params[0].getId());
+
+
+                //Log.d("user comentario", user.toString());
+                if(mapVotos.get(params[0])==null){
+                    mapVotos.put(params[0], count_votos);
+                    Log.d("map",mapVotos.toString() + "total: " + count_votos);
+                }else{
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        mapVotos.replace(params[0], count_votos);
+                    }else {
+                        mapVotos.put(params[0], count_votos);
+                    }
+                }
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+
+            if (result) {
+                mViewHolder.comentarioAdapter.notifyDataSetChanged();
+                Log.d("id", "deu certo");
+            }
+
+        }
+    }
+
+    private class atualizarNegativacoes extends AsyncTask<List<Comentario>, Void, Boolean>{
+        protected void onPreExecute() {
+            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+        }
+
+        protected Boolean doInBackground(List<Comentario>... params) {
+
+            try {
+                for (Comentario c:params[0]) {
+
+                    try{
+                        int count_negativacoes = votoViewModel.getCountNegativacoesComentarios(mPostagem.getId_postagem(),c.getId());
+                        //Log.d("user comentario", user.toString());
+                        if(mapNegativacoes.get(c)==null){
+                            mapNegativacoes.put(c, count_negativacoes);
+                            Log.d("mapNegativo",mapNegativacoes.toString() + "total: " + count_negativacoes);
+                        }else{
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                mapNegativacoes.replace(c, count_negativacoes);
+                            }else {
+                                mapNegativacoes.put(c, count_negativacoes);
+                            }
+                        }
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+
+            if (result) {
+                mViewHolder.comentarioAdapter.notifyDataSetChanged();
+                Log.d("id", "rodou  atualizar Negativacoes");
+            }
+
+        }
+    }
+
+    private class atualizarNegativacao extends AsyncTask<Comentario, Void, Boolean>{
+        protected void onPreExecute() {
+            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+        }
+
+        protected Boolean doInBackground(Comentario... params) {
+
+            try {
+                int count_negativacoes = votoViewModel.getCountNegativacoesComentarios(mPostagem.getId_postagem(),params[0].getId());
+
+                //Log.d("user comentario", user.toString());
+                if(mapNegativacoes.get(params[0])==null){
+                    mapNegativacoes.put(params[0], count_negativacoes);
+                    Log.d("mapNegativo2",mapNegativacoes.toString() + "total: " + count_negativacoes);
+                }else{
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        mapNegativacoes.replace(params[0], count_negativacoes);
+                        Log.d("mapNegativo2",mapNegativacoes.toString() + "total: " + count_negativacoes);
+                    }else {
+                        mapNegativacoes.put(params[0], count_negativacoes);
+                    }
+                }
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+
+            if (result) {
+                mViewHolder.comentarioAdapter.notifyDataSetChanged();
+                Log.d("id", "rodou  atualizar Negativacao");
+            }
+
+        }
+    }
+
     private class getAutor extends AsyncTask<List<Comentario>, Void, Boolean>{
         protected void onPreExecute() {
             //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);

@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ufrn.angele.apotheca.R;
-import com.ufrn.angele.apotheca.bd.ComentarioRepository;
 import com.ufrn.angele.apotheca.dominio.Comentario;
 import com.ufrn.angele.apotheca.dominio.Usuario;
 import com.ufrn.angele.apotheca.outros.CircleTransform;
@@ -30,16 +29,19 @@ public class ComentarioAdapter extends RecyclerView.Adapter {
     private HashMap<Comentario, Usuario> map;
     private ComentarioAdapterListener comentarioAdapterListener;
     private HashMap<Comentario, Integer> mapVotos;
+    private HashMap<Comentario, Integer> mapNegativacoes;
     public ComentarioAdapter( Context context,
                               HashMap<Comentario,Usuario> map,
                               List<Comentario> comentarios,
                               HashMap<Comentario, Integer> mapVotos,
+                              HashMap<Comentario, Integer> mapNegativacoes,
                               ComentarioAdapterListener comentarioAdapterListener) {
         this.map = map;
         this.comentarios = comentarios;
         this.context = context;
         this.comentarioAdapterListener=comentarioAdapterListener;
         this.mapVotos =mapVotos;
+        this.mapNegativacoes=mapNegativacoes;
     }
 
     @NonNull
@@ -79,7 +81,14 @@ public class ComentarioAdapter extends RecyclerView.Adapter {
             comentario_titulo.setText(comentarios.get(position).getTitulo());
             if(map!=null){
                 comentario_autor.setText(map.get(comentarios.get(position)).getNome());
-
+                if(mapVotos.get(comentarios.get(position)) != null){
+                    int aux= mapVotos.get(comentarios.get(position));
+                    comentario_counter_votes.setText(String.valueOf(aux));
+                }
+                if(mapNegativacoes.get(comentarios.get(position)) != null){
+                    int aux2= mapNegativacoes.get(comentarios.get(position));
+                    comentario_counter_downvotes.setText(String.valueOf(aux2));
+                }
                 Glide.with(context).load(map.get(comentarios.get(position)).getUrl_foto())
                         .crossFade()
                         .thumbnail(0.5f)
@@ -87,14 +96,7 @@ public class ComentarioAdapter extends RecyclerView.Adapter {
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(comentario_user);
             }
-            if(mapVotos!=null){
 
-                if(mapVotos.get(comentarios.get(position)) != null){
-                    int aux= mapVotos.get(comentarios.get(position));
-                    comentario_counter_votes.setText(String.valueOf(aux));
-                }
-
-            }
             comentario_vote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
