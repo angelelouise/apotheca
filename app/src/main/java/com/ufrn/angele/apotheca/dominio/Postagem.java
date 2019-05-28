@@ -11,7 +11,7 @@ public class Postagem implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id_postagem;
     private int id_autor;
-    private int tipo_postagem;
+//    private int tipo_postagem;
     private String titulo;
     private int id_turma;
     private String turma;
@@ -24,7 +24,7 @@ public class Postagem implements Serializable {
         return "Postagem{" +
                 "id_postagem=" + id_postagem +
                 ", id_autor=" + id_autor +
-                ", tipo_postagem=" + tipo_postagem +
+                ", tipo_postagem=" +
                 ", titulo='" + titulo + '\'' +
                 ", id_turma=" + id_turma +
                 ", turma='" + turma + '\'' +
@@ -64,13 +64,13 @@ public class Postagem implements Serializable {
         this.id_autor = id_autor;
     }
 
-    public int getTipo_postagem() {
-        return tipo_postagem;
-    }
-
-    public void setTipo_postagem(int tipo_postagem) {
-        this.tipo_postagem = tipo_postagem;
-    }
+//    public int getTipo_postagem() {
+//        return tipo_postagem;
+//    }
+//
+//    public void setTipo_postagem(int tipo_postagem) {
+//        this.tipo_postagem = tipo_postagem;
+//    }
 
     public int getId_turma() {
         return id_turma;

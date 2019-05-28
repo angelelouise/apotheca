@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ufrn.angele.apotheca.R;
-import com.ufrn.angele.apotheca.activity.DetalharPerguntaActivity;
 import com.ufrn.angele.apotheca.activity.DetalharPostActivity;
 import com.ufrn.angele.apotheca.dominio.Postagem;
 import com.ufrn.angele.apotheca.dominio.Usuario;
@@ -84,17 +83,21 @@ public class PostAdapter extends RecyclerView.Adapter{
                     // check if item still exists
                     if(pos != RecyclerView.NO_POSITION){
                         Postagem clickedDataItem = mPostagens.get(pos);
-                        if(clickedDataItem.getTipo_postagem() == 1){//do tipo livre
-                            Intent send = new Intent(mContext, DetalharPostActivity.class);
-                            send.putExtra(Constants.INTENT_POSTAGEM, (Serializable) clickedDataItem);
-                            send.putExtra(Constants.INTENT_USER, actualUser);
-                            mContext.startActivity(send);
-                        }else if (clickedDataItem.getTipo_postagem() == 0){//do tipo perguntas e respostas
-                            Intent sendP = new Intent(mContext, DetalharPerguntaActivity.class);
-                            sendP.putExtra(Constants.INTENT_POSTAGEM, (Serializable) clickedDataItem);
-                            sendP.putExtra(Constants.INTENT_USER, actualUser);
-                            mContext.startActivity(sendP);
-                        }
+                        Intent send = new Intent(mContext, DetalharPostActivity.class);
+                        send.putExtra(Constants.INTENT_POSTAGEM, (Serializable) clickedDataItem);
+                        send.putExtra(Constants.INTENT_USER, actualUser);
+                        mContext.startActivity(send);
+//                        if(clickedDataItem.getTipo_postagem() == 1){//do tipo livre
+//                            Intent send = new Intent(mContext, DetalharPostActivity.class);
+//                            send.putExtra(Constants.INTENT_POSTAGEM, (Serializable) clickedDataItem);
+//                            send.putExtra(Constants.INTENT_USER, actualUser);
+//                            mContext.startActivity(send);
+//                        }else if (clickedDataItem.getTipo_postagem() == 0){//do tipo perguntas e respostas
+//                            Intent sendP = new Intent(mContext, DetalharPerguntaActivity.class);
+//                            sendP.putExtra(Constants.INTENT_POSTAGEM, (Serializable) clickedDataItem);
+//                            sendP.putExtra(Constants.INTENT_USER, actualUser);
+//                            mContext.startActivity(sendP);
+//                        }
 
                     }
                 }
