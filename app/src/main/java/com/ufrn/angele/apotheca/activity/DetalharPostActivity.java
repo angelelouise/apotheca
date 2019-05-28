@@ -24,6 +24,7 @@ import com.ufrn.angele.apotheca.adapters.ComentarioAdapter;
 import com.ufrn.angele.apotheca.adapters.ComentarioAdapterListener;
 import com.ufrn.angele.apotheca.dominio.Comentario;
 import com.ufrn.angele.apotheca.dominio.Postagem;
+import com.ufrn.angele.apotheca.dominio.Report;
 import com.ufrn.angele.apotheca.dominio.Usuario;
 import com.ufrn.angele.apotheca.dominio.Voto;
 import com.ufrn.angele.apotheca.outros.CircleTransform;
@@ -52,7 +53,7 @@ public class DetalharPostActivity extends AppCompatActivity {
         android.support.v7.widget.Toolbar toolbar;
         RecyclerView lista_comentarios;
         ComentarioAdapter comentarioAdapter;
-        ImageButton cadastrar_comentario, post_vote, post_downvote;
+        ImageButton cadastrar_comentario, post_vote, post_downvote, post_report;
         EditText titulo_comentario;
         ImageView avatar;
     }
@@ -77,6 +78,7 @@ public class DetalharPostActivity extends AppCompatActivity {
         mViewHolder.post_count_negativacoes = findViewById(R.id.post_count_downvote);
         mViewHolder.titulo_comentario = findViewById(R.id.detalhar_post_comentario_descricao);
         mViewHolder.cadastrar_comentario = findViewById(R.id.detalhar_post_publicar_comentario);
+        mViewHolder.post_report = findViewById(R.id.post_report);
         //set postagem
         mViewHolder.turma.setText(mPostagem.getTurma());
         mViewHolder.titulo.setText(mPostagem.getTitulo());
@@ -199,7 +201,15 @@ public class DetalharPostActivity extends AppCompatActivity {
             }
         });
 
-
+        mViewHolder.post_report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent form = new Intent(DetalharPostActivity.this, FormReport.class);
+                form.putExtra(Constants.INTENT_POSTAGEM, mPostagem);
+                form.putExtra(Constants.INTENT_USER,mUser);
+                startActivity(form);
+            }
+        });
 
     }
     @Override
