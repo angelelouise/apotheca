@@ -15,10 +15,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class UsuarioServiceUFRN {
-    private String caminhoUsuarios = "usuario/v1/usuarios?cpf-cnpj=";
+    private String caminhoUsuarios = "usuario/v1/usuarios/info";
     private static Usuario mUser = new Usuario();
-    public Usuario getUsuario(String urlBase, String token, String apiKey, String cpf) throws IOException {
-        String url = urlBase + caminhoUsuarios + cpf;
+    public Usuario getUsuario(String urlBase, String token, String apiKey) throws IOException {
+        String url = urlBase + caminhoUsuarios;
 
         OkHttpClient client = new OkHttpClient();
         Log.d("token_req",token);
@@ -36,19 +36,31 @@ public class UsuarioServiceUFRN {
         try {
             String responseData = response.body().string();
             Log.d("responseData", responseData);
-            mArray = new JSONArray(responseData);
-            Log.d("mArray", mArray.toString());
+//            mArray = new JSONArray(responseData);
+//            Log.d("mArray", mArray.toString());
             Usuario user = new Usuario();
-            for (int i = 0; i < mArray.length(); i++) {
-                 JSONObject mJsonObject = mArray.getJSONObject(i);
-                 user.setLogin(mJsonObject.getString("login"));
-                 user.setNome(mJsonObject.getString("nome-pessoa"));
-                 user.setCpf_cnpj( mJsonObject.getLong("cpf-cnpj"));
-                 user.setUrl_foto(mJsonObject.getString("url-foto"));
-                 user.setEmail(mJsonObject.getString("email"));
-                 user.setId_usuario(mJsonObject.getInt("id-usuario"));
-                 Log.d("user2", user.toString());
-                 mUser = user; }
+//            for (int i = 0; i < mArray.length(); i++) {
+//                 JSONObject mJsonObject = mArray.getJSONObject(i);
+//                 user.setLogin(mJsonObject.getString("login"));
+//                 user.setNome(mJsonObject.getString("nome-pessoa"));
+//                 user.setCpf_cnpj( mJsonObject.getLong("cpf-cnpj"));
+//                 user.setUrl_foto(mJsonObject.getString("url-foto"));
+//                 user.setEmail(mJsonObject.getString("email"));
+//                 user.setId_usuario(mJsonObject.getInt("id-usuario"));
+//                 Log.d("user2", user.toString());
+//                 mUser = user;
+//            }
+
+            JSONObject jsonObject = new JSONObject(responseData);
+            user.setLogin(jsonObject.getString("login"));
+            user.setNome(jsonObject.getString("nome-pessoa"));
+            user.setCpf_cnpj( jsonObject.getLong("cpf-cnpj"));
+            user.setUrl_foto(jsonObject.getString("url-foto"));
+            user.setEmail(jsonObject.getString("email"));
+            user.setId_usuario(jsonObject.getInt("id-usuario"));
+            Log.d("user2", user.toString());
+            mUser = user;
+
           } catch (JSONException e) {
                  e.printStackTrace();
           }

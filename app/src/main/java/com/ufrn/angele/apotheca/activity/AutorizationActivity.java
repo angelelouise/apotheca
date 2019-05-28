@@ -58,7 +58,7 @@ public class AutorizationActivity extends AppCompatActivity {
     private Usuario mUser = new Usuario();
     private ArrayList<Discente> mDiscentes= new ArrayList<>();
     private ArrayList<Turma> mTurmas = new ArrayList<>();
-    private String cpf;
+//    private String cpf;
     private String accessToken;
     private boolean flag;
 
@@ -73,7 +73,7 @@ public class AutorizationActivity extends AppCompatActivity {
         //pegar no itent o cpf
         Intent itent = getIntent();
         flag =  itent.getBooleanExtra("flag",false);
-        cpf= itent.getStringExtra("cpf");
+//        cpf= itent.getStringExtra("cpf");
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -130,8 +130,8 @@ public class AutorizationActivity extends AppCompatActivity {
                 try {
 
                     InformacoesUFRN info = new InformacoesUFRN();
-                    Usuario aux = usuarioServiceUFRN.getUsuario(urlBase, params[0], apiKey, cpf);
-                    ArrayList<Discente> dis = discenteServiceUFRN.getDiscentes(urlBase, params[0], apiKey, cpf);
+                    Usuario aux = usuarioServiceUFRN.getUsuario(urlBase, params[0], apiKey);
+                    ArrayList<Discente> dis = discenteServiceUFRN.getDiscentes(urlBase, params[0], apiKey, String.valueOf(aux.getCpf_cnpj()));
                     for (Discente d:dis
                          ) {
                         d.setId_usuario(aux.getId_usuario());

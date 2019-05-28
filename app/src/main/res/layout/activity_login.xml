@@ -67,24 +67,30 @@
                 android:visibility="visible"
                 android:layout_marginBottom="16dp"/>
 
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:background="@drawable/logo"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/activity_horizontal_margin"/>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <AutoCompleteTextView
-                    android:id="@+id/email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:background="@drawable/retangulo_login"
-                    android:gravity="center_vertical"
-                    android:hint="@string/prompt_email"
-                    android:inputType="textEmailAddress"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:padding="10dp"
-                    android:elevation="2dp"/>
+                <!--<AutoCompleteTextView-->
+                    <!--android:id="@+id/email"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentTop="true"-->
+                    <!--android:background="@drawable/retangulo_login"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:hint="@string/prompt_email"-->
+                    <!--android:inputType="textEmailAddress"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:padding="10dp"-->
+                    <!--android:elevation="2dp"/>-->
 
             </android.support.design.widget.TextInputLayout>
 
@@ -112,15 +118,15 @@
 
             <!--</android.support.design.widget.TextInputLayout>-->
 
-            <ProgressBar
-                android:id="@+id/login_progress"
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_gravity="center_horizontal"
-                android:visibility="invisible"
-                android:layout_marginTop="10dp"/>
+            <!--<ProgressBar-->
+                <!--android:id="@+id/login_progress"-->
+                <!--style="?android:attr/progressBarStyleLarge"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="8dp"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:visibility="invisible"-->
+                <!--android:layout_marginTop="10dp"/>-->
 
             <Button
                 android:id="@+id/email_sign_in_button"
