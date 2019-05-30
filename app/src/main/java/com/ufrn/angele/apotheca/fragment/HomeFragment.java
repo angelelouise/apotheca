@@ -9,12 +9,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.adapters.PostAdapter;
@@ -44,6 +48,7 @@ public class HomeFragment extends Fragment {
         private PostAdapter mAdapter;
         private RecyclerView.LayoutManager layoutManager;
         private View view;
+        private Spinner filtro_turma;
     }
     private ViewHolder mViewHolder = new ViewHolder();
 
@@ -64,7 +69,7 @@ public class HomeFragment extends Fragment {
     private List<Turma> mTurmas;
     private UsuarioViewModel usuarioViewModel;
     private HashMap<Postagem, Usuario> mapPostagem = new HashMap<>();
-
+    private int idt;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -105,16 +110,8 @@ public class HomeFragment extends Fragment {
         posts = new ArrayList<>();
         //posts.add(new Postagem("","",new Date().toString()));
         //mapPostagem.put(new Postagem("","",new Date().toString()), new Usuario());
-        int id = mTurmas.get(0).getId_componente();
-        postagemViewModel.getListaPostagem(id).observe(this, new Observer<List<Postagem>>() {
-            @Override
-            public void onChanged(@Nullable List<Postagem> post) {
-                Log.d("post","post" +post);
-                posts.clear();
-                posts.addAll(post);
-                new getAutor().execute(post);
-            }
-        });
+        idt = mTurmas.get(0).getId_componente();
+
         //posts.add(new Postagem("Resolução de exercícios em sala","Controladores",new Date()));
 
     }
@@ -130,6 +127,33 @@ public class HomeFragment extends Fragment {
 
         mViewHolder.mAdapter = new PostAdapter(context,posts,usuario, mapPostagem);
         mViewHolder.recyclerView.setAdapter(mViewHolder.mAdapter);
+        mViewHolder.filtro_turma = mViewHolder.view.findViewById(R.id.filtro_turma);
+        ArrayAdapter<Turma> turmaDataAdapter = new ArrayAdapter<Turma>(context, android.R.layout.simple_spinner_item, mTurmas);
+        turmaDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mViewHolder.filtro_turma.setAdapter(turmaDataAdapter);
+        mViewHolder.filtro_turma.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                idt = mTurmas.get(position).getId_componente();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                idt = mTurmas.get(0).getId_componente();
+                mViewHolder.mAdapter.notifyDataSetChanged();
+            }
+
+        });
+        postagemViewModel.getListaPostagem(idt).observe(this, new Observer<List<Postagem>>() {
+            @Override
+            public void onChanged(@Nullable List<Postagem> post) {
+                Log.d("idt","idt" +idt);
+                Log.d("post","post" +post);
+                posts.clear();
+                posts.addAll(post);
+                new getAutor().execute(post);
+            }
+        });
 
         return mViewHolder.view;
     }
