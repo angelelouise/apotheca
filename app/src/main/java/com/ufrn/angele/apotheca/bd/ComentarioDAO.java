@@ -24,7 +24,7 @@ public interface ComentarioDAO {
     public void deletar (Comentario comentario);
 
     @Query("SELECT * FROM comentario WHERE id_postagem = :id")
-    public LiveData<List<Comentario>> findById(int id);
+    public LiveData<List<Comentario>> findById(String id);
 
     @Query("SELECT * FROM comentario WHERE id_autor = :id_autor")
     public LiveData<List<Comentario>> findByUsuario(Long id_autor);

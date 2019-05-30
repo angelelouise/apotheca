@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.ufrn.angele.apotheca.bd.firestore.PostagemDAOFirestore;
 import com.ufrn.angele.apotheca.dominio.Postagem;
 
 import java.util.List;
@@ -15,26 +16,26 @@ public class PostagemRepository {
     private LiveData<List<Postagem>> listaPostagem;
     private LiveData<Postagem> postagem;
     private PostagemDAO postagemDAO;
-    //private PostagemDAOFirestore postagemDAOFirestore;
+    private PostagemDAOFirestore postagemDAOFirestore;
 
     private ConnectivityManager cm;
     private boolean hasNet;
 
     public PostagemRepository(Application app) {
         postagemDAO = PostagemDB.getInstance(app).postagemDAO();
-        //postagemDAOFirestore = new PostagemDAOFirestore();
+        postagemDAOFirestore = new PostagemDAOFirestore();
         cm =(ConnectivityManager)app
                 .getSystemService(app.CONNECTIVITY_SERVICE);
     }
 
-    public LiveData<List<Postagem>> buscarTodas() {
-//        if (netOn()){
-//            //listaPostagem = postagemDAOFirestore.buscarTodas();
-//
-//        }else{
-//            listaPostagem = postagemDAO.buscarTodas();
-//        }
-        listaPostagem = postagemDAO.buscarTodas();
+    public LiveData<List<Postagem>> buscarTodas(int ids) {
+        if (netOn()){
+            listaPostagem = postagemDAOFirestore.buscarTodas(ids);
+
+        }else{
+            listaPostagem = postagemDAO.buscarTodas(ids);
+        }
+        //listaPostagem = postagemDAO.buscarTodas();
         return listaPostagem;
     }
 
@@ -65,12 +66,12 @@ public class PostagemRepository {
 
     public void inserir (Postagem postagem){
         new InsertASync(postagemDAO).execute(postagem);
-        //postagemDAOFirestore.inserir(postagem);
+        postagemDAOFirestore.inserir(postagem);
     }
 
     public void atualizar (Postagem postagem){
         new InsertASync(postagemDAO).execute(postagem);
-        //postagemDAOFirestore.atualizar(postagem);
+        postagemDAOFirestore.atualizar(postagem);
     }
 
     private class InsertASync extends AsyncTask<Postagem, Void, Void> {

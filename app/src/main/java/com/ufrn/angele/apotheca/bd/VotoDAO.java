@@ -21,14 +21,14 @@ public interface VotoDAO {
     public void deletar (Voto voto);
 
     @Query("SELECT COUNT(id) FROM voto WHERE id_postagem = :id_postagem and id_comentario <0 and voto = 1")
-    public int countVotosPostagem(int id_postagem);
+    public int countVotosPostagem(String id_postagem);
 
     @Query("SELECT COUNT(id) FROM voto WHERE id_postagem = :id_postagem and id_comentario <0 and negativacao = 1")
-    public int countNegativacoesPostagem(int id_postagem);
+    public int countNegativacoesPostagem(String id_postagem);
 
     @Query("SELECT COUNT(*) FROM voto WHERE id_postagem = :id_postagem and id_comentario = :id_comentario and voto = 1 and negativacao =0")
-    public int countVotosComentario(int id_postagem, int id_comentario);
+    public int countVotosComentario(String id_postagem, int id_comentario);
 
     @Query("SELECT COUNT(*) FROM voto WHERE id_postagem = :id_postagem and id_comentario = :id_comentario and negativacao = 1 and voto=0")
-    public int countNegativacoesComentario(int id_postagem, int id_comentario);
+    public int countNegativacoesComentario(String id_postagem, int id_comentario);
 }

@@ -40,19 +40,19 @@ public class VotoRepository {
         //postagemDAOFirestore.atualizar(postagem);
     }
 
-    public int getCountVotosComentario(int id_postagem, int id_comentario) {
+    public int getCountVotosComentario(String id_postagem, int id_comentario) {
         countVotosComentarios = votoDAO.countVotosComentario(id_postagem,id_comentario);
         return countVotosComentarios;
     }
-    public int getCountNegativacoesComentarios(int id_postagem, int id_comentario) {
+    public int getCountNegativacoesComentarios(String id_postagem, int id_comentario) {
         countNegativacoesComentarios = votoDAO.countNegativacoesComentario(id_postagem,id_comentario);
         return countNegativacoesComentarios;
     }
-    public int getCountVotosPostagem(int id_postagem) {
+    public int getCountVotosPostagem(String id_postagem) {
         countVotosPostagem = votoDAO.countVotosPostagem(id_postagem);
         return countVotosPostagem;
     }
-    public int getCountNegativacoesPostagem(int id_postagem) {
+    public int getCountNegativacoesPostagem(String id_postagem) {
         countNegativacoesPostagem = votoDAO.countNegativacoesPostagem(id_postagem);
         return countNegativacoesPostagem;
     }

@@ -1,6 +1,7 @@
 package com.ufrn.angele.apotheca.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -36,6 +37,7 @@ import com.ufrn.angele.apotheca.outros.CircleTransform;
 import com.ufrn.angele.apotheca.outros.Constants;
 import com.ufrn.angele.apotheca.viewmodel.UsuarioViewModel;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -249,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
         switch (navItemIndex) {
             case 0:
                 HomeFragment homeFragment = new HomeFragment();
+                bundle.putSerializable(Constants.INTENT_TURMA,turmas);
                 bundle.putSerializable("usuario", usuario);
                 homeFragment.setArguments(bundle);
                 return homeFragment;
@@ -290,6 +293,7 @@ public class MainActivity extends AppCompatActivity {
         mViewHolder.navigationView.getMenu().getItem(navItemIndex).setChecked(true);
     }
 
+
     private void setUpNavigationView() {
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
         mViewHolder.navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -330,9 +334,20 @@ public class MainActivity extends AppCompatActivity {
                         // launch new intent instead of loading fragment
                         //startActivity(new Intent(MainActivity.this, PrivacyPolicyActivity.class));
                         mViewHolder.drawer.closeDrawers();
+                        SharedPreferences preferences = getApplicationContext().getSharedPreferences("user_info", 0);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.clear();
+
+                        try {
+                            File dir = getApplicationContext().getCacheDir();
+                            deleteDir(dir);
+                        } catch (Exception e) {
+                        }
+                        finish();
                         return true;
                     default:
                         navItemIndex = 0;
+
                 }
 
                 //Checking if the item is in checked state or not, if not make it in checked state
@@ -371,7 +386,22 @@ public class MainActivity extends AppCompatActivity {
         //calling sync state is necessary or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
     }
-
+    private static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+            return dir.delete();
+        } else if (dir != null && dir.isFile()) {
+            return dir.delete();
+        } else {
+            return false;
+        }
+    }
     @Override
     public void onBackPressed() {
         if ( mViewHolder.drawer.isDrawerOpen(GravityCompat.START)) {

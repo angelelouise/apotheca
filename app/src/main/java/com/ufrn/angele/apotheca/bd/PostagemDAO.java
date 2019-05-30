@@ -32,10 +32,12 @@ public interface PostagemDAO {
 //    @Query("SELECT * FROM postagem INNER JOIN usuario ON (usuario.id = postagem.id_usuario)WHERE usuario.usuario_nome = :nome")
 //    public LiveData<List<Postagem>> findByAutor(String nome);
 
-    @Query("SELECT * FROM postagem WHERE id_turma = :id_turma")
+    @Query("SELECT * FROM postagem WHERE id_componente = :id_turma")
     public LiveData<List<Postagem>> findByTurma(Long id_turma);
 
-    @Query("SELECT * FROM postagem ORDER BY id_postagem ASC")
-    public LiveData<List<Postagem>> buscarTodas();
+//    @Query("SELECT * FROM postagem ORDER BY id_postagem ASC")
+    @Query("SELECT * FROM postagem where id_componente in (:id)")
+    public LiveData<List<Postagem>> buscarTodas(int id);
+
 }
 

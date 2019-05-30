@@ -31,23 +31,23 @@ public class VotoViewModel extends AndroidViewModel {
         votoRepository.atualizar(voto);
     }
 
-    public int getCountVotosComentarios(int id_postagem, int id_comentario) {
+    public int getCountVotosComentarios(String id_postagem, int id_comentario) {
             countVotosComentarios = votoRepository.getCountVotosComentario(id_postagem,id_comentario);
         return countVotosComentarios;
     }
 
-    public int getCountNegativacoesComentarios(int id_postagem, int id_comentario) {
+    public int getCountNegativacoesComentarios(String id_postagem, int id_comentario) {
 
         countNegativacoesComentarios = votoRepository.getCountNegativacoesComentarios(id_postagem,id_comentario);
         return countNegativacoesComentarios;
     }
 
-    public int getCountVotosPostagem(int id_postagem) {
+    public int getCountVotosPostagem(String id_postagem) {
         countVotosPostagem = votoRepository.getCountVotosPostagem(id_postagem);
         return countVotosPostagem;
     }
 
-    public int getCountNegativacoesPostagem(int id_postagem) {
+    public int getCountNegativacoesPostagem(String id_postagem) {
         countNegativacoesPostagem = votoRepository.getCountNegativacoesPostagem(id_postagem);
         return countNegativacoesPostagem;
     }

@@ -19,7 +19,9 @@ import android.view.ViewGroup;
 import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.adapters.PostAdapter;
 import com.ufrn.angele.apotheca.dominio.Postagem;
+import com.ufrn.angele.apotheca.dominio.Turma;
 import com.ufrn.angele.apotheca.dominio.Usuario;
+import com.ufrn.angele.apotheca.outros.Constants;
 import com.ufrn.angele.apotheca.viewmodel.PostagemViewModel;
 import com.ufrn.angele.apotheca.viewmodel.UsuarioViewModel;
 
@@ -59,6 +61,7 @@ public class HomeFragment extends Fragment {
     private PostagemViewModel postagemViewModel;
     private Context context;
     private Usuario usuario;
+    private List<Turma> mTurmas;
     private UsuarioViewModel usuarioViewModel;
     private HashMap<Postagem, Usuario> mapPostagem = new HashMap<>();
 
@@ -94,6 +97,7 @@ public class HomeFragment extends Fragment {
 
         if (getArguments() != null) {
             usuario = (Usuario) getArguments().getSerializable("usuario");
+            mTurmas = (List<Turma>) getArguments().getSerializable(Constants.INTENT_TURMA);
         }
         //criar dados para testes
         usuarioViewModel = ViewModelProviders.of(this).get(UsuarioViewModel.class);
@@ -101,7 +105,8 @@ public class HomeFragment extends Fragment {
         posts = new ArrayList<>();
         //posts.add(new Postagem("","",new Date().toString()));
         //mapPostagem.put(new Postagem("","",new Date().toString()), new Usuario());
-        postagemViewModel.getListaPostagem().observe(this, new Observer<List<Postagem>>() {
+        int id = mTurmas.get(0).getId_componente();
+        postagemViewModel.getListaPostagem(id).observe(this, new Observer<List<Postagem>>() {
             @Override
             public void onChanged(@Nullable List<Postagem> post) {
                 Log.d("post","post" +post);
@@ -153,15 +158,15 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        postagemViewModel.getListaPostagem().observe(this, new Observer<List<Postagem>>() {
-            @Override
-            public void onChanged(@Nullable List<Postagem> post) {
-                Log.d("post","post" +post);
-                posts.clear();
-                posts.addAll(post);
-                new getAutor().execute(post);
-            }
-        });
+//        postagemViewModel.getListaPostagem(ids).observe(this, new Observer<List<Postagem>>() {
+//            @Override
+//            public void onChanged(@Nullable List<Postagem> post) {
+//                Log.d("post","post" +post);
+//                posts.clear();
+//                posts.addAll(post);
+//                new getAutor().execute(post);
+//            }
+//        });
     }
 
     @Override

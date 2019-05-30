@@ -26,7 +26,7 @@ public class ComentarioRepository {
                 .getSystemService(app.CONNECTIVITY_SERVICE);
     }
 
-    public LiveData<List<Comentario>> findById(int id) {
+    public LiveData<List<Comentario>> findById(String id) {
         if (listaComentario==null){
             listaComentario = comentarioDAO.findById(id);
         }

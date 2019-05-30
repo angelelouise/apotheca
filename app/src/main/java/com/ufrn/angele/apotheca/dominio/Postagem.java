@@ -9,15 +9,18 @@ import java.io.Serializable;
 public class Postagem implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
-    private int id_postagem;
+    private int id;
+    private String id_postagem;
     private int id_autor;
 //    private int tipo_postagem;
     private String titulo;
-    private int id_turma;
+    private int id_componente;
     private String turma;
     private String data_cadastro;
     private boolean ativo;
     private String descricao;
+
+
 
     @Override
     public String toString() {
@@ -26,7 +29,7 @@ public class Postagem implements Serializable {
                 ", id_autor=" + id_autor +
                 ", tipo_postagem=" +
                 ", titulo='" + titulo + '\'' +
-                ", id_turma=" + id_turma +
+                ", id_componente=" + id_componente +
                 ", turma='" + turma + '\'' +
                 ", data_cadastro=" + data_cadastro +
                 ", avatar=" +
@@ -48,11 +51,11 @@ public class Postagem implements Serializable {
         this.descricao = descricao;
     }
 
-    public int getId_postagem() {
+    public String getId_postagem() {
         return id_postagem;
     }
 
-    public void setId_postagem(int id_postagem) {
+    public void setId_postagem(String id_postagem) {
         this.id_postagem = id_postagem;
     }
 
@@ -72,12 +75,12 @@ public class Postagem implements Serializable {
 //        this.tipo_postagem = tipo_postagem;
 //    }
 
-    public int getId_turma() {
-        return id_turma;
+    public int getId_componente() {
+        return id_componente;
     }
 
-    public void setId_turma(int id_turma) {
-        this.id_turma = id_turma;
+    public void setId_componente(int id_componente) {
+        this.id_componente = id_componente;
     }
 
     public boolean isAtivo() {
@@ -110,6 +113,14 @@ public class Postagem implements Serializable {
 
     public void setData_cadastro(String data_cadastro) {
         this.data_cadastro = data_cadastro;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

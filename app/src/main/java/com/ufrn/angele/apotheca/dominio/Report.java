@@ -3,12 +3,12 @@ package com.ufrn.angele.apotheca.dominio;
 
 public class Report {
     private int id;
-    private int id_postagem;
+    private String id_postagem;
     private int id_autor;
     private String data_cadastro;
     private String motivo;
 
-    public Report(int id, int id_postagem, int id_autor, String data_cadastro, String motivo) {
+    public Report(int id, String id_postagem, int id_autor, String data_cadastro, String motivo) {
         this.id = id;
         this.id_postagem = id_postagem;
         this.id_autor = id_autor;
@@ -35,11 +35,11 @@ public class Report {
         this.id = id;
     }
 
-    public int getId_postagem() {
+    public String getId_postagem() {
         return id_postagem;
     }
 
-    public void setId_postagem(int id_postagem) {
+    public void setId_postagem(String id_postagem) {
         this.id_postagem = id_postagem;
     }
 

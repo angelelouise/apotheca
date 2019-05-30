@@ -27,14 +27,14 @@ public class ComentarioViewModel extends AndroidViewModel{
     public void atualizar (Comentario comentario){
         comentarioRepository.atualizar(comentario);
     }
-    public void findById(int id){
+    public void findById(String id){
         listaComentarios = comentarioRepository.findById(id);
     }
     public void findByUsuario (Long id){
         listaComentarios = comentarioRepository.findByUsuario(id);
     }
 
-    public LiveData<List<Comentario>> getListaComentarios(int id_postagem) {
+    public LiveData<List<Comentario>> getListaComentarios(String id_postagem) {
         listaComentarios = comentarioRepository.findById(id_postagem);
         return listaComentarios;
     }

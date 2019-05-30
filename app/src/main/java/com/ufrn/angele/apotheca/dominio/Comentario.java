@@ -9,7 +9,7 @@ public class Comentario {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private int id_postagem;
+    private String id_postagem;
     private int id_resposta;
     private int id_autor;
     private String data_cadastro;
@@ -17,7 +17,7 @@ public class Comentario {
     private boolean escolhido;
     private String titulo;
 
-    public Comentario(int id, int id_postagem, int id_resposta, int id_autor, String data_cadastro, boolean resposta, boolean escolhido, String titulo) {
+    public Comentario(int id, String id_postagem, int id_resposta, int id_autor, String data_cadastro, boolean resposta, boolean escolhido, String titulo) {
         this.id = id;
         this.id_postagem = id_postagem;
         this.id_resposta = id_resposta;
@@ -58,11 +58,11 @@ public class Comentario {
         this.id = id;
     }
 
-    public int getId_postagem() {
+    public String getId_postagem() {
         return id_postagem;
     }
 
-    public void setId_postagem(int id_postagem) {
+    public void setId_postagem(String id_postagem) {
         this.id_postagem = id_postagem;
     }
 
