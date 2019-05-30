@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.ufrn.angele.apotheca.bd.firestore.ComentarioDAOFirestore;
 import com.ufrn.angele.apotheca.dominio.Comentario;
 
 import java.util.List;
@@ -15,19 +16,26 @@ public class ComentarioRepository {
     private LiveData<List<Comentario>> listaComentario;
     private LiveData<Comentario> comentario;
     private ComentarioDAO comentarioDAO;
+    private ComentarioDAOFirestore comentarioDAOFirestore;
 
     private ConnectivityManager cm;
     private boolean hasNet;
 
     public ComentarioRepository(Application app) {
         comentarioDAO = ComentarioDB.getInstance(app).comentarioDAO();
-        //postagemDAOFirestore = new PostagemDAOFirestore();
+        comentarioDAOFirestore = new ComentarioDAOFirestore();
         cm =(ConnectivityManager)app
                 .getSystemService(app.CONNECTIVITY_SERVICE);
     }
 
     public LiveData<List<Comentario>> findById(String id) {
-        if (listaComentario==null){
+//        if (listaComentario==null){
+//            listaComentario = comentarioDAO.findById(id);
+//        }
+        if (netOn()){
+            listaComentario = comentarioDAOFirestore.findById(id);
+
+        }else{
             listaComentario = comentarioDAO.findById(id);
         }
         return listaComentario;
@@ -41,12 +49,12 @@ public class ComentarioRepository {
 
     public void inserir (Comentario comentario){
         new ComentarioRepository.InsertASync(comentarioDAO).execute(comentario);
-        //postagemDAOFirestore.inserir(postagem);
+        comentarioDAOFirestore.inserir(comentario);
     }
 
     public void atualizar (Comentario comentario){
         new ComentarioRepository.InsertASync(comentarioDAO).execute(comentario);
-        //postagemDAOFirestore.atualizar(postagem);
+        comentarioDAOFirestore.atualizar(comentario);
     }
 
     private class InsertASync extends AsyncTask<Comentario, Void, Void> {

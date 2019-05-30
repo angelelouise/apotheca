@@ -30,7 +30,7 @@ public class DetalharPerguntaActivity extends AppCompatActivity {
         mViewHolder.titulo= findViewById(R.id.detalhar_post_titulo_det_pergunta);
         mViewHolder.descricao= findViewById(R.id.detalhar_post_descricao_det_pergunta);
 
-        mViewHolder.turma.setText(mPostagem.getTurma());
+        mViewHolder.turma.setText(mPostagem.getComponente());
         mViewHolder.titulo.setText(mPostagem.getTitulo());
         mViewHolder.descricao.setText(mPostagem.getDescricao());
         setSupportActionBar(mViewHolder.toolbar);

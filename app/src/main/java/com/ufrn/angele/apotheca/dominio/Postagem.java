@@ -15,7 +15,7 @@ public class Postagem implements Serializable {
 //    private int tipo_postagem;
     private String titulo;
     private int id_componente;
-    private String turma;
+    private String componente;
     private String data_cadastro;
     private boolean ativo;
     private String descricao;
@@ -30,16 +30,16 @@ public class Postagem implements Serializable {
                 ", tipo_postagem=" +
                 ", titulo='" + titulo + '\'' +
                 ", id_componente=" + id_componente +
-                ", turma='" + turma + '\'' +
+                ", componente='" + componente + '\'' +
                 ", data_cadastro=" + data_cadastro +
                 ", avatar=" +
                 ", ativo=" + ativo +
                 '}';
     }
 
-    public Postagem(String titulo, String turma, String data_cadastro) {
+    public Postagem(String titulo, String componente, String data_cadastro) {
         this.titulo = titulo;
-        this.turma = turma;
+        this.componente = componente;
         this.data_cadastro = data_cadastro;
     }
 
@@ -99,12 +99,12 @@ public class Postagem implements Serializable {
         this.titulo = titulo;
     }
 
-    public String getTurma() {
-        return turma;
+    public String getComponente() {
+        return componente;
     }
 
-    public void setTurma(String turma) {
-        this.turma = turma;
+    public void setComponente(String componente) {
+        this.componente = componente;
     }
 
     public String getData_cadastro() {

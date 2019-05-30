@@ -84,7 +84,7 @@ public class CadastrarPostActivity extends AppCompatActivity {
                 p.setDescricao(mViewHolder.mDescricaoView.getText().toString());
                 p.setAtivo(true);
                 p.setId_componente(t.getId_componente());
-                p.setTurma(turma);
+                p.setComponente(turma);
 //                if(tipo == TIPO0){
 //                    p.setTipo_postagem(0);
 //                }else{

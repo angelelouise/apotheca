@@ -6,10 +6,14 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.ufrn.angele.apotheca.bd.PostagemDAO;
-import com.ufrn.angele.apotheca.dominio.Postagem;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.ufrn.angele.apotheca.bd.ComentarioDAO;
+import com.ufrn.angele.apotheca.dominio.Comentario;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,28 +21,29 @@ import java.util.Map;
 
 import static android.support.constraint.Constraints.TAG;
 
-public class PostagemDAOFirestore implements PostagemDAO {
+public class ComentarioDAOFirestore implements ComentarioDAO {
+
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private Map<String,Object> popularDados(Postagem postagem){
+    private Map<String,Object> popularDados(Comentario comentario){
         Map<String, Object> post = new HashMap<>();
-        post.put("descricao",postagem.getDescricao());
-        post.put("titulo",postagem.getTitulo());
-        post.put("id_componente",postagem.getId_componente());
-        //post.put("id_postagem",postagem.getId_postagem());
-        post.put("id_usuario",postagem.getId_autor());
-        post.put("componente",postagem.getComponente());
-        post.put("data_cadastro",postagem.getData_cadastro());
-        post.put("ativo",postagem.isAtivo());
+        post.put("titulo",comentario.getTitulo());
+        post.put("id_autor",comentario.getId_autor());
+        post.put("id_postagem",comentario.getId_postagem());
+        post.put("data_cadastro",comentario.getData_cadastro());
+        post.put("escolhido",comentario.isEscolhido());
 
         return post;
     }
-    public void inserir(Postagem postagem){
+    @Override
+    public void inserir(Comentario comentario) {
         Map<String, Object> post = new HashMap<>();
-        post = popularDados(postagem);
+        post = popularDados(comentario);
 
         // Add a new document with a generated ID
         db.collection("postagem")
+                .document(comentario.getId_postagem())
+                .collection("comentario")
                 .add(post)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -55,34 +60,25 @@ public class PostagemDAOFirestore implements PostagemDAO {
     }
 
     @Override
-    public void atualizar(Postagem postagem) {
+    public void atualizar(Comentario comentario) {
 
     }
 
     @Override
-    public void deletar(Postagem postagem) {
+    public void deletar(Comentario comentario) {
 
     }
 
     @Override
-    public LiveData<Postagem> findById(Long id) {
+    public LiveData<List<Comentario>> findById(String id) {
+        return new ComentarioFirebaseQueryLiveData(db
+                .collection("postagem")
+                .document(id)
+                .collection("comentario"));
+    }
+
+    @Override
+    public LiveData<List<Comentario>> findByUsuario(Long id_autor) {
         return null;
-    }
-
-    @Override
-    public LiveData<List<Postagem>> findByUsuario(Long id_usuario) {
-        return null;
-    }
-
-    @Override
-    public LiveData<List<Postagem>> findByTurma(Long id_turma) {
-        return null;
-    }
-
-    @Override
-    public LiveData<List<Postagem>> buscarTodas(int id) {
-//        return new PostagemFirebaseQueryLiveData(db.collection("postagem").whereGreaterThanOrEqualTo(documentId(), 0));
-
-        return new PostagemFirebaseQueryLiveData(db.collection("postagem").whereEqualTo("id_componente",id));
     }
 }

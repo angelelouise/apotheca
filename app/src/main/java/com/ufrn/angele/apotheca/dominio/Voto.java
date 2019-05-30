@@ -8,13 +8,13 @@ public class Voto {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String id_postagem;
-    private int id_comentario;
+    private String id_comentario;
     private boolean voto;
     private boolean negativacao;
     private int id_autor;
     private String data_cadastro;
 
-    public Voto(int id, String id_postagem, int id_comentario, boolean voto, boolean negativacao, int id_autor, String data_cadastro) {
+    public Voto(int id, String id_postagem, String id_comentario, boolean voto, boolean negativacao, int id_autor, String data_cadastro) {
         this.id = id;
         this.id_postagem = id_postagem;
         this.id_comentario = id_comentario;
@@ -53,11 +53,11 @@ public class Voto {
         this.id_postagem = id_postagem;
     }
 
-    public int getId_comentario() {
+    public String getId_comentario() {
         return id_comentario;
     }
 
-    public void setId_comentario(int id_comentario) {
+    public void setId_comentario(String id_comentario) {
         this.id_comentario = id_comentario;
     }
 

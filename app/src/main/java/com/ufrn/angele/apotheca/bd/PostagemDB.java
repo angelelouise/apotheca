@@ -12,7 +12,7 @@ import com.ufrn.angele.apotheca.dominio.Postagem;
  * 2- Cria o BD
  * 3- Cria o repositorio
  * 4- Cria a view*/
-@Database(entities = {Postagem.class},version = 1, exportSchema = false)
+@Database(entities = {Postagem.class},version = 2, exportSchema = false)
 public abstract class PostagemDB extends RoomDatabase {
     private static PostagemDB INSTANCE;
 

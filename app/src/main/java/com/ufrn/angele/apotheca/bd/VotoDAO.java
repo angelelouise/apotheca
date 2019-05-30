@@ -27,8 +27,8 @@ public interface VotoDAO {
     public int countNegativacoesPostagem(String id_postagem);
 
     @Query("SELECT COUNT(*) FROM voto WHERE id_postagem = :id_postagem and id_comentario = :id_comentario and voto = 1 and negativacao =0")
-    public int countVotosComentario(String id_postagem, int id_comentario);
+    public int countVotosComentario(String id_postagem, String id_comentario);
 
     @Query("SELECT COUNT(*) FROM voto WHERE id_postagem = :id_postagem and id_comentario = :id_comentario and negativacao = 1 and voto=0")
-    public int countNegativacoesComentario(String id_postagem, int id_comentario);
+    public int countNegativacoesComentario(String id_postagem, String id_comentario);
 }

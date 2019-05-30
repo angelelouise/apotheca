@@ -24,7 +24,6 @@ import com.ufrn.angele.apotheca.adapters.ComentarioAdapter;
 import com.ufrn.angele.apotheca.adapters.ComentarioAdapterListener;
 import com.ufrn.angele.apotheca.dominio.Comentario;
 import com.ufrn.angele.apotheca.dominio.Postagem;
-import com.ufrn.angele.apotheca.dominio.Report;
 import com.ufrn.angele.apotheca.dominio.Usuario;
 import com.ufrn.angele.apotheca.dominio.Voto;
 import com.ufrn.angele.apotheca.outros.CircleTransform;
@@ -80,7 +79,7 @@ public class DetalharPostActivity extends AppCompatActivity {
         mViewHolder.cadastrar_comentario = findViewById(R.id.detalhar_post_publicar_comentario);
         mViewHolder.post_report = findViewById(R.id.post_report);
         //set postagem
-        mViewHolder.turma.setText(mPostagem.getTurma());
+        mViewHolder.turma.setText(mPostagem.getComponente());
         mViewHolder.titulo.setText(mPostagem.getTitulo());
         mViewHolder.descricao.setText(mPostagem.getDescricao());
         //pegar toolbar
@@ -156,12 +155,10 @@ public class DetalharPostActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Comentario comentario = new Comentario(
-                                0,
+                                "",
                                 mPostagem.getId_postagem(),
-                                0,
                                 mPostagem.getId_autor(),
                                 new Date().toString(),
-                                false,
                                 false,
                                 mViewHolder.titulo_comentario.getText().toString());
                         comentarioViewModel.inserir(comentario);
@@ -177,7 +174,7 @@ public class DetalharPostActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Voto post_vote = new Voto(0,
                         mPostagem.getId_postagem(),
-                        -1,
+                        "",
                         true,
                         false,
                         mUser.getId_usuario(),
@@ -191,7 +188,7 @@ public class DetalharPostActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Voto post_vote = new Voto(0,
                         mPostagem.getId_postagem(),
-                        -1,
+                        "",
                         false,
                         true,
                         mUser.getId_usuario(),

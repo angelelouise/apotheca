@@ -56,7 +56,7 @@
     <string name="titulo">Título</string>
     <string name="descricao">Descrição</string>
     <string name="tipo_da_postagem">Tipo da postagem</string>
-    <string name="turma">Turma</string>
+    <string name="componente">Turma</string>
     <string name="tags">Tags</string>
     <string name="anexos">Anexos</string>
     <string name="ver_comentarios">Ver comentários</string>

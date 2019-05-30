@@ -6,20 +6,21 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.ufrn.angele.apotheca.dominio.Postagem;
+import com.ufrn.angele.apotheca.dominio.Comentario;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class PostagemFirebaseQueryLiveData  extends LiveData<List<Postagem>> {
+public class ComentarioFirebaseQueryLiveData extends LiveData<List<Comentario>>  {
     public static final String LOG_TAG = "FirebaseQueryLiveData";
 
     private final Query query;
@@ -27,14 +28,17 @@ public class PostagemFirebaseQueryLiveData  extends LiveData<List<Postagem>> {
 
     private ListenerRegistration registration;
 
-    public PostagemFirebaseQueryLiveData(Query query) {
+    public ComentarioFirebaseQueryLiveData(Query query) {
         this.query = query;
     }
 
-    public PostagemFirebaseQueryLiveData(CollectionReference ref) {
+    public ComentarioFirebaseQueryLiveData(CollectionReference ref) {
         this.query = ref;
     }
 
+//    public ComentarioFirebaseQueryLiveData(Task<QuerySnapshot> task) {
+//        this.task = task;
+//    }
     @Override
     protected void onActive() {
         Log.d(LOG_TAG, "onActive");
@@ -58,24 +62,24 @@ public class PostagemFirebaseQueryLiveData  extends LiveData<List<Postagem>> {
                 return;
             }
 
-            List<Postagem> postagens = new ArrayList<>();
+            List<Comentario> comentarios = new ArrayList<>();
 
             for(DocumentSnapshot doc : value.getDocuments()){
                 if(doc.getId()!=null){
-                    Postagem p = new Postagem(doc.getString("titulo"),doc.getString("componente"),doc.getString("data_cadastro"));
-                    p.setId_autor(doc.getLong("id_usuario").intValue());
-                    p.setId_postagem(doc.getId());
-                    p.setId_componente(doc.getLong("id_componente").intValue());
-                    p.setDescricao(doc.getString("descricao"));
-                    p.setAtivo(doc.getBoolean("ativo"));
+                    Comentario p = new Comentario(doc.getId(),
+                            doc.getString("id_postagem"),
+                            doc.getLong("id_autor").intValue(),
+                            doc.getString("data_cadastro"),
+                            doc.getBoolean("escolhido"),
+                            doc.getString("titulo"));
 
-                    postagens.add(p);
+                    comentarios.add(p);
                 }
 
             }
 
-            setValue(postagens);
-            Log.d(LOG_TAG, "Postagem retornadas");
+            setValue(comentarios);
+            Log.d(LOG_TAG, "Comentarios retornados");
         }
     }
 }

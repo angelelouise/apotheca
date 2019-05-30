@@ -105,7 +105,7 @@ public class PostAdapter extends RecyclerView.Adapter{
         }
         public void bindView(int position){
             list_titulo.setText(mPostagens.get(position).getTitulo());
-            list_turma.setText(mPostagens.get(position).getTurma());
+            list_turma.setText(mPostagens.get(position).getComponente());
             list_timestamp.setText(mPostagens.get(position).getData_cadastro().toString());
             //list_avatar.setImageResource(mPostagens.get(position).getAvatar());
             if(map!=null){

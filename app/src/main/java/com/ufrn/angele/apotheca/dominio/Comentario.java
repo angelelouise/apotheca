@@ -8,22 +8,19 @@ import android.arch.persistence.room.PrimaryKey;
 public class Comentario {
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private int id_comentario;
+    private String id;
     private String id_postagem;
-    private int id_resposta;
     private int id_autor;
     private String data_cadastro;
-    private boolean resposta;
     private boolean escolhido;
     private String titulo;
 
-    public Comentario(int id, String id_postagem, int id_resposta, int id_autor, String data_cadastro, boolean resposta, boolean escolhido, String titulo) {
+    public Comentario(String id, String id_postagem, int id_autor, String data_cadastro, boolean escolhido, String titulo) {
         this.id = id;
         this.id_postagem = id_postagem;
-        this.id_resposta = id_resposta;
         this.id_autor = id_autor;
         this.data_cadastro = data_cadastro;
-        this.resposta = resposta;
         this.escolhido = escolhido;
         this.titulo = titulo;
     }
@@ -33,13 +30,21 @@ public class Comentario {
         return "Comentario{" +
                 "id=" + id +
                 ", id_postagem=" + id_postagem +
-                ", id_resposta=" + id_resposta +
+                ", id_resposta=" +
                 ", id_autor=" + id_autor +
                 ", data_cadastro='" + data_cadastro + '\'' +
-                ", resposta=" + resposta +
+                ", resposta="  +
                 ", escolhido=" + escolhido +
                 ", titulo='" + titulo + '\'' +
                 '}';
+    }
+
+    public int getId_comentario() {
+        return id_comentario;
+    }
+
+    public void setId_comentario(int id_comentario) {
+        this.id_comentario = id_comentario;
     }
 
     public String getTitulo() {
@@ -50,11 +55,11 @@ public class Comentario {
         this.titulo = titulo;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -64,14 +69,6 @@ public class Comentario {
 
     public void setId_postagem(String id_postagem) {
         this.id_postagem = id_postagem;
-    }
-
-    public int getId_resposta() {
-        return id_resposta;
-    }
-
-    public void setId_resposta(int id_resposta) {
-        this.id_resposta = id_resposta;
     }
 
     public int getId_autor() {
@@ -90,13 +87,6 @@ public class Comentario {
         this.data_cadastro = data_cadastro;
     }
 
-    public boolean isResposta() {
-        return resposta;
-    }
-
-    public void setResposta(boolean resposta) {
-        this.resposta = resposta;
-    }
 
     public boolean isEscolhido() {
         return escolhido;
