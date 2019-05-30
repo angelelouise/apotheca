@@ -14,6 +14,9 @@ public interface VotoDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void inserir(Voto voto);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public void inserirPostagem(Voto voto);
+
     @Update
     public void atualizar(Voto voto);
 

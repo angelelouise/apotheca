@@ -179,7 +179,7 @@ public class DetalharPostActivity extends AppCompatActivity {
                         false,
                         mUser.getId_usuario(),
                         new Date().toString());
-                votoViewModel.inserir(post_vote);
+                votoViewModel.inserirPostagem(post_vote);
                 new atualizarVotoPostagem().execute(mPostagem);
             }
         });
@@ -193,7 +193,7 @@ public class DetalharPostActivity extends AppCompatActivity {
                         true,
                         mUser.getId_usuario(),
                         new Date().toString());
-                votoViewModel.inserir(post_vote);
+                votoViewModel.inserirPostagem(post_vote);
                 new atualizarNegativacaoPostagem().execute(mPostagem);
             }
         });

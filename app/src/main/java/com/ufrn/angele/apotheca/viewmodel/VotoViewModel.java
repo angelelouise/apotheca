@@ -27,6 +27,9 @@ public class VotoViewModel extends AndroidViewModel {
     public void inserir (Voto voto){
         votoRepository.inserir(voto);
     }
+    public void inserirPostagem (Voto voto){
+        votoRepository.inserirPostagem(voto);
+    }
     public void atualizar (Voto voto){
         votoRepository.atualizar(voto);
     }
