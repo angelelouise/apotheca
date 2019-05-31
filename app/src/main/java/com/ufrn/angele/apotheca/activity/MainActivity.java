@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Turma> turmas = new ArrayList<>();
     public static int NOVA_POSTAGEM = 1;
     public static int DETALHES_POSTAGEM = 2;
-    private UsuarioViewModel usuarioViewModel;
+    private UsuarioViewModel usuarioViewModel ;
     private UsuarioRepository usuarioRepository;
     private TurmaRepository turmaRepository;
     private DiscenteRepository discenteRepository;
@@ -91,11 +91,11 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         usuario = (Usuario) intent.getSerializableExtra(Constants.INTENT_USER);
-        //Log.d("mainUser", usuario.toString());
+        Log.d("mainUser", usuario.toString());
         discentes = (ArrayList<Discente>) intent.getSerializableExtra(Constants.INTENT_DISCENTE);
         turmas = (ArrayList<Turma>) intent.getSerializableExtra(Constants.INTENT_TURMA);
 
-        usuarioRepository= new UsuarioRepository(getApplication());
+        usuarioViewModel= new UsuarioViewModel(getApplication());
         turmaRepository = new TurmaRepository(getApplication());
         discenteRepository = new DiscenteRepository(getApplication());
 
@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Usuario result) {
             super.onPostExecute(result);
-            if(result!=null){
+            if(result.getId_usuario()!=0){
                 if(result.equals(usuario)){
                     Log.d("concomitancia", "usuario já existe");
 
