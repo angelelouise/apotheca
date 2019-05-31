@@ -24,15 +24,17 @@ public class PostagemFirebaseQueryLiveData  extends LiveData<List<Postagem>> {
 
     private final Query query;
     private final MyValueEventListener listener = new MyValueEventListener();
-
+    private List<Integer>ids = new ArrayList<>();
     private ListenerRegistration registration;
 
-    public PostagemFirebaseQueryLiveData(Query query) {
+    public PostagemFirebaseQueryLiveData(Query query, List<Integer>ids) {
         this.query = query;
+        this.ids=ids;
     }
 
-    public PostagemFirebaseQueryLiveData(CollectionReference ref) {
+    public PostagemFirebaseQueryLiveData(CollectionReference ref, List<Integer>ids) {
         this.query = ref;
+        this.ids=ids;
     }
 
     @Override
@@ -62,14 +64,16 @@ public class PostagemFirebaseQueryLiveData  extends LiveData<List<Postagem>> {
 
             for(DocumentSnapshot doc : value.getDocuments()){
                 if(doc.getId()!=null){
-                    Postagem p = new Postagem(doc.getString("titulo"),doc.getString("componente"),doc.getString("data_cadastro"));
-                    p.setId_autor(doc.getLong("id_usuario").intValue());
-                    p.setId_postagem(doc.getId());
-                    p.setId_componente(doc.getLong("id_componente").intValue());
-                    p.setDescricao(doc.getString("descricao"));
-                    p.setAtivo(doc.getBoolean("ativo"));
+                    if(ids.contains(doc.getLong("id_componente").intValue()) ){
+                        Postagem p = new Postagem(doc.getString("titulo"),doc.getString("componente"),doc.getString("data_cadastro"));
+                        p.setId_autor(doc.getLong("id_usuario").intValue());
+                        p.setId_postagem(doc.getId());
+                        p.setId_componente(doc.getLong("id_componente").intValue());
+                        p.setDescricao(doc.getString("descricao"));
+                        p.setAtivo(doc.getBoolean("ativo"));
 
-                    postagens.add(p);
+                        postagens.add(p);
+                    }
                 }
 
             }

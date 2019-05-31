@@ -9,15 +9,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.ufrn.angele.apotheca.R;
@@ -69,7 +66,7 @@ public class HomeFragment extends Fragment {
     private List<Turma> mTurmas;
     private UsuarioViewModel usuarioViewModel;
     private HashMap<Postagem, Usuario> mapPostagem = new HashMap<>();
-    private int idt;
+    private List<Integer> idt =new ArrayList<>();
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -110,10 +107,11 @@ public class HomeFragment extends Fragment {
         posts = new ArrayList<>();
         //posts.add(new Postagem("","",new Date().toString()));
         //mapPostagem.put(new Postagem("","",new Date().toString()), new Usuario());
-        idt = mTurmas.get(0).getId_componente();
 
         //posts.add(new Postagem("Resolução de exercícios em sala","Controladores",new Date()));
-
+        for (Turma t:mTurmas) {
+            idt.add(t.getId_componente());
+        }
     }
 
     @Override
@@ -128,22 +126,22 @@ public class HomeFragment extends Fragment {
         mViewHolder.mAdapter = new PostAdapter(context,posts,usuario, mapPostagem);
         mViewHolder.recyclerView.setAdapter(mViewHolder.mAdapter);
         mViewHolder.filtro_turma = mViewHolder.view.findViewById(R.id.filtro_turma);
-        ArrayAdapter<Turma> turmaDataAdapter = new ArrayAdapter<Turma>(context, android.R.layout.simple_spinner_item, mTurmas);
-        turmaDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mViewHolder.filtro_turma.setAdapter(turmaDataAdapter);
-        mViewHolder.filtro_turma.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                idt = mTurmas.get(position).getId_componente();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                idt = mTurmas.get(0).getId_componente();
-                mViewHolder.mAdapter.notifyDataSetChanged();
-            }
-
-        });
+//        ArrayAdapter<Turma> turmaDataAdapter = new ArrayAdapter<Turma>(context, android.R.layout.simple_spinner_item, mTurmas);
+//        turmaDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        mViewHolder.filtro_turma.setAdapter(turmaDataAdapter);
+//        mViewHolder.filtro_turma.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+//                idt = mTurmas.get(position).getId_componente();
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parentView) {
+//                idt = mTurmas.get(0).getId_componente();
+//                mViewHolder.mAdapter.notifyDataSetChanged();
+//            }
+//
+//        });
         postagemViewModel.getListaPostagem(idt).observe(this, new Observer<List<Postagem>>() {
             @Override
             public void onChanged(@Nullable List<Postagem> post) {

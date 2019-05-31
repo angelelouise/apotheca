@@ -80,9 +80,9 @@ public class PostagemDAOFirestore implements PostagemDAO {
     }
 
     @Override
-    public LiveData<List<Postagem>> buscarTodas(int id) {
+    public LiveData<List<Postagem>> buscarTodas(List<Integer> id) {
 //        return new PostagemFirebaseQueryLiveData(db.collection("postagem").whereGreaterThanOrEqualTo(documentId(), 0));
 
-        return new PostagemFirebaseQueryLiveData(db.collection("postagem").whereEqualTo("id_componente",id));
+        return new PostagemFirebaseQueryLiveData(db.collection("postagem"),id);
     }
 }

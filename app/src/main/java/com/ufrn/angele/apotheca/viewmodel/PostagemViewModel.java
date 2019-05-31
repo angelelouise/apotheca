@@ -38,7 +38,7 @@ public class PostagemViewModel extends AndroidViewModel {
     public void findByUsuario (Long id){
         listaPostagem = postagemRepository.findByUsuario(id);
     }
-    public LiveData<List<Postagem>> getListaPostagem(int ids) {
+    public LiveData<List<Postagem>> getListaPostagem(List<Integer> ids) {
         listaPostagem = postagemRepository.buscarTodas(ids);
         return listaPostagem;
     }

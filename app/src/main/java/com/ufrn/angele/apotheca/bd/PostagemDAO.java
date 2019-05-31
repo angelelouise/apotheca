@@ -37,7 +37,7 @@ public interface PostagemDAO {
 
 //    @Query("SELECT * FROM postagem ORDER BY id_postagem ASC")
     @Query("SELECT * FROM postagem where id_componente in (:id)")
-    public LiveData<List<Postagem>> buscarTodas(int id);
+    public LiveData<List<Postagem>> buscarTodas(List<Integer> id);
 
 }
 

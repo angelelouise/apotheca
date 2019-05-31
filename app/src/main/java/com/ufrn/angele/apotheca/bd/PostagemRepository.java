@@ -28,7 +28,7 @@ public class PostagemRepository {
                 .getSystemService(app.CONNECTIVITY_SERVICE);
     }
 
-    public LiveData<List<Postagem>> buscarTodas(int ids) {
+    public LiveData<List<Postagem>> buscarTodas(List<Integer> ids) {
         if (netOn()){
             listaPostagem = postagemDAOFirestore.buscarTodas(ids);
 
