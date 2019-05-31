@@ -2,6 +2,7 @@ package com.ufrn.angele.apotheca.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -227,14 +228,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private boolean dataCheck(){
         //verificar aqui se não houve atualização de dados do usuário
-        //usuarioViewModel.findByLogin(user.getCpf_cnpj());
-
-        usuarioRepository.inserir(usuario);
-        //Usuario teste=usuarioRepository.findByCPF(usuario.getCpf_cnpj());
-        //Usuario teste2=usuarioRepository.findById(usuario.getId_usuario());
-
-        //Log.d("teste1", teste.toString());
-        //Log.d("teste2", teste2.toString());
+        new checkUsuario().execute(usuario);
         for (Turma t: turmas) {
             Log.d("turmaBanco", t.toString());
             turmaRepository.inserir(t);
@@ -245,6 +239,39 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+    private class checkUsuario extends AsyncTask<Usuario, Void, Usuario> {
+        protected void onPreExecute() {
+            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+        }
+
+        protected Usuario doInBackground(Usuario... params) {
+            Usuario user =new Usuario();
+            try {
+
+                user=  usuarioViewModel.findById(params[0].getId_usuario());
+                //Log.d("user comentario", user.toString());
+                return user;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return user;
+        }
+        @Override
+        protected void onPostExecute(Usuario result) {
+            super.onPostExecute(result);
+            if(result!=null){
+                if(result.equals(usuario)){
+                    Log.d("concomitancia", "usuario já existe");
+
+                }else{
+                    //update
+                }
+            }
+            else{
+                usuarioViewModel.inserir(usuario);
+            }
+        }
     }
     private Fragment getHomeFragment() {
         Bundle bundle = new Bundle();

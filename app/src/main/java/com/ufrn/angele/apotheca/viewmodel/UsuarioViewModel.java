@@ -18,6 +18,9 @@ public class UsuarioViewModel extends AndroidViewModel {
         super(application);
         usuarioRepository = new UsuarioRepository(application);
     }
+    public void inserir (Usuario usuario){
+        usuarioRepository.inserir(usuario);
+    }
 
     public Usuario findByLogin(Long cpf){
         usuario = usuarioRepository.findByCPF(cpf);

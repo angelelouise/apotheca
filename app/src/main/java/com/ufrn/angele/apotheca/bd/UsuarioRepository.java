@@ -6,32 +6,45 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.ufrn.angele.apotheca.bd.firestore.UsuarioDAOFirestore;
 import com.ufrn.angele.apotheca.dominio.Usuario;
 
 public class UsuarioRepository {
     private Usuario usuario;
     private UsuarioDAO usuarioDAO;
     private ConnectivityManager cm;
-
+    private UsuarioDAOFirestore usuarioDAOFirestore;
     public UsuarioRepository(Application app) {
         usuarioDAO = UsuarioDB.getInstance(app).usuarioDAO();
+        usuarioDAOFirestore = new UsuarioDAOFirestore();
         cm =(ConnectivityManager)app
                 .getSystemService(app.CONNECTIVITY_SERVICE);
     }
     public void inserir (Usuario usuario){
         //if(netOn) > insere usuário no serviço
         new InsertASync(usuarioDAO).execute(usuario);
+        usuarioDAOFirestore.inserir(usuario);
     }
 
     public Usuario findByCPF(Long cpf){
 
         //if(netOn) > consulta usuário no serviço
-        usuario = usuarioDAO.findByCPF(cpf);
+        if (netOn()){
+            usuario = usuarioDAOFirestore.findByCPF(cpf);
+
+        }else{
+            usuario = usuarioDAO.findByCPF(cpf);
+        }
         return usuario;
     }
     public Usuario findById(int id_usuario){
         //if(netOn) > consulta usuário no serviço
-        usuario = usuarioDAO.findByIdUsuario(id_usuario);
+        if (netOn()){
+            usuario = usuarioDAOFirestore.findByIdUsuario(id_usuario);
+
+        }else{
+            usuario = usuarioDAO.findByIdUsuario(id_usuario);
+        }
         return usuario;
     }
     private class InsertASync extends AsyncTask<Usuario, Void, Void> {
