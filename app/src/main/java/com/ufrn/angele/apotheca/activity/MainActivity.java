@@ -370,7 +370,8 @@ public class MainActivity extends AppCompatActivity {
                             deleteDir(dir);
                         } catch (Exception e) {
                         }
-                        finish();
+                        Intent intent =  new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(intent);
                         return true;
                     default:
                         navItemIndex = 0;

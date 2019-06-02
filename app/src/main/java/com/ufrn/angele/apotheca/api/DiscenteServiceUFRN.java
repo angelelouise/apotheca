@@ -37,10 +37,7 @@ public class DiscenteServiceUFRN {
         JSONArray mArray;
         try {
             String responseData = response.body().string();
-            Log.d("responseData", responseData);
             mArray = new JSONArray(responseData);
-            Log.d("mArray", mArray.toString());
-
             //Discente discente = new Discente();
             for (int i = 0; i < mArray.length(); i++) {
                 Discente discente = new Discente();
@@ -53,7 +50,6 @@ public class DiscenteServiceUFRN {
                 discente.setId_discente(mJsonObject.getInt("id-discente"));
                 discente.setTipo_vinculo(mJsonObject.getString("sigla-nivel"));
 
-                Log.d("discente", discente.toString());
                 mDiscentes.add(discente);
 
             }
@@ -62,7 +58,6 @@ public class DiscenteServiceUFRN {
             e.printStackTrace();
         }
 
-        //Log.d("userService", mUser.toString());
         return mDiscentes;
     }
 }

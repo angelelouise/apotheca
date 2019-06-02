@@ -118,7 +118,7 @@ public class AutorizationActivity extends AppCompatActivity {
     private class ServiceTask extends AsyncTask<String, Void, InformacoesUFRN> {
 
         protected void onPreExecute() {
-            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+            pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
         }
 
         protected InformacoesUFRN doInBackground(String... params) {
@@ -141,7 +141,6 @@ public class AutorizationActivity extends AppCompatActivity {
                     if (dis != null) {
                         turmas = turmaServiceUFRN.getTurmas(urlBase, params[0], apiKey, dis);
                     }
-                    Log.d("aux", aux.toString());
                     info.setUsuario(aux);
                     info.setDiscentes(dis);
                     info.setTurmas(turmas);

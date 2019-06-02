@@ -37,7 +37,6 @@ public class UsuarioServiceUFRN {
             String responseData = response.body().string();
             Log.d("responseData", responseData);
 //            mArray = new JSONArray(responseData);
-//            Log.d("mArray", mArray.toString());
             Usuario user = new Usuario();
 //            for (int i = 0; i < mArray.length(); i++) {
 //                 JSONObject mJsonObject = mArray.getJSONObject(i);

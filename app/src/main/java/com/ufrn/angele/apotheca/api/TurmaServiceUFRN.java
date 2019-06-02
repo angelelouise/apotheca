@@ -41,9 +41,7 @@ public class TurmaServiceUFRN {
             JSONArray mArray;
             try {
                 String responseData = response.body().string();
-                Log.d("responseData", responseData);
                 mArray = new JSONArray(responseData);
-                Log.d("mArray", mArray.toString());
 
 
                 for (int i = 0; i < mArray.length(); i++) {
@@ -56,7 +54,6 @@ public class TurmaServiceUFRN {
                     turma.setId_discente(mJsonObject.getInt("id-discente"));
                     turma.setNome_componente(mJsonObject.getString("nome-componente"));
 
-                    Log.d("turma", turma.toString());
                     mTurmas.add(turma);
 
                 }
