@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Usuario result) {
             super.onPostExecute(result);
             if(result.getId_usuario()!=0){
-                if(result.equals(usuario)){
+                if(result.getId_usuario() == usuario.getId_usuario()){
                     Log.d("concomitancia", "usuario já existe");
 
                 }else{
