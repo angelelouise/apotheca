@@ -25,4 +25,8 @@ public interface UsuarioDAO {
 
     @Query("SELECT * FROM usuario WHERE id_usuario = :id_usuario LIMIT 1")
     public Usuario findByIdUsuario(int id_usuario);
+
+    @Query("SELECT * FROM usuario WHERE login = :login LIMIT 1")
+    public Usuario findByLogin(String login);
+
 }

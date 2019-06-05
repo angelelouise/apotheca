@@ -22,13 +22,17 @@ public class UsuarioViewModel extends AndroidViewModel {
         usuarioRepository.inserir(usuario);
     }
 
-    public Usuario findByLogin(Long cpf){
+    public Usuario findByCPF(Long cpf){
         usuario = usuarioRepository.findByCPF(cpf);
         return usuario;
     }
 
-    public Usuario findById(int id_usuario){
-        usuario = usuarioRepository.findById(id_usuario);
+    public Usuario findByIdUsuario(int id_usuario){
+        usuario = usuarioRepository.findByIdUsuario(id_usuario);
+        return usuario;
+    }
+    public Usuario findByLogin(String login){
+        usuario = usuarioRepository.findByLogin(login);
         return usuario;
     }
     public Usuario getUsuario() {

@@ -222,8 +222,8 @@ public class HomeFragment extends Fragment {
                 for (Postagem c : params[0]) {
 
                     try {
-                        Usuario user = usuarioViewModel.findById(c.getId_autor());
-                        Log.d("user comentario", user.toString());
+                        Usuario user = usuarioViewModel.findByIdUsuario(c.getId_autor());
+                        Log.d("user postagem", user.toString());
                         mapPostagem.put(c, user);
                     } catch (Exception e) {
                         e.printStackTrace();

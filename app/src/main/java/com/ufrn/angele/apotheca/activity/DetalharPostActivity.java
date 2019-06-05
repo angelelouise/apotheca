@@ -407,7 +407,7 @@ public class DetalharPostActivity extends AppCompatActivity {
 
                     try{
                         Log.d("comentario", c.getId_autor()+"");
-                        Usuario user = usuarioViewModel.findById(c.getId_autor());
+                        Usuario user = usuarioViewModel.findByIdUsuario(c.getId_autor());
                         //Log.d("user comentario", user.toString());
                         mapComentario.put(c, user);
 

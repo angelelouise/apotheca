@@ -37,13 +37,23 @@ public class UsuarioRepository {
         }
         return usuario;
     }
-    public Usuario findById(int id_usuario){
+    public Usuario findByIdUsuario(int id_usuario){
         //if(netOn) > consulta usuário no serviço
         if (netOn()){
             usuario = usuarioDAOFirestore.findByIdUsuario(id_usuario);
 
         }else{
             usuario = usuarioDAO.findByIdUsuario(id_usuario);
+        }
+        return usuario;
+    }
+    public Usuario findByLogin(String login){
+        //if(netOn) > consulta usuário no serviço
+        if (netOn()){
+            usuario = usuarioDAOFirestore.findByLogin(login);
+
+        }else{
+            usuario = usuarioDAO.findByLogin(login);
         }
         return usuario;
     }

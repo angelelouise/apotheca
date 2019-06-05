@@ -249,18 +249,18 @@ public class MainActivity extends AppCompatActivity {
             Usuario user =new Usuario();
             try {
 
-                user=  usuarioViewModel.findById(params[0].getId_usuario());
+                user=  usuarioViewModel.findByLogin(params[0].getLogin());
                 //Log.d("user comentario", user.toString());
                 return user;
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return user;
+            return null;
         }
         @Override
         protected void onPostExecute(Usuario result) {
             super.onPostExecute(result);
-            if(result.getId_usuario()!=0){
+            if(result !=null){
                 if(result.getId_usuario() == usuario.getId_usuario()){
                     Log.d("concomitancia", "usuario já existe");
 
