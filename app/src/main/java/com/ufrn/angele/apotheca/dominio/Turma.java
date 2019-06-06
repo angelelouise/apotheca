@@ -23,7 +23,7 @@ public class Turma implements Serializable {
     private String codigo_componente;
     @NonNull
     private String nome_componente;
-
+    private String chave_usuario;
     @Override
     public String toString() {
 //        return "Turma{" +
@@ -36,6 +36,14 @@ public class Turma implements Serializable {
 //                ", nome_componente='" + nome_componente + '\'' +
 //                '}';
         return nome_componente;
+    }
+
+    public String getChave_usuario() {
+        return chave_usuario;
+    }
+
+    public void setChave_usuario(String chave_usuario) {
+        this.chave_usuario = chave_usuario;
     }
 
     public int getId() {

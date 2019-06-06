@@ -28,7 +28,7 @@ public class UsuarioDAOFirestore implements UsuarioDAO {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     //private Usuario usuario;
-    private Map<String,Object> popularDados(Usuario usuario){
+    public Map<String,Object> popularDados(Usuario usuario){
         Map<String, Object> post = new HashMap<>();
         post.put("id_usuario",usuario.getId_usuario());
         post.put("cpf_cnpj",usuario.getCpf_cnpj());

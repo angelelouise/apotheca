@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.ufrn.angele.apotheca.bd.firestore.DiscenteDAOFirestore;
 import com.ufrn.angele.apotheca.dominio.Discente;
 
 import java.util.List;
@@ -13,16 +14,19 @@ import java.util.List;
 public class DiscenteRepository {
     private List<Discente> discentes;
     private DiscenteDAO discenteDAO;
+    private DiscenteDAOFirestore discenteDAOFirestore;
 
     private ConnectivityManager cm;
 
     public DiscenteRepository(Application app) {
         discenteDAO = DiscenteDB.getInstance(app).discenteDAO();
+        discenteDAOFirestore = new DiscenteDAOFirestore();
         cm =(ConnectivityManager)app
                 .getSystemService(app.CONNECTIVITY_SERVICE);
     }
     public void inserir (Discente discente){
-        new InsertASync(discenteDAO).execute(discente);
+        discenteDAOFirestore.inserir(discente);
+        //new InsertASync(discenteDAO).execute(discente);
     }
 
     public List<Discente> findByCPF(String cpf){

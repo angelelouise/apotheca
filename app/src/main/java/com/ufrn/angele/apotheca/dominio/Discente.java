@@ -23,6 +23,7 @@ public class Discente implements Serializable {
     private String nome_curso;
     private int id_tipo_discente;
     private String tipo_vinculo;
+    private String chave_usuario;
 
     @Override
     public String toString() {
@@ -37,6 +38,14 @@ public class Discente implements Serializable {
                 ", id_tipo_discente=" + id_tipo_discente +
                 ", tipo_vinculo='" + tipo_vinculo + '\'' +
                 '}';
+    }
+
+    public String getChave_usuario() {
+        return chave_usuario;
+    }
+
+    public void setChave_usuario(String chave_usuario) {
+        this.chave_usuario = chave_usuario;
     }
 
     public int getId() {

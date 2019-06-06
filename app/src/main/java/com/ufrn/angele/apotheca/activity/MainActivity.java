@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -22,7 +23,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -30,6 +35,7 @@ import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.bd.DiscenteRepository;
 import com.ufrn.angele.apotheca.bd.TurmaRepository;
 import com.ufrn.angele.apotheca.bd.UsuarioRepository;
+import com.ufrn.angele.apotheca.bd.firestore.UsuarioDAOFirestore;
 import com.ufrn.angele.apotheca.dominio.Discente;
 import com.ufrn.angele.apotheca.dominio.Turma;
 import com.ufrn.angele.apotheca.dominio.Usuario;
@@ -89,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
     private UsuarioRepository usuarioRepository;
     private TurmaRepository turmaRepository;
     private DiscenteRepository discenteRepository;
+    private String chave_usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -235,37 +242,123 @@ public class MainActivity extends AppCompatActivity {
     private boolean dataCheck(){
         //verificar aqui se não houve atualização de dados do usuário
         //new checkUsuario().execute(usuario);
-        FirebaseFirestore.getInstance().collection("usuario")
+        FirebaseFirestore.getInstance()
+                .collection("usuario")
                 .whereEqualTo("login", usuario.getLogin())
                 .get()
                 .addOnSuccessListener(
                         new OnSuccessListener<QuerySnapshot>() {
                             @Override
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
-                                    Log.d(TAG, doc.getId() + " => " + doc.getData());
-                                    if(doc.exists()){
-                                        if(doc.getLong("id_usuario").intValue() == usuario.getId_usuario()){
+                                if(queryDocumentSnapshots.isEmpty()){
+                                    usuarioViewModel.inserir(usuario);
+                                }else{
+                                    for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                                        Log.d(TAG, doc.getId() + " => " + doc.getData());
+                                        if(doc.exists()){
                                             Log.d("concomitancia", "usuario já existe");
+
+                                        }else{
+                                            usuarioViewModel.inserir(usuario);
                                         }
 
-                                    }else{
-                                        usuarioViewModel.inserir(usuario);
                                     }
-
-                                    Log.d(TAG, "findbylogin" + usuario);
                                 }
+
                             }
                         }
 
                 );
-        for (Turma t: turmas) {
-            Log.d("turmaBanco", t.toString());
-            turmaRepository.inserir(t);
-        }
-        for (Discente d: discentes) {
+
+        for (final Discente d: discentes) {
             Log.d("discenteBanco", d.toString());
-            discenteRepository.inserir(d);
+            FirebaseFirestore.getInstance()
+                    .collection("usuario")
+                    .whereEqualTo("id_usuario",d.getId_usuario())
+                    .get()
+                    .addOnSuccessListener(
+                            new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    for (final DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                                        Log.d(TAG, doc.getId() + "  B=> " + doc.getData());
+                                                doc.getReference()
+                                                .collection("discente")
+                                                .whereEqualTo("id_discente", d.getId_discente())
+                                                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                        if(queryDocumentSnapshots.isEmpty()){
+                                                            Log.d(TAG, "chave usuario" + doc.getId());
+                                                            d.setChave_usuario(doc.getId());
+                                                            discenteRepository.inserir(d);
+                                                        }else{
+                                                            for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                                                                if(document.exists()){
+                                                                    d.setChave_usuario(doc.getId());
+                                                                    if(document.getLong("id_discente").intValue() == d.getId_discente()){
+                                                                        Log.d("concomitancia", "discente já existe");
+                                                                    }
+
+                                                                }else{
+                                                                    d.setChave_usuario(doc.getId());
+                                                                    discenteRepository.inserir(d);
+                                                                }
+                                                            }
+                                                        }
+
+                                                    }
+
+
+                                                });
+
+
+                                    }
+                                }
+                            }
+
+                    );
+        }
+        for (final Turma t: turmas) {
+            //Log.d("turmaBanco", t.toString());
+            FirebaseFirestore.getInstance()
+                    .collection("usuario")
+                    .whereEqualTo("id_usuario",usuario.getId_usuario())
+                    .get()
+                    .addOnSuccessListener(
+                            new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    for (final DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                                        Log.d(TAG, doc.getId() + "  B=> " + doc.getData());
+                                        doc.getReference()
+                                                .collection("turmas")
+                                                .whereEqualTo("id_componente", t.getId_componente())
+                                                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                        if(queryDocumentSnapshots.isEmpty()){
+                                                            t.setChave_usuario(doc.getId());
+                                                            turmaRepository.inserir(t);
+                                                        }else{
+                                                            for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                                                                if(document.exists()){
+                                                                    t.setChave_usuario(doc.getId());
+                                                                    Log.d("concomitancia", "turma já existe");
+
+                                                                }
+                                                            }
+                                                        }
+
+                                                    }
+                                                });
+
+
+                                    }
+                                }
+                            }
+
+                    );
         }
 
         return true;
