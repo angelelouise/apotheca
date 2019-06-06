@@ -71,7 +71,7 @@ public class PostagemFirebaseQueryLiveData  extends LiveData<List<Postagem>> {
                         p.setId_componente(doc.getLong("id_componente").intValue());
                         p.setDescricao(doc.getString("descricao"));
                         p.setAtivo(doc.getBoolean("ativo"));
-
+                        p.setUrl_autor(doc.getString("url_autor"));
                         postagens.add(p);
                     }
                 }

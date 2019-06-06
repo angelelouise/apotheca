@@ -1,5 +1,6 @@
 package com.ufrn.angele.apotheca.fragment;
 
+import android.app.Application;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -17,8 +18,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.adapters.PostAdapter;
+import com.ufrn.angele.apotheca.bd.UsuarioRepository;
 import com.ufrn.angele.apotheca.dominio.Postagem;
 import com.ufrn.angele.apotheca.dominio.Turma;
 import com.ufrn.angele.apotheca.dominio.Usuario;
@@ -29,6 +36,8 @@ import com.ufrn.angele.apotheca.viewmodel.UsuarioViewModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static android.support.constraint.Constraints.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,8 +74,10 @@ public class HomeFragment extends Fragment {
     private Usuario usuario;
     private List<Turma> mTurmas;
     private UsuarioViewModel usuarioViewModel;
+    private UsuarioRepository usuarioRepository;
     private HashMap<Postagem, Usuario> mapPostagem = new HashMap<>();
     private List<Integer> idt =new ArrayList<>();
+    Application app;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -102,7 +113,8 @@ public class HomeFragment extends Fragment {
             mTurmas = (List<Turma>) getArguments().getSerializable(Constants.INTENT_TURMA);
         }
         //criar dados para testes
-        usuarioViewModel = ViewModelProviders.of(this).get(UsuarioViewModel.class);
+        //usuarioViewModel= new UsuarioViewModel(app);
+
         postagemViewModel = ViewModelProviders.of(this).get(PostagemViewModel.class);
         posts = new ArrayList<>();
         //posts.add(new Postagem("","",new Date().toString()));
@@ -113,8 +125,13 @@ public class HomeFragment extends Fragment {
             idt.add(t.getId_componente());
         }
     }
-
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        app = getActivity().getApplication();
+        usuarioRepository = new UsuarioRepository(app);
+    }
+        @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mViewHolder.view = inflater.inflate(R.layout.fragment_home, container, false);
@@ -146,10 +163,10 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChanged(@Nullable List<Postagem> post) {
                 Log.d("idt","idt" +idt);
-                Log.d("post","post" +post);
+                //Log.d("post","post" +post);
                 posts.clear();
                 posts.addAll(post);
-                new getAutor().execute(post);
+                mViewHolder.mAdapter.notifyDataSetChanged();
             }
         });
 
@@ -211,42 +228,41 @@ public class HomeFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-    private class getAutor extends AsyncTask<List<Postagem>, Void, Boolean> {
-        protected void onPreExecute() {
-            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
-        }
-
-        protected Boolean doInBackground(List<Postagem>... params) {
-
-            try {
-                for (Postagem c : params[0]) {
-
-                    try {
-                        Usuario user = usuarioViewModel.findByIdUsuario(c.getId_autor());
-                        Log.d("user postagem", user.toString());
-                        mapPostagem.put(c, user);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    Log.d("autor", mapPostagem.toString());
-                }
-
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return false;
-        }
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-
-            if (result) {
-                mViewHolder.mAdapter.notifyDataSetChanged();
-                Log.d("id", "deu certo");
-            }
-
-        }
-    }
+//    private class getAutor extends AsyncTask<List<Postagem>, Void, Boolean> {
+//        protected void onPreExecute() {
+//            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+//        }
+//
+//        protected Boolean doInBackground(List<Postagem>... params) {
+//
+//            try {
+//                for (Postagem c : params[0]) {
+//
+//                    try {
+//                        //
+//                        mapPostagem.put(c, usuarioRepository.findByIdUsuario(c.getId_autor()));
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    Log.d("mapPostagem", mapPostagem.toString());
+//                }
+//
+//                return true;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            return false;
+//        }
+//        @Override
+//        protected void onPostExecute(Boolean result) {
+//            super.onPostExecute(result);
+//
+//            if (result) {
+//                mViewHolder.mAdapter.notifyDataSetChanged();
+//                //Log.d("id", "deu certo");
+//            }
+//
+//        }
+//    }
 }

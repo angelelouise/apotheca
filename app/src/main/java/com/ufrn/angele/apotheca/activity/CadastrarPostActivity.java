@@ -85,6 +85,7 @@ public class CadastrarPostActivity extends AppCompatActivity {
                 p.setAtivo(true);
                 p.setId_componente(t.getId_componente());
                 p.setComponente(turma);
+                p.setUrl_autor(mUser.getUrl_foto());
 //                if(tipo == TIPO0){
 //                    p.setTipo_postagem(0);
 //                }else{

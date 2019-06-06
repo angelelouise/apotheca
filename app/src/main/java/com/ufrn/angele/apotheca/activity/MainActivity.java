@@ -22,6 +22,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.bd.DiscenteRepository;
 import com.ufrn.angele.apotheca.bd.TurmaRepository;
@@ -40,6 +44,8 @@ import com.ufrn.angele.apotheca.viewmodel.UsuarioViewModel;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import static android.support.constraint.Constraints.TAG;
 
 public class MainActivity extends AppCompatActivity {
     private static class ViewHolder{
@@ -228,7 +234,31 @@ public class MainActivity extends AppCompatActivity {
     }
     private boolean dataCheck(){
         //verificar aqui se não houve atualização de dados do usuário
-        new checkUsuario().execute(usuario);
+        //new checkUsuario().execute(usuario);
+        FirebaseFirestore.getInstance().collection("usuario")
+                .whereEqualTo("login", usuario.getLogin())
+                .get()
+                .addOnSuccessListener(
+                        new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                                    Log.d(TAG, doc.getId() + " => " + doc.getData());
+                                    if(doc.exists()){
+                                        if(doc.getLong("id_usuario").intValue() == usuario.getId_usuario()){
+                                            Log.d("concomitancia", "usuario já existe");
+                                        }
+
+                                    }else{
+                                        usuarioViewModel.inserir(usuario);
+                                    }
+
+                                    Log.d(TAG, "findbylogin" + usuario);
+                                }
+                            }
+                        }
+
+                );
         for (Turma t: turmas) {
             Log.d("turmaBanco", t.toString());
             turmaRepository.inserir(t);
@@ -240,39 +270,65 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
-    private class checkUsuario extends AsyncTask<Usuario, Void, Usuario> {
-        protected void onPreExecute() {
-            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
-        }
-
-        protected Usuario doInBackground(Usuario... params) {
-            Usuario user =new Usuario();
-            try {
-
-                user=  usuarioViewModel.findByLogin(params[0].getLogin());
-                //Log.d("user comentario", user.toString());
-                return user;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Usuario result) {
-            super.onPostExecute(result);
-            if(result !=null){
-                if(result.getId_usuario() == usuario.getId_usuario()){
-                    Log.d("concomitancia", "usuario já existe");
-
-                }else{
-                    //update
-                }
-            }
-            else{
-                usuarioViewModel.inserir(usuario);
-            }
-        }
-    }
+//    private class checkUsuario extends AsyncTask<Usuario, Void, Usuario> {
+//        protected void onPreExecute() {
+//            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+//        }
+//
+//        protected Usuario doInBackground(Usuario... params) {
+//
+//            try {
+//
+//                //user=  usuarioViewModel.findByLogin(params[0].getLogin());
+//                final Usuario finalUser = new Usuario();
+//                FirebaseFirestore.getInstance().collection("usuario")
+//                        .whereEqualTo("login", params[0].getLogin())
+//                        .get()
+//                        .addOnSuccessListener(
+//                                new OnSuccessListener<QuerySnapshot>() {
+//                                    @Override
+//                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                                        for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+//                                            Log.d(TAG, doc.getId() + " => " + doc.getData());
+//                                            if(doc.exists()){
+//                                                if(doc.getLong("id_usuario").intValue() == usuario.getId_usuario()){
+//                                                        Log.d("concomitancia", "usuario já existe");
+//
+//                                                }
+//
+//                                            }else{
+//                                                usuarioViewModel.inserir(usuario);
+//                                            }
+//
+//                                            Log.d(TAG, "findbylogin" + usuario);
+//                                        }
+//                                    }
+//                                }
+//
+//                        );
+//                Log.d("user comentario", finalUser.toString());
+//                return finalUser;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//        @Override
+//        protected void onPostExecute(Usuario result) {
+//            super.onPostExecute(result);
+//            if(result !=null){
+//                if(result.getId_usuario() == usuario.getId_usuario()){
+//                    Log.d("concomitancia", "usuario já existe");
+//
+//                }else{
+//                    //update
+//                }
+//            }
+//            else{
+//                usuarioViewModel.inserir(usuario);
+//            }
+//        }
+//    }
     private Fragment getHomeFragment() {
         Bundle bundle = new Bundle();
         switch (navItemIndex) {

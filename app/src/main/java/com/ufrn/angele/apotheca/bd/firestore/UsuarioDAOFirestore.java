@@ -105,7 +105,7 @@ public class UsuarioDAOFirestore implements UsuarioDAO {
 
     @Override
     public Usuario findByIdUsuario(int id_usuario) {
-        final Usuario usuario= new Usuario();
+        final Usuario usuario2= new Usuario();
         db.collection("usuario")
                 .whereEqualTo("id_usuario",id_usuario)
                 .get()
@@ -116,22 +116,22 @@ public class UsuarioDAOFirestore implements UsuarioDAO {
                             for (DocumentSnapshot doc : task.getResult()) {
                                 Log.d(TAG, doc.getId() + " => " + doc.getData());
                                 if(doc.exists()){
-                                    usuario.setId_usuario(doc.getLong("id_usuario").intValue());
-                                    usuario.setEmail(doc.getString("email"));
-                                    usuario.setUrl_foto(doc.getString("url_foto"));
-                                    usuario.setNome(doc.getString("nome"));
-                                    usuario.setLogin(doc.getString("login"));
-                                    usuario.setCpf_cnpj(doc.getLong("cpf_cnpj"));
+                                    usuario2.setId_usuario(doc.getLong("id_usuario").intValue());
+                                    usuario2.setEmail(doc.getString("email"));
+                                    usuario2.setUrl_foto(doc.getString("url_foto"));
+                                    usuario2.setNome(doc.getString("nome"));
+                                    usuario2.setLogin(doc.getString("login"));
+                                    usuario2.setCpf_cnpj(doc.getLong("cpf_cnpj"));
                                 }
 
-                                Log.d(TAG, "findByIdUsuario:" + usuario);
+                                Log.d(TAG, "findByIdUsuario:" + usuario2);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });
-        return usuario;
+        return usuario2;
 
     }
     @Override

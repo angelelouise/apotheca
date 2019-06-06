@@ -19,6 +19,7 @@ public class Postagem implements Serializable {
     private String data_cadastro;
     private boolean ativo;
     private String descricao;
+    private String url_autor;
 
 
 
@@ -41,6 +42,14 @@ public class Postagem implements Serializable {
         this.titulo = titulo;
         this.componente = componente;
         this.data_cadastro = data_cadastro;
+    }
+
+    public String getUrl_autor() {
+        return url_autor;
+    }
+
+    public void setUrl_autor(String url_autor) {
+        this.url_autor = url_autor;
     }
 
     public String getDescricao() {

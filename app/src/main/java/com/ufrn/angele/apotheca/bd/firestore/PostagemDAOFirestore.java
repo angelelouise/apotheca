@@ -30,6 +30,7 @@ public class PostagemDAOFirestore implements PostagemDAO {
         post.put("componente",postagem.getComponente());
         post.put("data_cadastro",postagem.getData_cadastro());
         post.put("ativo",postagem.isAtivo());
+        post.put("url_autor",postagem.getUrl_autor());
 
         return post;
     }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,14 +109,15 @@ public class PostAdapter extends RecyclerView.Adapter{
             list_turma.setText(mPostagens.get(position).getComponente());
             list_timestamp.setText(mPostagens.get(position).getData_cadastro().toString());
             //list_avatar.setImageResource(mPostagens.get(position).getAvatar());
-            if(map!=null){
-                Glide.with(mContext).load(map.get(mPostagens.get(position)).getUrl_foto())
+
+
+            Glide.with(mContext).load(mPostagens.get(position).getUrl_autor())
                         .crossFade()
                         .thumbnail(0.5f)
                         .bitmapTransform(new CircleTransform(mContext))
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(list_avatar);
-            }
+
         }
         @Override
         public void onClick(View view) {
