@@ -3,7 +3,6 @@ package com.ufrn.angele.apotheca.activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -121,8 +120,9 @@ public class DetalharPostActivity extends AppCompatActivity {
                                 mUser.getId_usuario(),
                                 new Date().toString());
                         votoViewModel.inserir(voto);
-                        new atualizarVoto().execute(comentarios.get(position));
-
+                        //new atualizarVoto().execute(comentarios.get(position));
+                        atualizaVotosComentarios(mPostagem,comentarios.get(position));
+                        mViewHolder.comentarioAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -135,7 +135,9 @@ public class DetalharPostActivity extends AppCompatActivity {
                                 mUser.getId_usuario(),
                                 new Date().toString());
                         votoViewModel.inserir(downvote);
-                        new atualizarNegativacao().execute(comentarios.get(position));
+                        //new atualizarNegativacao().execute(comentarios.get(position));
+                        atualizaVotosComentarios(mPostagem,comentarios.get(position));
+                        mViewHolder.comentarioAdapter.notifyDataSetChanged();
                     }
                 });
         mViewHolder.lista_comentarios.setAdapter(mViewHolder.comentarioAdapter);
@@ -149,11 +151,12 @@ public class DetalharPostActivity extends AppCompatActivity {
                 //postagemAdapter.setPalavras(post);
                 comentarios.clear();
                 comentarios.addAll(comentario);
-                //atualizarVotos();
-                //new getAutor().execute(comentario);
-//                new atualizarVotos().execute(comentario);
-//                new atualizarNegativacoes().execute(comentario);
-                
+                for (Comentario c:comentario) {
+                    atualizaVotosComentarios(mPostagem,c);
+                    mViewHolder.comentarioAdapter.notifyDataSetChanged();
+                }
+
+
             }
         });
 
@@ -226,186 +229,265 @@ public class DetalharPostActivity extends AppCompatActivity {
         finish();
         return true;
     }
-
-
-    private class atualizarVotos extends AsyncTask<List<Comentario>, Void, Boolean>{
-    protected void onPreExecute() {
-        //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
-    }
-
-    protected Boolean doInBackground(List<Comentario>... params) {
-
-        try {
-            for (Comentario c:params[0]) {
-
-                try{
-                    int count_votos =  votoViewModel.getCountVotosComentarios(mPostagem.getId_postagem(),c.getId());
-                    //Log.d("user comentario", user.toString());
-                    if(mapVotos.get(c)==null){
-                        mapVotos.put(c, count_votos);
-                        Log.d("map",mapVotos.toString() + "total: " + count_votos);
-                    }else{
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            mapVotos.replace(c, count_votos);
-                        }else {
-                            mapVotos.put(c, count_votos);
+    private void atualizaVotosPostagem(String id_postagem){
+        FirebaseFirestore
+                .getInstance()
+                .collection("postagem")
+                .document(id_postagem)
+                .collection("voto")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(LOG_TAG, "Listen failed.", e);
+                            return;
                         }
+                        int countV=0;
+                        int countN=0;
+                        for(DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()){
+                            if(doc.getBoolean("voto")==true){
+                                countV++;
+                            }
+                            if(doc.getBoolean("negativacao")==true){
+                                countN++;
+                            }
+
+                        }
+                        mViewHolder.post_count_votos.setText(String.valueOf(countV));
+                        mViewHolder.post_count_negativacoes.setText(String.valueOf(countN));
                     }
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
+                });
     }
-    @Override
-    protected void onPostExecute(Boolean result) {
-        super.onPostExecute(result);
+    private void atualizaVotosComentarios(Postagem postagem, final Comentario comentario){
+        FirebaseFirestore
+                .getInstance()
+                .collection("postagem")
+                .document(postagem.getId_postagem())
+                .collection("comentario")
+                .document(comentario.getId())
+                .collection("voto")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(LOG_TAG, "Listen failed.", e);
+                            return;
+                        }
+                        int countV=0;
+                        int countN=0;
+                        for(DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()){
+                            if(doc.getBoolean("voto")==true){
+                                countV++;
+                            }
+                            if(doc.getBoolean("negativacao")==true){
+                                countN++;
+                            }
 
-        if (result) {
-            mViewHolder.comentarioAdapter.notifyDataSetChanged();
-            Log.d("id", "deu certo");
-        }
-
-    }
-}
-
-    private class atualizarVoto extends AsyncTask<Comentario, Void, Boolean>{
-        protected void onPreExecute() {
-            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
-        }
-
-        protected Boolean doInBackground(Comentario... params) {
-
-            try {
-
-                int count_votos =  votoViewModel.getCountVotosComentarios(mPostagem.getId_postagem(),params[0].getId());
-
-
-                //Log.d("user comentario", user.toString());
-                if(mapVotos.get(params[0])==null){
-                    mapVotos.put(params[0], count_votos);
-                    Log.d("map",mapVotos.toString() + "total: " + count_votos);
-                }else{
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        mapVotos.replace(params[0], count_votos);
-                    }else {
-                        mapVotos.put(params[0], count_votos);
-                    }
-                }
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return false;
-        }
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-
-            if (result) {
-                mViewHolder.comentarioAdapter.notifyDataSetChanged();
-                Log.d("id", "deu certo");
-            }
-
-        }
-    }
-
-    private class atualizarNegativacoes extends AsyncTask<List<Comentario>, Void, Boolean>{
-        protected void onPreExecute() {
-            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
-        }
-
-        protected Boolean doInBackground(List<Comentario>... params) {
-
-            try {
-                for (Comentario c:params[0]) {
-
-                    try{
-                        int count_negativacoes = votoViewModel.getCountNegativacoesComentarios(mPostagem.getId_postagem(),c.getId());
-                        //Log.d("user comentario", user.toString());
-                        if(mapNegativacoes.get(c)==null){
-                            mapNegativacoes.put(c, count_negativacoes);
-                            Log.d("mapNegativo",mapNegativacoes.toString() + "total: " + count_negativacoes);
+                        }
+                        if(mapNegativacoes.get(comentario)==null){
+                            mapNegativacoes.put(comentario, countN);
+                            Log.d("mapNegativo2",mapNegativacoes.toString() + "total: " + countN);
                         }else{
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                mapNegativacoes.replace(c, count_negativacoes);
+                                mapNegativacoes.replace(comentario, countN);
+                                Log.d("mapNegativo2",mapNegativacoes.toString() + "total: " + countN);
                             }else {
-                                mapNegativacoes.put(c, count_negativacoes);
+                                mapNegativacoes.put(comentario, countN);
                             }
                         }
-
-                    }catch (Exception e){
-                        e.printStackTrace();
+                        if(mapVotos.get(comentario)==null){
+                            mapVotos.put(comentario, countV);
+                            Log.d("mapPositivo",mapNegativacoes.toString() + "total: " + countV);
+                        }else{
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                mapVotos.put(comentario, countV);
+                                Log.d("mapPositivo",mapNegativacoes.toString() + "total: " + countN);
+                            }else {
+                                mapVotos.put(comentario, countV);
+                            }
+                        }
                     }
-                }
-
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return false;
-        }
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-
-            if (result) {
-                mViewHolder.comentarioAdapter.notifyDataSetChanged();
-                Log.d("id", "rodou  atualizar Negativacoes");
-            }
-
-        }
+                });
     }
 
-    private class atualizarNegativacao extends AsyncTask<Comentario, Void, Boolean>{
-        protected void onPreExecute() {
-            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
-        }
+//    private class atualizarVotos extends AsyncTask<List<Comentario>, Void, Boolean>{
+//    protected void onPreExecute() {
+//        //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+//    }
 
-        protected Boolean doInBackground(Comentario... params) {
+//    protected Boolean doInBackground(List<Comentario>... params) {
+//
+//        try {
+//            for (Comentario c:params[0]) {
+//
+//                try{
+//                    int count_votos =  votoViewModel.getCountVotosComentarios(mPostagem.getId_postagem(),c.getId());
+//                    //Log.d("user comentario", user.toString());
+//                    if(mapVotos.get(c)==null){
+//                        mapVotos.put(c, count_votos);
+//                        Log.d("map",mapVotos.toString() + "total: " + count_votos);
+//                    }else{
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                            mapVotos.replace(c, count_votos);
+//                        }else {
+//                            mapVotos.put(c, count_votos);
+//                        }
+//                    }
+//
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            return true;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return false;
+//    }
+//    @Override
+//    protected void onPostExecute(Boolean result) {
+//        super.onPostExecute(result);
+//
+//        if (result) {
+//            mViewHolder.comentarioAdapter.notifyDataSetChanged();
+//            Log.d("id", "deu certo");
+//        }
+//
+//    }
+//}
 
-            try {
-                int count_negativacoes = votoViewModel.getCountNegativacoesComentarios(mPostagem.getId_postagem(),params[0].getId());
-
-                //Log.d("user comentario", user.toString());
-                if(mapNegativacoes.get(params[0])==null){
-                    mapNegativacoes.put(params[0], count_negativacoes);
-                    Log.d("mapNegativo2",mapNegativacoes.toString() + "total: " + count_negativacoes);
-                }else{
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        mapNegativacoes.replace(params[0], count_negativacoes);
-                        Log.d("mapNegativo2",mapNegativacoes.toString() + "total: " + count_negativacoes);
-                    }else {
-                        mapNegativacoes.put(params[0], count_negativacoes);
-                    }
-                }
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return false;
-        }
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-
-            if (result) {
-                mViewHolder.comentarioAdapter.notifyDataSetChanged();
-                Log.d("id", "rodou  atualizar Negativacao");
-            }
-
-        }
-    }
+//    private class atualizarVoto extends AsyncTask<Comentario, Void, Boolean>{
+//        protected void onPreExecute() {
+//            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+//        }
+//
+//        protected Boolean doInBackground(Comentario... params) {
+//
+//            try {
+//
+//                int count_votos =  votoViewModel.getCountVotosComentarios(mPostagem.getId_postagem(),params[0].getId());
+//
+//
+//                //Log.d("user comentario", user.toString());
+//                if(mapVotos.get(params[0])==null){
+//                    mapVotos.put(params[0], count_votos);
+//                    Log.d("map",mapVotos.toString() + "total: " + count_votos);
+//                }else{
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                        mapVotos.replace(params[0], count_votos);
+//                    }else {
+//                        mapVotos.put(params[0], count_votos);
+//                    }
+//                }
+//                return true;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            return false;
+//        }
+//        @Override
+//        protected void onPostExecute(Boolean result) {
+//            super.onPostExecute(result);
+//
+//            if (result) {
+//                mViewHolder.comentarioAdapter.notifyDataSetChanged();
+//                Log.d("id", "deu certo");
+//            }
+//
+//        }
+//    }
+//
+//    private class atualizarNegativacoes extends AsyncTask<List<Comentario>, Void, Boolean>{
+//        protected void onPreExecute() {
+//            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+//        }
+//
+//        protected Boolean doInBackground(List<Comentario>... params) {
+//
+//            try {
+//                for (Comentario c:params[0]) {
+//
+//                    try{
+//                        int count_negativacoes = votoViewModel.getCountNegativacoesComentarios(mPostagem.getId_postagem(),c.getId());
+//                        //Log.d("user comentario", user.toString());
+//                        if(mapNegativacoes.get(c)==null){
+//                            mapNegativacoes.put(c, count_negativacoes);
+//                            Log.d("mapNegativo",mapNegativacoes.toString() + "total: " + count_negativacoes);
+//                        }else{
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                                mapNegativacoes.replace(c, count_negativacoes);
+//                            }else {
+//                                mapNegativacoes.put(c, count_negativacoes);
+//                            }
+//                        }
+//
+//                    }catch (Exception e){
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//                return true;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            return false;
+//        }
+//        @Override
+//        protected void onPostExecute(Boolean result) {
+//            super.onPostExecute(result);
+//
+//            if (result) {
+//                mViewHolder.comentarioAdapter.notifyDataSetChanged();
+//                Log.d("id", "rodou  atualizar Negativacoes");
+//            }
+//
+//        }
+//    }
+//
+//    private class atualizarNegativacao extends AsyncTask<Comentario, Void, Boolean>{
+//        protected void onPreExecute() {
+//            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+//        }
+//
+//        protected Boolean doInBackground(Comentario... params) {
+//
+//            try {
+//                int count_negativacoes = votoViewModel.getCountNegativacoesComentarios(mPostagem.getId_postagem(),params[0].getId());
+//
+//                //Log.d("user comentario", user.toString());
+//                if(mapNegativacoes.get(params[0])==null){
+//                    mapNegativacoes.put(params[0], count_negativacoes);
+//                    Log.d("mapNegativo2",mapNegativacoes.toString() + "total: " + count_negativacoes);
+//                }else{
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                        mapNegativacoes.replace(params[0], count_negativacoes);
+//                        Log.d("mapNegativo2",mapNegativacoes.toString() + "total: " + count_negativacoes);
+//                    }else {
+//                        mapNegativacoes.put(params[0], count_negativacoes);
+//                    }
+//                }
+//                return true;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            return false;
+//        }
+//        @Override
+//        protected void onPostExecute(Boolean result) {
+//            super.onPostExecute(result);
+//
+//            if (result) {
+//                mViewHolder.comentarioAdapter.notifyDataSetChanged();
+//                Log.d("id", "rodou  atualizar Negativacao");
+//            }
+//
+//        }
+//    }
 
 //    private class getAutor extends AsyncTask<List<Comentario>, Void, Boolean>{
 //        protected void onPreExecute() {
@@ -507,84 +589,5 @@ public class DetalharPostActivity extends AppCompatActivity {
 //
 //        }
 //    }
-    private void atualizaVotosPostagem(String id_postagem){
-        FirebaseFirestore
-                .getInstance()
-                .collection("postagem")
-                .document(id_postagem)
-                .collection("voto")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(LOG_TAG, "Listen failed.", e);
-                            return;
-                        }
-                        int countV=0;
-                        int countN=0;
-                        for(DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()){
-                            if(doc.getBoolean("voto")==true){
-                                countV++;
-                            }
-                            if(doc.getBoolean("negativacao")==true){
-                                countN++;
-                            }
 
-                        }
-                        mViewHolder.post_count_votos.setText(String.valueOf(countV));
-                        mViewHolder.post_count_negativacoes.setText(String.valueOf(countN));
-                    }
-                });
-    }
-    private void atualizaVotosComentarios(Postagem postagem, final Comentario comentario){
-        FirebaseFirestore
-                .getInstance()
-                .collection("postagem")
-                .document(postagem.getId_postagem())
-                .collection("comentario")
-                .document(comentario.getId())
-                .collection("voto")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(LOG_TAG, "Listen failed.", e);
-                            return;
-                        }
-                        int countV=0;
-                        int countN=0;
-                        for(DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()){
-                            if(doc.getBoolean("voto")==true){
-                                countV++;
-                            }
-                            if(doc.getBoolean("negativacao")==true){
-                                countN++;
-                            }
-
-                        }
-                        if(mapNegativacoes.get(comentario)==null){
-                            mapNegativacoes.put(comentario, countN);
-                            Log.d("mapNegativo2",mapNegativacoes.toString() + "total: " + countN);
-                        }else{
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                mapNegativacoes.replace(comentario, countN);
-                                Log.d("mapNegativo2",mapNegativacoes.toString() + "total: " + countN);
-                            }else {
-                                mapNegativacoes.put(comentario, countN);
-                            }
-                        }
-                        if(mapVotos.get(comentario)==null){
-                            mapVotos.put(comentario, countV);
-                            Log.d("mapPositivo",mapNegativacoes.toString() + "total: " + countV);
-                        }else{
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                mapVotos.put(comentario, countV);
-                                Log.d("mapPositivo",mapNegativacoes.toString() + "total: " + countN);
-                            }else {
-                                mapVotos.put(comentario, countV);
-                            }
-                        }
-                    }
-                });
-    }
 }
