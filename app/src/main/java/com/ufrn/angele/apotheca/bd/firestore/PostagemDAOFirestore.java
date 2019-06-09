@@ -20,7 +20,7 @@ import static android.support.constraint.Constraints.TAG;
 public class PostagemDAOFirestore implements PostagemDAO {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private Map<String,Object> popularDados(Postagem postagem){
+    public Map<String,Object> popularDados(Postagem postagem){
         Map<String, Object> post = new HashMap<>();
         post.put("descricao",postagem.getDescricao());
         post.put("titulo",postagem.getTitulo());
