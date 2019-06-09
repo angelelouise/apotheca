@@ -2,10 +2,8 @@ package com.ufrn.angele.apotheca.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -23,11 +21,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -35,7 +29,6 @@ import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.bd.DiscenteRepository;
 import com.ufrn.angele.apotheca.bd.TurmaRepository;
 import com.ufrn.angele.apotheca.bd.UsuarioRepository;
-import com.ufrn.angele.apotheca.bd.firestore.UsuarioDAOFirestore;
 import com.ufrn.angele.apotheca.dominio.Discente;
 import com.ufrn.angele.apotheca.dominio.Turma;
 import com.ufrn.angele.apotheca.dominio.Usuario;
@@ -332,9 +325,10 @@ public class MainActivity extends AppCompatActivity {
                                     for (final DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
                                         Log.d(TAG, doc.getId() + "  B=> " + doc.getData());
                                         doc.getReference()
-                                                .collection("turmas")
+                                                .collection("turma")
                                                 .whereEqualTo("id_componente", t.getId_componente())
-                                                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                .get()
+                                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                                     @Override
                                                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                                         if(queryDocumentSnapshots.isEmpty()){
