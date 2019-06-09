@@ -6,9 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -71,7 +69,9 @@ public class ComentarioFirebaseQueryLiveData extends LiveData<List<Comentario>> 
                             doc.getLong("id_autor").intValue(),
                             doc.getString("data_cadastro"),
                             doc.getBoolean("escolhido"),
-                            doc.getString("titulo"));
+                            doc.getString("titulo"),
+                            doc.getString("nome"),
+                            doc.getString("url_autor"));
 
                     comentarios.add(p);
                 }

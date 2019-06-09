@@ -6,12 +6,8 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.ufrn.angele.apotheca.bd.ComentarioDAO;
 import com.ufrn.angele.apotheca.dominio.Comentario;
 
@@ -32,6 +28,8 @@ public class ComentarioDAOFirestore implements ComentarioDAO {
         post.put("id_postagem",comentario.getId_postagem());
         post.put("data_cadastro",comentario.getData_cadastro());
         post.put("escolhido",comentario.isEscolhido());
+        post.put("nome",comentario.getNome());
+        post.put("url_autor",comentario.getUrl_autor());
 
         return post;
     }

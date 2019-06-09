@@ -15,28 +15,48 @@ public class Comentario {
     private String data_cadastro;
     private boolean escolhido;
     private String titulo;
+    private String nome;
+    private String url_autor;
 
-    public Comentario(String id, String id_postagem, int id_autor, String data_cadastro, boolean escolhido, String titulo) {
+    public Comentario(String id, String id_postagem, int id_autor, String data_cadastro, boolean escolhido, String titulo, String nome, String url_autor) {
         this.id = id;
         this.id_postagem = id_postagem;
         this.id_autor = id_autor;
         this.data_cadastro = data_cadastro;
         this.escolhido = escolhido;
         this.titulo = titulo;
+        this.nome = nome;
+        this.url_autor = url_autor;
     }
 
     @Override
     public String toString() {
         return "Comentario{" +
-                "id=" + id +
-                ", id_postagem=" + id_postagem +
-                ", id_resposta=" +
+                ", id='" + id + '\'' +
+                ", id_postagem='" + id_postagem + '\'' +
                 ", id_autor=" + id_autor +
                 ", data_cadastro='" + data_cadastro + '\'' +
-                ", resposta="  +
                 ", escolhido=" + escolhido +
                 ", titulo='" + titulo + '\'' +
+                ", nome='" + nome + '\'' +
+                ", Url_autor='" + url_autor + '\'' +
                 '}';
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getUrl_autor() {
+        return url_autor;
+    }
+
+    public void setUrl_autor(String url_autor) {
+        url_autor = url_autor;
     }
 
     public int getId_comentario() {

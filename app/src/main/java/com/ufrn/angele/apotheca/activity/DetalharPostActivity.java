@@ -19,6 +19,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.adapters.ComentarioAdapter;
 import com.ufrn.angele.apotheca.adapters.ComentarioAdapterListener;
@@ -36,6 +41,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.ufrn.angele.apotheca.bd.firestore.PostagemFirebaseQueryLiveData.LOG_TAG;
 
 public class DetalharPostActivity extends AppCompatActivity {
     private Postagem mPostagem;
@@ -100,7 +107,6 @@ public class DetalharPostActivity extends AppCompatActivity {
         comentarios = new ArrayList<Comentario>();
         votoViewModel = ViewModelProviders.of(this).get(VotoViewModel.class);
         mViewHolder.comentarioAdapter = new ComentarioAdapter(DetalharPostActivity.this,
-                mapComentario,
                 comentarios,
                 mapVotos,
                 mapNegativacoes,
@@ -144,9 +150,10 @@ public class DetalharPostActivity extends AppCompatActivity {
                 comentarios.clear();
                 comentarios.addAll(comentario);
                 //atualizarVotos();
-                new getAutor().execute(comentario);
-                new atualizarVotos().execute(comentario);
-                new atualizarNegativacoes().execute(comentario);
+                //new getAutor().execute(comentario);
+//                new atualizarVotos().execute(comentario);
+//                new atualizarNegativacoes().execute(comentario);
+                
             }
         });
 
@@ -160,14 +167,17 @@ public class DetalharPostActivity extends AppCompatActivity {
                                 mPostagem.getId_autor(),
                                 new Date().toString(),
                                 false,
-                                mViewHolder.titulo_comentario.getText().toString());
+                                mViewHolder.titulo_comentario.getText().toString(),
+                                mUser.getNome(),
+                                mUser.getUrl_foto());
                         comentarioViewModel.inserir(comentario);
                         mViewHolder.titulo_comentario.setText("");
                     }
                 }
         );
-        new atualizarVotoPostagem().execute(mPostagem);
-        new atualizarNegativacaoPostagem().execute(mPostagem);
+//        new atualizarVotoPostagem().execute(mPostagem);
+//        new atualizarNegativacaoPostagem().execute(mPostagem);
+        atualizaVotosPostagem(mPostagem.getId_postagem());
         //listener dos votos/downvotes do post
         mViewHolder.post_vote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,7 +190,8 @@ public class DetalharPostActivity extends AppCompatActivity {
                         mUser.getId_usuario(),
                         new Date().toString());
                 votoViewModel.inserirPostagem(post_vote);
-                new atualizarVotoPostagem().execute(mPostagem);
+                //new atualizarVotoPostagem().execute(mPostagem);
+                atualizaVotosPostagem(mPostagem.getId_postagem());
             }
         });
         mViewHolder.post_downvote.setOnClickListener(new View.OnClickListener() {
@@ -194,7 +205,8 @@ public class DetalharPostActivity extends AppCompatActivity {
                         mUser.getId_usuario(),
                         new Date().toString());
                 votoViewModel.inserirPostagem(post_vote);
-                new atualizarNegativacaoPostagem().execute(mPostagem);
+                atualizaVotosPostagem(mPostagem.getId_postagem());
+                //new atualizarNegativacaoPostagem().execute(mPostagem);
             }
         });
 
@@ -395,104 +407,184 @@ public class DetalharPostActivity extends AppCompatActivity {
         }
     }
 
-    private class getAutor extends AsyncTask<List<Comentario>, Void, Boolean>{
-        protected void onPreExecute() {
-            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
-        }
+//    private class getAutor extends AsyncTask<List<Comentario>, Void, Boolean>{
+//        protected void onPreExecute() {
+//            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+//        }
+//
+//        protected Boolean doInBackground(List<Comentario>... params) {
+//
+//            try {
+//                for (Comentario c:params[0]) {
+//
+//                    try{
+//                        Log.d("comentario", c.getId_autor()+"");
+//                        Usuario user = usuarioViewModel.findByIdUsuario(c.getId_autor());
+//                        //Log.d("user comentario", user.toString());
+//                        mapComentario.put(c, user);
+//
+//                    }catch (Exception e){
+//                        e.printStackTrace();
+//                    }
+//                    Log.d("autor", mapComentario.toString());
+//                }
+//
+//                return true;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            return false;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Boolean result) {
+//            super.onPostExecute(result);
+//
+//            if (result) {
+//                mViewHolder.comentarioAdapter.notifyDataSetChanged();
+//                Log.d("id", "deu certo");
+//            }
+//
+//        }
+//    }
 
-        protected Boolean doInBackground(List<Comentario>... params) {
+//    private class atualizarVotoPostagem extends AsyncTask<Postagem, Void, Integer>{
+//        protected void onPreExecute() {
+//            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+//        }
+//
+//        protected Integer doInBackground(Postagem... params) {
+//
+//            try {
+//                int count_votos =  votoViewModel.getCountVotosPostagem(mPostagem.getId_postagem());
+//
+//                return count_votos;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            return 0;
+//        }
+//        @Override
+//        protected void onPostExecute(Integer result) {
+//            super.onPostExecute(result);
+//
+//            if (result>0) {
+//                mViewHolder.post_count_votos.setText(String.valueOf(result));
+//                Log.d("id", "executou atualizar voto postagem");
+//            }
+//
+//        }
+//    }
+//    private class atualizarNegativacaoPostagem extends AsyncTask<Postagem, Void, Integer>{
+//        protected void onPreExecute() {
+//            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
+//        }
+//
+//        protected Integer doInBackground(Postagem... params) {
+//
+//            try {
+//
+//                int count_negativacoes =  votoViewModel.getCountNegativacoesPostagem(mPostagem.getId_postagem());
+//
+//                return count_negativacoes;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            return 0;
+//        }
+//        @Override
+//        protected void onPostExecute(Integer result) {
+//            super.onPostExecute(result);
+//
+//            if (result>0) {
+//                mViewHolder.post_count_negativacoes.setText(String.valueOf(result));
+//
+//                Log.d("id", "executou atualizar negativação postagem");
+//            }
+//
+//        }
+//    }
+    private void atualizaVotosPostagem(String id_postagem){
+        FirebaseFirestore
+                .getInstance()
+                .collection("postagem")
+                .document(id_postagem)
+                .collection("voto")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(LOG_TAG, "Listen failed.", e);
+                            return;
+                        }
+                        int countV=0;
+                        int countN=0;
+                        for(DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()){
+                            if(doc.getBoolean("voto")==true){
+                                countV++;
+                            }
+                            if(doc.getBoolean("negativacao")==true){
+                                countN++;
+                            }
 
-            try {
-                for (Comentario c:params[0]) {
-
-                    try{
-                        Log.d("comentario", c.getId_autor()+"");
-                        Usuario user = usuarioViewModel.findByIdUsuario(c.getId_autor());
-                        //Log.d("user comentario", user.toString());
-                        mapComentario.put(c, user);
-
-                    }catch (Exception e){
-                        e.printStackTrace();
+                        }
+                        mViewHolder.post_count_votos.setText(String.valueOf(countV));
+                        mViewHolder.post_count_negativacoes.setText(String.valueOf(countN));
                     }
-                    Log.d("autor", mapComentario.toString());
-                }
-
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return false;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-
-            if (result) {
-                mViewHolder.comentarioAdapter.notifyDataSetChanged();
-                Log.d("id", "deu certo");
-            }
-
-        }
+                });
     }
+    private void atualizaVotosComentarios(Postagem postagem, final Comentario comentario){
+        FirebaseFirestore
+                .getInstance()
+                .collection("postagem")
+                .document(postagem.getId_postagem())
+                .collection("comentario")
+                .document(comentario.getId())
+                .collection("voto")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(LOG_TAG, "Listen failed.", e);
+                            return;
+                        }
+                        int countV=0;
+                        int countN=0;
+                        for(DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()){
+                            if(doc.getBoolean("voto")==true){
+                                countV++;
+                            }
+                            if(doc.getBoolean("negativacao")==true){
+                                countN++;
+                            }
 
-    private class atualizarVotoPostagem extends AsyncTask<Postagem, Void, Integer>{
-        protected void onPreExecute() {
-            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
-        }
-
-        protected Integer doInBackground(Postagem... params) {
-
-            try {
-                int count_votos =  votoViewModel.getCountVotosPostagem(mPostagem.getId_postagem());
-
-                return count_votos;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return 0;
-        }
-        @Override
-        protected void onPostExecute(Integer result) {
-            super.onPostExecute(result);
-
-            if (result>0) {
-                mViewHolder.post_count_votos.setText(String.valueOf(result));
-                Log.d("id", "executou atualizar voto postagem");
-            }
-
-        }
-    }
-    private class atualizarNegativacaoPostagem extends AsyncTask<Postagem, Void, Integer>{
-        protected void onPreExecute() {
-            //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
-        }
-
-        protected Integer doInBackground(Postagem... params) {
-
-            try {
-
-                int count_negativacoes =  votoViewModel.getCountNegativacoesPostagem(mPostagem.getId_postagem());
-
-                return count_negativacoes;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return 0;
-        }
-        @Override
-        protected void onPostExecute(Integer result) {
-            super.onPostExecute(result);
-
-            if (result>0) {
-                mViewHolder.post_count_negativacoes.setText(String.valueOf(result));
-
-                Log.d("id", "executou atualizar negativação postagem");
-            }
-
-        }
+                        }
+                        if(mapNegativacoes.get(comentario)==null){
+                            mapNegativacoes.put(comentario, countN);
+                            Log.d("mapNegativo2",mapNegativacoes.toString() + "total: " + countN);
+                        }else{
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                mapNegativacoes.replace(comentario, countN);
+                                Log.d("mapNegativo2",mapNegativacoes.toString() + "total: " + countN);
+                            }else {
+                                mapNegativacoes.put(comentario, countN);
+                            }
+                        }
+                        if(mapVotos.get(comentario)==null){
+                            mapVotos.put(comentario, countV);
+                            Log.d("mapPositivo",mapNegativacoes.toString() + "total: " + countV);
+                        }else{
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                mapVotos.put(comentario, countV);
+                                Log.d("mapPositivo",mapNegativacoes.toString() + "total: " + countN);
+                            }else {
+                                mapVotos.put(comentario, countV);
+                            }
+                        }
+                    }
+                });
     }
 }
