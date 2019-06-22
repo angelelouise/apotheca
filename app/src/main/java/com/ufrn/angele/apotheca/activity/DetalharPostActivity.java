@@ -58,7 +58,7 @@ public class DetalharPostActivity extends AppCompatActivity {
         android.support.v7.widget.Toolbar toolbar;
         RecyclerView lista_comentarios;
         ComentarioAdapter comentarioAdapter;
-        ImageButton cadastrar_comentario, post_vote, post_downvote, post_report;
+        ImageButton cadastrar_comentario, post_vote, post_downvote, post_report, destacar;
         EditText titulo_comentario;
         ImageView avatar;
     }
@@ -84,6 +84,7 @@ public class DetalharPostActivity extends AppCompatActivity {
         mViewHolder.titulo_comentario = findViewById(R.id.detalhar_post_comentario_descricao);
         mViewHolder.cadastrar_comentario = findViewById(R.id.detalhar_post_publicar_comentario);
         mViewHolder.post_report = findViewById(R.id.post_report);
+        mViewHolder.destacar = findViewById(R.id.comentario_destacar);
         //set postagem
         mViewHolder.turma.setText(mPostagem.getComponente());
         mViewHolder.titulo.setText(mPostagem.getTitulo());
@@ -93,7 +94,10 @@ public class DetalharPostActivity extends AppCompatActivity {
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setHomeButtonEnabled(true);
         //atualizar contadores
-
+        //inativar destaque se o usuário não for o autor da postagem
+        if (mPostagem.getId_autor()!= mUser.getId_usuario()){
+            mViewHolder.destacar.setVisibility(View.INVISIBLE);
+        }
         //set comentario adapter
         mViewHolder.avatar = findViewById(R.id.detalhar_post_comentario_avatar);
         Glide.with(this).load(mUser.getUrl_foto())
@@ -139,6 +143,13 @@ public class DetalharPostActivity extends AppCompatActivity {
                         atualizaVotosComentarios(mPostagem,comentarios.get(position));
                         mViewHolder.comentarioAdapter.notifyDataSetChanged();
                     }
+                    @Override
+                    public void destacarOnClick(View v, int position) {
+                        Comentario top = comentarios.get(position);
+                        destacarComentario(top);
+                        mViewHolder.comentarioAdapter.notifyDataSetChanged();
+
+                    }
                 });
         mViewHolder.lista_comentarios.setAdapter(mViewHolder.comentarioAdapter);
         mViewHolder.lista_comentarios.setLayoutManager(new LinearLayoutManager(this));
@@ -153,6 +164,11 @@ public class DetalharPostActivity extends AppCompatActivity {
                 comentarios.addAll(comentario);
                 for (Comentario c:comentario) {
                     atualizaVotosComentarios(mPostagem,c);
+                    if (c.isEscolhido()){
+                        Comentario top = c;
+                        comentarios.remove(c);
+                        comentarios.add(0,top);
+                    }
                     mViewHolder.comentarioAdapter.notifyDataSetChanged();
                 }
 
@@ -260,9 +276,9 @@ public class DetalharPostActivity extends AppCompatActivity {
     }
     private void atualizaVotosComentarios(Postagem postagem, final Comentario comentario){
         FirebaseFirestore
-                .getInstance()
-                .collection("postagem")
-                .document(postagem.getId_postagem())
+                        .getInstance()
+                        .collection("postagem")
+                        .document(postagem.getId_postagem())
                 .collection("comentario")
                 .document(comentario.getId())
                 .collection("voto")
@@ -309,7 +325,11 @@ public class DetalharPostActivity extends AppCompatActivity {
                     }
                 });
     }
+    private void destacarComentario(Comentario comentario){
+        comentario.setEscolhido(true);
 
+        comentarioViewModel.atualizar(comentario);
+    }
 //    private class atualizarVotos extends AsyncTask<List<Comentario>, Void, Boolean>{
 //    protected void onPreExecute() {
 //        //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);

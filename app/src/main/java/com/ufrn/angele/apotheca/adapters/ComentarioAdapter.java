@@ -2,6 +2,7 @@ package com.ufrn.angele.apotheca.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +59,7 @@ public class ComentarioAdapter extends RecyclerView.Adapter {
     }
     private class ListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView comentario_titulo, comentario_counter_votes, comentario_counter_downvotes, comentario_autor;
-        private ImageButton comentario_vote, comentario_downvote;
+        private ImageButton comentario_vote, comentario_downvote, destacar;
         private ImageView comentario_user;
 
         public ListViewHolder(@NonNull View itemView) {
@@ -70,7 +71,7 @@ public class ComentarioAdapter extends RecyclerView.Adapter {
             comentario_autor = itemView.findViewById(R.id.comentario_item_autor);
             comentario_counter_votes= itemView.findViewById(R.id.comentario_iten_counter_votes);
             comentario_counter_downvotes= itemView.findViewById(R.id.comentario_iten_counter_downvotes);
-
+            destacar= itemView.findViewById(R.id.comentario_destacar);
 
         }
         public void bindView(final int position){
@@ -84,6 +85,10 @@ public class ComentarioAdapter extends RecyclerView.Adapter {
             if(mapNegativacoes.get(comentarios.get(position)) != null){
                 int aux2= mapNegativacoes.get(comentarios.get(position));
                 comentario_counter_downvotes.setText(String.valueOf(aux2));
+            }
+            if (comentarios.get(position).isEscolhido()){
+
+                destacar.setColorFilter(ContextCompat.getColor(context, android.R.color.holo_purple));
             }
             Glide.with(context).load(comentarios.get(position).getUrl_autor())
                         .crossFade()
@@ -103,6 +108,12 @@ public class ComentarioAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     comentarioAdapterListener.downvoteOnClick(v,position);
+                }
+            });
+            destacar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    comentarioAdapterListener.destacarOnClick(v,position);
                 }
             });
         }

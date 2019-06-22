@@ -23,6 +23,18 @@
             android:orientation="vertical"
             android:layout_weight="7">
 
+            <ImageButton
+                android:id="@+id/comentario_destacar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/colorText"
+                app:layout_constraintBottom_toTopOf="@+id/comentario_item_titulo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/btn_star" />
+
             <TextView
                 android:id="@+id/comentario_item_autor"
                 android:layout_width="wrap_content"

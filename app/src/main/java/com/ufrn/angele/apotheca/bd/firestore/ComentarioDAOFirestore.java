@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.ufrn.angele.apotheca.bd.ComentarioDAO;
 import com.ufrn.angele.apotheca.dominio.Comentario;
 
@@ -59,7 +60,14 @@ public class ComentarioDAOFirestore implements ComentarioDAO {
 
     @Override
     public void atualizar(Comentario comentario) {
+        Map<String, Object> post = new HashMap<>();
+        post = popularDados(comentario);
 
+        db.collection("postagem").
+                document(comentario.getId_postagem())
+                .collection("comentario")
+                .document(comentario.getId())
+                .set(post, SetOptions.merge());
     }
 
     @Override
