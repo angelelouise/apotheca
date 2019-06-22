@@ -138,7 +138,7 @@ public class AutorizationActivity extends AppCompatActivity {
                     }
                     ArrayList<Turma> turmas = null;
 
-                    if (dis != null) {
+                    if (!dis.isEmpty()) {
                         turmas = turmaServiceUFRN.getTurmas(urlBase, params[0], apiKey, dis);
                     }
                     info.setUsuario(aux);
@@ -161,7 +161,7 @@ public class AutorizationActivity extends AppCompatActivity {
             super.onPostExecute(result);
             pd.dismiss();
             Log.d("result", result.toString());
-            if (result != null) {
+            if (result.getUsuario() != null) {
 
                 mUser= result.getUsuario();
                 mDiscentes = result.getDiscentes();
@@ -237,7 +237,7 @@ public class AutorizationActivity extends AppCompatActivity {
         editor.putString(Constants.KEY_ACCESS_TOKEN, accessToken);
         editor.putString(Constants.KEY_REFRESH_TOKEN, refreshToken);
         editor.putLong(Constants.KEY_EXPIRES_IN, expiresIn);
-        editor.commit();
+        editor.apply();
         Log.d("token", accessToken);
         Log.d("refresh_token", refreshToken);
     }

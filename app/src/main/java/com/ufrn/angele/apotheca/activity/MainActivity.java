@@ -507,6 +507,7 @@ public class MainActivity extends AppCompatActivity {
                         SharedPreferences preferences = getApplicationContext().getSharedPreferences("user_info", 0);
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.clear();
+                        editor.apply();
 
                         try {
                             File dir = getApplicationContext().getCacheDir();
