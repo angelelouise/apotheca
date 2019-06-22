@@ -25,6 +25,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -62,6 +65,7 @@ public class DetalharPostActivity extends AppCompatActivity {
     private VotoViewModel votoViewModel;
     private Usuario mUser;
     private List<String> anexos = new ArrayList<>();
+    ArrayAdapter<String> adapter;
     private class ViewHolder{
         TextView titulo, descricao, turma, post_count_votos, post_count_negativacoes;
         android.support.v7.widget.Toolbar toolbar;
@@ -78,7 +82,16 @@ public class DetalharPostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhar_post);
 
+        FirebaseAuth.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
 
+            /* perform your actions here*/
+
+
+        } else {
+            signInAsAnonymous();
+        }
         Intent intent = getIntent();
         mPostagem = (Postagem) intent.getSerializableExtra(Constants.INTENT_POSTAGEM);
         mUser = (Usuario ) intent.getSerializableExtra(Constants.INTENT_USER);
@@ -104,6 +117,7 @@ public class DetalharPostActivity extends AppCompatActivity {
         setSupportActionBar(mViewHolder.toolbar);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setHomeButtonEnabled(true);
+        getListaAnexo(mPostagem);
         //atualizar contadores
         //inativar destaque se o usuário não for o autor da postagem
         if (mPostagem.getId_autor()!= mUser.getId_usuario()){
@@ -250,8 +264,8 @@ public class DetalharPostActivity extends AppCompatActivity {
             }
         });
         //anexos
-        getListaAnexo(mPostagem);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+
+        adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, anexos);
         mViewHolder.detalhar_anexos.setAdapter(adapter);
         mViewHolder.detalhar_anexos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -261,6 +275,23 @@ public class DetalharPostActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void signInAsAnonymous() {
+        FirebaseAuth.getInstance().signInAnonymously().addOnSuccessListener(this, new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                /* perform your actions here*/
+
+            }
+        })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.e("MainActivity", "signFailed****** ", exception);
+                    }
+                });
+    }
+
     @Override
     public boolean onSupportNavigateUp(){
         finish();
@@ -343,7 +374,9 @@ public class DetalharPostActivity extends AppCompatActivity {
                                 mapVotos.put(comentario, countV);
                             }
                         }
+                        mViewHolder.comentarioAdapter.notifyDataSetChanged();
                     }
+
                 });
     }
     private void destacarComentario(Comentario comentario){
@@ -361,6 +394,8 @@ public class DetalharPostActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
                         // Got the download URL for 'users/me/profile.png'
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()));
+                        startActivity(browserIntent);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -370,6 +405,7 @@ public class DetalharPostActivity extends AppCompatActivity {
                 });
 
     }
+
     private void getListaAnexo(Postagem postagem){
 
         FirebaseFirestore
@@ -383,9 +419,13 @@ public class DetalharPostActivity extends AppCompatActivity {
                         for(DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()){
                             anexos.add(doc.getString("filename"));
                         }
+                        Log.d("anexos",anexos.toString());
+                        adapter.notifyDataSetChanged();
                     }
+
                 });
     }
+
 //    private class atualizarVotos extends AsyncTask<List<Comentario>, Void, Boolean>{
 //    protected void onPreExecute() {
 //        //pd = ProgressDialog.show(AutorizationActivity.this, "", "loading", true);
