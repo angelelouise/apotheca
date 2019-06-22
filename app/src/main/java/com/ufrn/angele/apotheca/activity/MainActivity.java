@@ -2,6 +2,7 @@ package com.ufrn.angele.apotheca.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +27,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ufrn.angele.apotheca.R;
+import com.ufrn.angele.apotheca.api.LogoutServiceUFRN;
 import com.ufrn.angele.apotheca.bd.DiscenteRepository;
 import com.ufrn.angele.apotheca.bd.TurmaRepository;
 import com.ufrn.angele.apotheca.bd.UsuarioRepository;
@@ -42,6 +44,7 @@ import com.ufrn.angele.apotheca.outros.Constants;
 import com.ufrn.angele.apotheca.viewmodel.UsuarioViewModel;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static android.support.constraint.Constraints.TAG;
@@ -90,6 +93,9 @@ public class MainActivity extends AppCompatActivity {
     private DiscenteRepository discenteRepository;
     private String chave_usuario;
 
+    private final String urlBase = "https://api.info.ufrn.br/";
+    private final String apiKey = "PNAGndLwyjQh3SifoO840HH7FrhWwHOhR9FssfxK";
+    private String token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,7 +153,8 @@ public class MainActivity extends AppCompatActivity {
             loadHomeFragment();
         }
 
-
+        SharedPreferences preferences = this.getSharedPreferences("user_info", 0);
+        token = preferences.getString(Constants.KEY_ACCESS_TOKEN,"");
 
     }
 
@@ -505,18 +512,21 @@ public class MainActivity extends AppCompatActivity {
                         //startActivity(new Intent(MainActivity.this, PrivacyPolicyActivity.class));
                         mViewHolder.drawer.closeDrawers();
                         SharedPreferences preferences = getApplicationContext().getSharedPreferences("user_info", 0);
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.clear();
-                        editor.apply();
+
+                        if (preferences.edit().clear().commit()){
+                            Log.d("Logout", ""+ preferences.getString(Constants.KEY_ACCESS_TOKEN,""));
+                            Intent intent =  new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        }
 
                         try {
                             File dir = getApplicationContext().getCacheDir();
                             deleteDir(dir);
                         } catch (Exception e) {
                         }
-                        Intent intent =  new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        return true;
+
+                        new LogoutRequestAsyncTask().execute(token);
+                        break;
                     default:
                         navItemIndex = 0;
 
@@ -640,7 +650,20 @@ public class MainActivity extends AppCompatActivity {
 //
 //        return super.onOptionsItemSelected(item);
 //    }
+    private class LogoutRequestAsyncTask extends AsyncTask<String, Void, Boolean> {
 
+    @Override
+    protected Boolean doInBackground(String... strings) {
+
+        LogoutServiceUFRN logoutServiceUFRN = new LogoutServiceUFRN();
+        try {
+            logoutServiceUFRN.logout(urlBase,strings[0],apiKey);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+}
     // show or hide the fab
     private void toggleFab() {
         if (navItemIndex == 0)

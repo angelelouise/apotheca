@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.ufrn.angele.apotheca.R;
+import com.ufrn.angele.apotheca.outros.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        SharedPreferences preferences = this.getSharedPreferences("user_info", 0);
+        String token = preferences.getString(Constants.KEY_ACCESS_TOKEN,"");
+        //Log.d("checkToken",token);
+        if(token!=""){
+            Intent startAutorization = new Intent(LoginActivity.this, AutorizationActivity.class);
+            startActivity(startAutorization);
+        }
 
         Button mEmailSignInButton =  findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -70,12 +78,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
 //        mProgressView = findViewById(R.id.login_progress);
-        SharedPreferences preferences = this.getSharedPreferences("user_info", 0);
 
-        if(preferences!=null){
-            Intent startAutorization = new Intent(LoginActivity.this, AutorizationActivity.class);
-            startActivity(startAutorization);
-        }
     }
 
     private void attemptLogin() {
