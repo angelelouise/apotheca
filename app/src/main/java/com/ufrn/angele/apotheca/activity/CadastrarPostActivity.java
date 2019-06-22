@@ -175,6 +175,26 @@ public class CadastrarPostActivity extends AppCompatActivity {
                             //urls.add(taskSnapshot.getStorage().getDownloadUrl().getResult().toString());
                         }
                     });
+            Map<String, Object> file = new HashMap<>();
+            file.put("filename",filename);
+            FirebaseFirestore
+                    .getInstance()
+                    .collection("postagem")
+                    .document(Idpost)
+                    .collection("anexo")
+                    .add(file)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error adding document", e);
+                        }
+                    });
         }
         return urls;
     }

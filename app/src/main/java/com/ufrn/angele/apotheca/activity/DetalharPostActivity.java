@@ -3,26 +3,34 @@ package com.ufrn.angele.apotheca.activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
 import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.adapters.ComentarioAdapter;
 import com.ufrn.angele.apotheca.adapters.ComentarioAdapterListener;
@@ -53,6 +61,7 @@ public class DetalharPostActivity extends AppCompatActivity {
     private UsuarioViewModel usuarioViewModel;
     private VotoViewModel votoViewModel;
     private Usuario mUser;
+    private List<String> anexos = new ArrayList<>();
     private class ViewHolder{
         TextView titulo, descricao, turma, post_count_votos, post_count_negativacoes;
         android.support.v7.widget.Toolbar toolbar;
@@ -61,6 +70,7 @@ public class DetalharPostActivity extends AppCompatActivity {
         ImageButton cadastrar_comentario, post_vote, post_downvote, post_report, destacar;
         EditText titulo_comentario;
         ImageView avatar;
+        ListView detalhar_anexos;
     }
     private ViewHolder mViewHolder = new ViewHolder();
     @Override
@@ -85,6 +95,7 @@ public class DetalharPostActivity extends AppCompatActivity {
         mViewHolder.cadastrar_comentario = findViewById(R.id.detalhar_post_publicar_comentario);
         mViewHolder.post_report = findViewById(R.id.post_report);
         mViewHolder.destacar = findViewById(R.id.comentario_destacar);
+        mViewHolder.detalhar_anexos = findViewById(R.id.detalhar_anexos);
         //set postagem
         mViewHolder.turma.setText(mPostagem.getComponente());
         mViewHolder.titulo.setText(mPostagem.getTitulo());
@@ -238,7 +249,17 @@ public class DetalharPostActivity extends AppCompatActivity {
                 startActivity(form);
             }
         });
-
+        //anexos
+        getListaAnexo(mPostagem);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, anexos);
+        mViewHolder.detalhar_anexos.setAdapter(adapter);
+        mViewHolder.detalhar_anexos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                getAnexo(mPostagem,anexos.get(i));
+            }
+        });
     }
     @Override
     public boolean onSupportNavigateUp(){
@@ -329,6 +350,41 @@ public class DetalharPostActivity extends AppCompatActivity {
         comentario.setEscolhido(true);
 
         comentarioViewModel.atualizar(comentario);
+    }
+    private void getAnexo(Postagem postagem, String filename){
+        String path = postagem.getId_postagem()+"/"+filename;
+        FirebaseStorage
+                .getInstance()
+                .getReference()
+                .child(path)
+                .getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        // Got the download URL for 'users/me/profile.png'
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle any errors
+                    }
+                });
+
+    }
+    private void getListaAnexo(Postagem postagem){
+
+        FirebaseFirestore
+                .getInstance()
+                .collection("postagem")
+                .document(postagem.getId_postagem())
+                .collection("anexo")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        for(DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()){
+                            anexos.add(doc.getString("filename"));
+                        }
+                    }
+                });
     }
 //    private class atualizarVotos extends AsyncTask<List<Comentario>, Void, Boolean>{
 //    protected void onPreExecute() {
