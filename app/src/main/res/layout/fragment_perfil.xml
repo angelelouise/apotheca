@@ -172,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:text="TextView"
+                android:text="Sobre mim..."
                 android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
         </LinearLayout>

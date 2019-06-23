@@ -72,7 +72,7 @@ public class DetalharPostActivity extends AppCompatActivity {
         RecyclerView lista_comentarios;
         ComentarioAdapter comentarioAdapter;
         AnexoAdapter anexoAdapter;
-        ImageButton cadastrar_comentario, post_vote, post_downvote, post_report, destacar;
+        ImageButton cadastrar_comentario, post_vote, post_downvote, post_report, destacar, post_edit, post_delete;
         EditText titulo_comentario;
         ImageView avatar;
         RecyclerView detalhar_anexos;
@@ -110,6 +110,8 @@ public class DetalharPostActivity extends AppCompatActivity {
         mViewHolder.post_report = findViewById(R.id.post_report);
         mViewHolder.destacar = findViewById(R.id.comentario_destacar);
         mViewHolder.detalhar_anexos = findViewById(R.id.detalhar_anexos);
+        mViewHolder.post_edit = findViewById(R.id.detalhes_editar);
+        mViewHolder.post_delete = findViewById(R.id.detalhes_excluir);
         //set postagem
         mViewHolder.turma.setText(mPostagem.getComponente());
         mViewHolder.titulo.setText(mPostagem.getTitulo());
@@ -135,6 +137,10 @@ public class DetalharPostActivity extends AppCompatActivity {
         votoViewModel = ViewModelProviders.of(this).get(VotoViewModel.class);
         if (mPostagem.getId_autor()== mUser.getId_usuario()){
             isAutor=true;
+
+        }else{
+            mViewHolder.post_edit.setVisibility(View.INVISIBLE);
+            mViewHolder.post_delete.setVisibility(View.INVISIBLE);
         }
         mViewHolder.comentarioAdapter = new ComentarioAdapter(DetalharPostActivity.this,
                 comentarios,

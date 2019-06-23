@@ -13,8 +13,11 @@ import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.adapters.NotificacaoAdapter;
 import com.ufrn.angele.apotheca.dominio.Notificacao;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,6 +40,7 @@ public class NotificacoesFragment extends Fragment {
     private ArrayList<Notificacao> notificacoes;
     private OnFragmentInteractionListener mListener;
     private ArrayList<String> frases;
+    public static final String DATE_FORMAT = "dd.MM.yyyy 'às' HH:mm:ss";
 
     public static class ViewHolder{
         private RecyclerView recyclerView;
@@ -77,13 +81,16 @@ public class NotificacoesFragment extends Fragment {
 
         notificacoes =  new ArrayList<>();
         frases = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date today = Calendar.getInstance().getTime();
 
         //modificar para pegar da API
-        notificacoes.add(new Notificacao(0,1,0,0,new Date(),0,false));
-        notificacoes.add(new Notificacao(0,0,0,0,new Date(),1,false));
-        notificacoes.add(new Notificacao(0,1,0,0,new Date(),2,false));
-        notificacoes.add(new Notificacao(0,1,0,0,new Date(),3,false));
-        notificacoes.add(new Notificacao(0,1,0,0,new Date(),4,false));
+        notificacoes.add(new Notificacao(0,1,0,0,dateFormat.format(today),0,false));
+        notificacoes.add(new Notificacao(0,0,0,0,dateFormat.format(today),1,false));
+        notificacoes.add(new Notificacao(0,1,0,0,dateFormat.format(today),2,false));
+        notificacoes.add(new Notificacao(0,1,0,0,dateFormat.format(today),3,false));
+        notificacoes.add(new Notificacao(0,1,0,0,dateFormat.format(today),4,false));
         frases = composeFrases(notificacoes);
     }
 

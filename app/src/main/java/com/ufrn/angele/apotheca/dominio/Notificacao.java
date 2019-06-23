@@ -1,14 +1,12 @@
 package com.ufrn.angele.apotheca.dominio;
 
-import java.util.Date;
-
 public class Notificacao {
 
     private int id;
     private int id_autor;
     private int id_postagem;
     private int id_notificado;
-    private Date data_cadastro;
+    private String data_cadastro;
     private int tipo_notificacao;
     private boolean visualizada;
     private int avatar;
@@ -28,7 +26,7 @@ public class Notificacao {
                 '}';
     }
 
-    public Notificacao(int id, int id_autor, int id_postagem, int id_notificado, Date data_cadastro, int tipo_notificacao, boolean visualizada) {
+    public Notificacao(int id, int id_autor, int id_postagem, int id_notificado, String data_cadastro, int tipo_notificacao, boolean visualizada) {
         this.id = id;
         this.id_autor = id_autor;
         this.id_postagem = id_postagem;
@@ -71,11 +69,11 @@ public class Notificacao {
         this.id_notificado = id_notificado;
     }
 
-    public Date getData_cadastro() {
+    public String getData_cadastro() {
         return data_cadastro;
     }
 
-    public void setData_cadastro(Date data_cadastro) {
+    public void setData_cadastro(String data_cadastro) {
         this.data_cadastro = data_cadastro;
     }
 

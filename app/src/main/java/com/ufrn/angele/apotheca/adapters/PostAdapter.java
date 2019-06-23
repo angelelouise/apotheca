@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +71,7 @@ public class PostAdapter extends RecyclerView.Adapter{
             list_turma = view.findViewById(R.id.list_turma);
             list_timestamp = view.findViewById(R.id.list_timestamp);
             list_avatar = view.findViewById(R.id.list_avatar);
-            list_menu = view.findViewById(R.id.list_menu);
+            //list_menu = view.findViewById(R.id.list_menu);
 
             //view.setOnClickListener(this);
             view.setOnClickListener(new View.OnClickListener(){

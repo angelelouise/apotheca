@@ -39,7 +39,7 @@ public class PerfilFragment extends Fragment {
 
     private ArrayList<Discente> discentes = new ArrayList<>();
     private String urlProfileImg;
-    private static final String urlNavHeaderBg = "https://api.androidhive.info/images/nav-menu-header-bg.jpg";
+    private static final String urlNavHeaderBg = "https://backgrounddownload.com/wp-content/uploads/2018/09/beautiful-plain-background-hd-5.jpg";
     private OnFragmentInteractionListener mListener;
     private Usuario usuario = new Usuario();
 
