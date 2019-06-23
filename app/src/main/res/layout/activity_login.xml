@@ -46,33 +46,35 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin">
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:background="@drawable/apotheca"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/activity_horizontal_margin"/>
+
             <TextView
                 android:id="@+id/apotheca"
-                android:layout_width="139dp"
-                android:layout_height="32dp"
-                android:layout_marginStart="13dp"
-                android:layout_marginTop="38dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/aldrichregular"
+                android:layout_gravity="center_vertical|center_horizontal"
                 android:text="@string/apotheca"
-                android:textAppearance="@style/apotheca"
-                android:gravity="center_vertical"
-                android:fontFamily="@font/aldrichregular"/>
+                android:textAppearance="@style/apotheca" />
 
             <View
                 android:id="@+id/line"
                 android:layout_width="74.08dp"
                 android:layout_height="2.74dp"
-                android:layout_marginStart="13dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/line"
                 android:visibility="visible"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="15dp"
+                android:layout_gravity="center_vertical|center_horizontal"/>
 
-            <ImageView
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:background="@drawable/logo"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="@dimen/activity_horizontal_margin"/>
+
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"

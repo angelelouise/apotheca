@@ -29,16 +29,18 @@ public class ComentarioAdapter extends RecyclerView.Adapter {
     private ComentarioAdapterListener comentarioAdapterListener;
     private HashMap<Comentario, Integer> mapVotos;
     private HashMap<Comentario, Integer> mapNegativacoes;
-    public ComentarioAdapter( Context context,
-                              List<Comentario> comentarios,
-                              HashMap<Comentario, Integer> mapVotos,
-                              HashMap<Comentario, Integer> mapNegativacoes,
-                              ComentarioAdapterListener comentarioAdapterListener) {
+    private Boolean isAutor = false;
+    public ComentarioAdapter(Context context,
+                             List<Comentario> comentarios,
+                             HashMap<Comentario, Integer> mapVotos,
+                             HashMap<Comentario, Integer> mapNegativacoes,
+                             ComentarioAdapterListener comentarioAdapterListener, Boolean isAutor) {
         this.comentarios = comentarios;
         this.context = context;
         this.comentarioAdapterListener=comentarioAdapterListener;
         this.mapVotos =mapVotos;
         this.mapNegativacoes=mapNegativacoes;
+        this.isAutor=isAutor;
     }
 
     @NonNull
@@ -72,6 +74,10 @@ public class ComentarioAdapter extends RecyclerView.Adapter {
             comentario_counter_votes= itemView.findViewById(R.id.comentario_iten_counter_votes);
             comentario_counter_downvotes= itemView.findViewById(R.id.comentario_iten_counter_downvotes);
             destacar= itemView.findViewById(R.id.comentario_destacar);
+
+            if(!isAutor){
+                destacar.setVisibility(View.INVISIBLE);
+            }
 
         }
         public void bindView(final int position){

@@ -33,11 +33,16 @@ import com.ufrn.angele.apotheca.dominio.Usuario;
 import com.ufrn.angele.apotheca.outros.Constants;
 import com.ufrn.angele.apotheca.viewmodel.PostagemViewModel;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -53,7 +58,8 @@ public class CadastrarPostActivity extends AppCompatActivity {
     Map<String, Object> post = new HashMap<>();
     private int mSelecionada =-1;
     private int tipo_activity =-1;
-    private List<Uri> uris;
+    private List<Uri> uris = new ArrayList<>();;
+    public static final String DATE_FORMAT = "dd.MM.yyyy 'às' HH:mm:ss";
     StringBuilder builder = new StringBuilder();
     private static class ViewHolder{
         TextView mTituloView, mDescricaoView, mTagView, mUris;
@@ -115,7 +121,10 @@ public class CadastrarPostActivity extends AppCompatActivity {
                 Turma t = (Turma) mViewHolder.mTurma.getSelectedItem();
                 String turma = mViewHolder.mTurma.getSelectedItem().toString();
 //                String tipo = mViewHolder.mTipo.getSelectedItem().toString();
-                p = new Postagem(mViewHolder.mTituloView.getText().toString(), t.getNome_componente() , new Date().toString());
+                SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                Date today = Calendar.getInstance().getTime();
+                p = new Postagem(mViewHolder.mTituloView.getText().toString(), t.getNome_componente() , dateFormat.format(today));
                 p.setDescricao(mViewHolder.mDescricaoView.getText().toString());
                 p.setAtivo(true);
                 p.setId_componente(t.getId_componente());
@@ -219,10 +228,17 @@ public class CadastrarPostActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode==86 && resultCode==RESULT_OK && data!=null){
-            uris = new ArrayList<>();
 
             uris.add(data.getData());
-            builder.append(data.getData() + "\n");
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                Path p = Paths.get(String.valueOf(data.getData()));
+                String file = p.getFileName().toString();
+                builder.append(file + "\n");
+            }else{
+                builder.append(data.getData() + "\n");
+            }
+//          String aux = data.getData().getPath().substring(data.getData().getPath().lastIndexOf("\\")+1);
+
             mViewHolder.mUris.setText(builder.toString());
 
         }

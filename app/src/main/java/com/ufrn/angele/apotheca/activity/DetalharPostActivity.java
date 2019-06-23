@@ -13,12 +13,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -35,6 +32,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.ufrn.angele.apotheca.R;
+import com.ufrn.angele.apotheca.adapters.AnexoAdapter;
+import com.ufrn.angele.apotheca.adapters.AnexoAdapterListener;
 import com.ufrn.angele.apotheca.adapters.ComentarioAdapter;
 import com.ufrn.angele.apotheca.adapters.ComentarioAdapterListener;
 import com.ufrn.angele.apotheca.dominio.Comentario;
@@ -65,16 +64,18 @@ public class DetalharPostActivity extends AppCompatActivity {
     private VotoViewModel votoViewModel;
     private Usuario mUser;
     private List<String> anexos = new ArrayList<>();
-    ArrayAdapter<String> adapter;
+    private Boolean isAutor = false;
+    //ArrayAdapter<String> adapter;
     private class ViewHolder{
         TextView titulo, descricao, turma, post_count_votos, post_count_negativacoes;
         android.support.v7.widget.Toolbar toolbar;
         RecyclerView lista_comentarios;
         ComentarioAdapter comentarioAdapter;
+        AnexoAdapter anexoAdapter;
         ImageButton cadastrar_comentario, post_vote, post_downvote, post_report, destacar;
         EditText titulo_comentario;
         ImageView avatar;
-        ListView detalhar_anexos;
+        RecyclerView detalhar_anexos;
     }
     private ViewHolder mViewHolder = new ViewHolder();
     @Override
@@ -120,9 +121,7 @@ public class DetalharPostActivity extends AppCompatActivity {
         getListaAnexo(mPostagem);
         //atualizar contadores
         //inativar destaque se o usuário não for o autor da postagem
-        if (mPostagem.getId_autor()!= mUser.getId_usuario()){
-            mViewHolder.destacar.setVisibility(View.INVISIBLE);
-        }
+
         //set comentario adapter
         mViewHolder.avatar = findViewById(R.id.detalhar_post_comentario_avatar);
         Glide.with(this).load(mUser.getUrl_foto())
@@ -134,6 +133,9 @@ public class DetalharPostActivity extends AppCompatActivity {
         mViewHolder.lista_comentarios = findViewById(R.id.detalhar_post_lista_comentarios);
         comentarios = new ArrayList<Comentario>();
         votoViewModel = ViewModelProviders.of(this).get(VotoViewModel.class);
+        if (mPostagem.getId_autor()== mUser.getId_usuario()){
+            isAutor=true;
+        }
         mViewHolder.comentarioAdapter = new ComentarioAdapter(DetalharPostActivity.this,
                 comentarios,
                 mapVotos,
@@ -175,7 +177,8 @@ public class DetalharPostActivity extends AppCompatActivity {
                         mViewHolder.comentarioAdapter.notifyDataSetChanged();
 
                     }
-                });
+                },
+                isAutor);
         mViewHolder.lista_comentarios.setAdapter(mViewHolder.comentarioAdapter);
         mViewHolder.lista_comentarios.setLayoutManager(new LinearLayoutManager(this));
         //set comentario viewmodel live data
@@ -265,15 +268,20 @@ public class DetalharPostActivity extends AppCompatActivity {
         });
         //anexos
 
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, anexos);
-        mViewHolder.detalhar_anexos.setAdapter(adapter);
-        mViewHolder.detalhar_anexos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                getAnexo(mPostagem,anexos.get(i));
-            }
-        });
+//        adapter = new ArrayAdapter<String>(this,
+//                android.R.layout.simple_list_item_1, anexos);
+        mViewHolder.anexoAdapter = new AnexoAdapter(DetalharPostActivity.this,
+                anexos,
+                new AnexoAdapterListener() {
+                    @Override
+                    public void anexoOnClick(View v, int position) {
+                        getAnexo(mPostagem,anexos.get(position));
+                    }
+                });
+        mViewHolder.detalhar_anexos.setAdapter(mViewHolder.anexoAdapter);
+        mViewHolder.detalhar_anexos.setLayoutManager(new LinearLayoutManager(this));
+
+
     }
 
     private void signInAsAnonymous() {
@@ -420,7 +428,7 @@ public class DetalharPostActivity extends AppCompatActivity {
                             anexos.add(doc.getString("filename"));
                         }
                         Log.d("anexos",anexos.toString());
-                        adapter.notifyDataSetChanged();
+                        mViewHolder.anexoAdapter.notifyDataSetChanged();
                     }
 
                 });
