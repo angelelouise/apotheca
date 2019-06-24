@@ -137,6 +137,9 @@ public class DetalharPostActivity extends AppCompatActivity {
         votoViewModel = ViewModelProviders.of(this).get(VotoViewModel.class);
         if (mPostagem.getId_autor()== mUser.getId_usuario()){
             isAutor=true;
+            mViewHolder.post_vote.setEnabled(false);
+            mViewHolder.post_downvote.setEnabled(false);
+            mViewHolder.post_report.setEnabled(false);
 
         }else{
             mViewHolder.post_edit.setVisibility(View.INVISIBLE);
