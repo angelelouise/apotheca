@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     private DiscenteRepository discenteRepository;
     private String chave_usuario;
 
-    private final String urlBase = "https://api.info.ufrn.br/";
+    private final String urlBase = "https://autenticacao.info.ufrn.br/";
     private final String apiKey = "PNAGndLwyjQh3SifoO840HH7FrhWwHOhR9FssfxK";
     private String token;
     @Override
@@ -512,20 +512,21 @@ public class MainActivity extends AppCompatActivity {
                         //startActivity(new Intent(MainActivity.this, PrivacyPolicyActivity.class));
                         mViewHolder.drawer.closeDrawers();
                         SharedPreferences preferences = getApplicationContext().getSharedPreferences("user_info", 0);
-
-                        if (preferences.edit().clear().commit()){
-                            Log.d("Logout", ""+ preferences.getString(Constants.KEY_ACCESS_TOKEN,""));
-                            Intent intent =  new Intent(MainActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                        }
-
+                        //token = preferences.getString(Constants.KEY_ACCESS_TOKEN,"");
+                        //ew LogoutRequestAsyncTask().execute(token);
                         try {
                             File dir = getApplicationContext().getCacheDir();
                             deleteDir(dir);
                         } catch (Exception e) {
                         }
+                        if (preferences.edit().clear().commit()){
+                            Log.d("Logout", ""+ preferences.getString(Constants.KEY_ACCESS_TOKEN,""));
+//                            Intent intent =  new Intent(MainActivity.this, LoginActivity.class);
+//                            startActivity(intent);
+                            Intent intent =  new Intent(MainActivity.this, LogoutActivity.class);
+                            startActivity(intent);
+                        }
 
-                        new LogoutRequestAsyncTask().execute(token);
                         break;
                     default:
                         navItemIndex = 0;
@@ -662,6 +663,22 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return true;
+    }
+
+    @Override
+    protected void onPostExecute(Boolean aBoolean) {
+        SharedPreferences preferences = getApplicationContext().getSharedPreferences("user_info", 0);
+        if (preferences.edit().clear().commit()){
+            Log.d("Logout", ""+ preferences.getString(Constants.KEY_ACCESS_TOKEN,""));
+            Intent intent =  new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
+
+        try {
+            File dir = getApplicationContext().getCacheDir();
+            deleteDir(dir);
+        } catch (Exception e) {
+        }
     }
 }
     // show or hide the fab

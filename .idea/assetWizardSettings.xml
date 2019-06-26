@@ -74,7 +74,10 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="foregroundImage" value="E:\Drive\UFRN\Pos Mobile\Trabalho Final\Logo.png" />
+                                      <entry key="backgroundLayerName" value="ic_launcher_background" />
+                                      <entry key="foregroundImage" value="C:\Users\Angele\Google Drive\UFRN\Pos Mobile\Trabalho Final\apotheca.png" />
+                                      <entry key="foregroundLayerName" value="ic_launcher_foreground" />
+                                      <entry key="outputName" value="apotheca" />
                                     </map>
                                   </option>
                                 </PersistentState>

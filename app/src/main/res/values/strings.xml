@@ -61,5 +61,6 @@
     <string name="anexos">Anexos</string>
     <string name="ver_comentarios">Ver comentários</string>
     <string name="reportar">Reportar</string>
+    <string name="title_activity_logout">LogoutActivity</string>
 
 </resources>
