@@ -320,6 +320,17 @@ public class DetalharPostActivity extends AppCompatActivity {
             }
         });
 
+        //editar post
+        mViewHolder.post_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent editar =  new Intent(DetalharPostActivity.this, CadastrarPostActivity.class);
+                editar.putExtra(Constants.INTENT_POSTAGEM, mPostagem);
+                editar.putExtra(Constants.INTENT_USER, mUser);
+                editar.putExtra("editar", true);
+                startActivity(editar);
+            }
+        });
     }
 
     private void signInAsAnonymous() {

@@ -63,16 +63,18 @@ public class PostagemFirebaseQueryLiveData  extends LiveData<List<Postagem>> {
             List<Postagem> postagens = new ArrayList<>();
 
             for(DocumentSnapshot doc : value.getDocuments()){
-                if(doc.getId()!=null){
-                    if(ids.contains(doc.getLong("id_componente").intValue()) ){
-                        Postagem p = new Postagem(doc.getString("titulo"),doc.getString("componente"),doc.getString("data_cadastro"));
-                        p.setId_autor(doc.getLong("id_usuario").intValue());
-                        p.setId_postagem(doc.getId());
-                        p.setId_componente(doc.getLong("id_componente").intValue());
-                        p.setDescricao(doc.getString("descricao"));
-                        p.setAtivo(doc.getBoolean("ativo"));
-                        p.setUrl_autor(doc.getString("url_autor"));
-                        postagens.add(p);
+                if(doc.exists()){
+                    if(ids.contains(doc.getLong("id_componente").intValue())  ){
+                        if(doc.getBoolean("ativo")){
+                            Postagem p = new Postagem(doc.getString("titulo"),doc.getString("componente"),doc.getString("data_cadastro"));
+                            p.setId_autor(doc.getLong("id_usuario").intValue());
+                            p.setId_postagem(doc.getId());
+                            p.setId_componente(doc.getLong("id_componente").intValue());
+                            p.setDescricao(doc.getString("descricao"));
+                            p.setAtivo(doc.getBoolean("ativo"));
+                            p.setUrl_autor(doc.getString("url_autor"));
+                            postagens.add(p);
+                        }
                     }
                 }
 
