@@ -61,8 +61,21 @@ public class PostagemDAOFirestore implements PostagemDAO {
     }
 
     @Override
-    public void deletar(Postagem postagem) {
-
+    public void excluir(Postagem postagem) {
+        db.collection("postagem").document(postagem.getId_postagem())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
     }
 
     @Override

@@ -124,43 +124,49 @@ public class CadastrarPostActivity extends AppCompatActivity {
                 SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
                 dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                 Date today = Calendar.getInstance().getTime();
-                p = new Postagem(mViewHolder.mTituloView.getText().toString(), t.getNome_componente() , dateFormat.format(today));
-                p.setDescricao(mViewHolder.mDescricaoView.getText().toString());
-                p.setAtivo(true);
-                p.setId_componente(t.getId_componente());
-                p.setComponente(turma);
-                p.setUrl_autor(mUser.getUrl_foto());
+                if(mViewHolder.mTituloView.getText().toString().isEmpty() || mViewHolder.mDescricaoView.getText().toString().isEmpty()){
+                    Toast toast = Toast.makeText(getApplicationContext(),"Por favor, defina um título e uma descrição para sua postagem",Toast.LENGTH_LONG);
+                    toast.show();
+                }else{
+                    p = new Postagem(mViewHolder.mTituloView.getText().toString(), t.getNome_componente() , dateFormat.format(today));
+                    p.setDescricao(mViewHolder.mDescricaoView.getText().toString());
+                    p.setAtivo(true);
+                    p.setId_componente(t.getId_componente());
+                    p.setComponente(turma);
+                    p.setUrl_autor(mUser.getUrl_foto());
 //                if(tipo == TIPO0){
 //                    p.setTipo_postagem(0);
 //                }else{
 //                    p.setTipo_postagem(1);
 //                }
-                p.setId_autor(mUser.getId_usuario());
+                    p.setId_autor(mUser.getId_usuario());
 
-                //cadastrar tag
+                    //cadastrar tag
 
-                FirebaseFirestore
-                        .getInstance()
-                        .collection("postagem")
-                        .add(postagemDAOFirestore.popularDados(p))
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                                if (!uris.isEmpty()){
-                                    uploadFiles(uris,documentReference.getId());
+                    FirebaseFirestore
+                            .getInstance()
+                            .collection("postagem")
+                            .add(postagemDAOFirestore.popularDados(p))
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                    if (!uris.isEmpty()){
+                                        uploadFiles(uris,documentReference.getId());
+                                    }
                                 }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error adding document", e);
-                            }
-                        });
-                //postagemViewModel.inserir(p);
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(TAG, "Error adding document", e);
+                                }
+                            });
+                    //postagemViewModel.inserir(p);
 
-                finish();
+                    finish();
+                }
+
             }
         });
 

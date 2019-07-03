@@ -26,6 +26,9 @@ public class PostagemViewModel extends AndroidViewModel {
     public void atualizar (Postagem postagem){
         postagemRepository.atualizar(postagem);
     }
+    public void excluir (Postagem postagem){
+        postagemRepository.excluir(postagem);
+    }
     public void findById(Long id){
         postagem = postagemRepository.findById(id);
     }

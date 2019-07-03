@@ -21,7 +21,7 @@ public interface PostagemDAO {
     public void atualizar(Postagem postagem);
 
     @Delete
-    public void deletar (Postagem postagem);
+    public void excluir (Postagem postagem);
 
     @Query("SELECT * FROM postagem WHERE id_postagem = :id LIMIT 1")
     public LiveData<Postagem> findById(Long id);

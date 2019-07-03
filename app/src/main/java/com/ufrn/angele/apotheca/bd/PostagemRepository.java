@@ -74,6 +74,11 @@ public class PostagemRepository {
         postagemDAOFirestore.atualizar(postagem);
     }
 
+    public void excluir (Postagem postagem){
+        //new InsertASync(postagemDAO).execute(postagem);
+        postagemDAOFirestore.excluir(postagem);
+    }
+
     private class InsertASync extends AsyncTask<Postagem, Void, Void> {
         private PostagemDAO postagemDAO;
 

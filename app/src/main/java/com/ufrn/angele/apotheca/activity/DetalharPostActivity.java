@@ -1,13 +1,16 @@
 package com.ufrn.angele.apotheca.activity;
 
+import android.app.Dialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +46,7 @@ import com.ufrn.angele.apotheca.dominio.Voto;
 import com.ufrn.angele.apotheca.outros.CircleTransform;
 import com.ufrn.angele.apotheca.outros.Constants;
 import com.ufrn.angele.apotheca.viewmodel.ComentarioViewModel;
+import com.ufrn.angele.apotheca.viewmodel.PostagemViewModel;
 import com.ufrn.angele.apotheca.viewmodel.UsuarioViewModel;
 import com.ufrn.angele.apotheca.viewmodel.VotoViewModel;
 
@@ -65,6 +69,7 @@ public class DetalharPostActivity extends AppCompatActivity {
     private Usuario mUser;
     private List<String> anexos = new ArrayList<>();
     private Boolean isAutor = false;
+    private PostagemViewModel postagemViewModel;
     //ArrayAdapter<String> adapter;
     private class ViewHolder{
         TextView titulo, descricao, turma, post_count_votos, post_count_negativacoes;
@@ -290,6 +295,30 @@ public class DetalharPostActivity extends AppCompatActivity {
         mViewHolder.detalhar_anexos.setAdapter(mViewHolder.anexoAdapter);
         mViewHolder.detalhar_anexos.setLayoutManager(new LinearLayoutManager(this));
 
+        postagemViewModel = new PostagemViewModel(this.getApplication());
+        //Excluir postagem
+        mViewHolder.post_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(DetalharPostActivity.this);
+                builder.setMessage(R.string.dialog_excluir)
+                        .setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // FIRE ZE MISSILES!
+                                postagemViewModel.excluir(mPostagem);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(R.string.nom, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User cancelled the dialog
+                            }
+                        });
+                // Create the AlertDialog object and return it
+                Dialog dialog = builder.create();
+                dialog.show();
+            }
+        });
 
     }
 
