@@ -19,10 +19,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
 import com.ufrn.angele.apotheca.R;
@@ -61,6 +64,8 @@ public class CadastrarPostActivity extends AppCompatActivity {
     private List<Uri> uris = new ArrayList<>();;
     public static final String DATE_FORMAT = "dd.MM.yyyy 'às' HH:mm:ss";
     StringBuilder builder = new StringBuilder();
+    private boolean editar =false;
+    private Postagem mPostagem;
     private static class ViewHolder{
         TextView mTituloView, mDescricaoView, mTagView, mUris;
         Spinner mTipo,mTurma;
@@ -75,10 +80,21 @@ public class CadastrarPostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cadastrar_post);
         postagemViewModel = new PostagemViewModel(getApplication());
         Intent intent = getIntent();
+        editar = intent.getBooleanExtra("editar",false);
+        if(!editar){
+            mTurmas = (ArrayList<Turma>) intent.getSerializableExtra(Constants.INTENT_TURMA);
+            mSelecionada =  intent.getIntExtra("selecionada",-1); //pega posição da turma selecionada na lista de turma
+            mUser = (Usuario) intent.getSerializableExtra(Constants.INTENT_USER);
+        }else{
+            mPostagem = (Postagem) intent.getSerializableExtra(Constants.INTENT_POSTAGEM);
+            mUser = (Usuario) intent.getSerializableExtra(Constants.INTENT_USER);
+            Turma aux = new Turma();
+            aux.setId_componente(mPostagem.getId_componente());
+            aux.setNome_componente(mPostagem.getComponente());
+            mTurmas = new ArrayList<>();
+            mTurmas.add(aux);
+        }
 
-        mTurmas = (ArrayList<Turma>) intent.getSerializableExtra(Constants.INTENT_TURMA);
-        mSelecionada =  intent.getIntExtra("selecionada",-1); //pega posição da turma selecionada na lista de turma
-        mUser = (Usuario) intent.getSerializableExtra(Constants.INTENT_USER);
 
 //        mTipos = new ArrayList<>();
 //        mTipos.add(TIPO0);
@@ -101,6 +117,11 @@ public class CadastrarPostActivity extends AppCompatActivity {
         mViewHolder.mTurma.setAdapter(turmaDataAdapter);
         if(mSelecionada > 0){
             mViewHolder.mTurma.setSelection(mSelecionada);
+        }
+        if(editar){
+            mViewHolder.mTituloView.setText(mPostagem.getTitulo());
+            mViewHolder.mDescricaoView.setText(mPostagem.getDescricao());
+            //mViewHolder.mTagView.setText(mPostagem.getTitulo());
         }
 //        mViewHolder.mTipo.setAdapter(tipoDataAdapter);
         mViewHolder.mAddAnexo.setOnClickListener(new View.OnClickListener() {
@@ -142,26 +163,48 @@ public class CadastrarPostActivity extends AppCompatActivity {
                     p.setId_autor(mUser.getId_usuario());
 
                     //cadastrar tag
-
-                    FirebaseFirestore
-                            .getInstance()
-                            .collection("postagem")
-                            .add(postagemDAOFirestore.popularDados(p))
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                                    if (!uris.isEmpty()){
-                                        uploadFiles(uris,documentReference.getId());
+                    if(editar){
+                        FirebaseFirestore
+                                .getInstance()
+                                .collection("postagem")
+                                .document(mPostagem.getId_postagem())
+                                .set(postagemDAOFirestore.popularDados(p),SetOptions.merge() )
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (!uris.isEmpty()){
+                                            uploadFiles(uris,mPostagem.getId_postagem());
+                                        }
                                     }
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w(TAG, "Error adding document", e);
-                                }
-                            });
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error adding document", e);
+                                    }
+                                });
+                    }else {
+                        FirebaseFirestore
+                                .getInstance()
+                                .collection("postagem")
+                                .add(postagemDAOFirestore.popularDados(p))
+                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                        if (!uris.isEmpty()){
+                                            uploadFiles(uris,documentReference.getId());
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error adding document", e);
+                                    }
+                                });
+                    }
+
                     //postagemViewModel.inserir(p);
 
                     finish();
