@@ -10,13 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.ufrn.angele.apotheca.R;
 import com.ufrn.angele.apotheca.adapters.PostAdapter;
 import com.ufrn.angele.apotheca.dominio.Postagem;
 import com.ufrn.angele.apotheca.dominio.Usuario;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -84,8 +88,10 @@ public class PostsFragment extends Fragment {
         }
         //criar dados para testes
         posts = new ArrayList<>();
-        posts.add(new Postagem("Lista de exercício 1","Linguagem de Programação",new Date().toString()));
-        posts.add(new Postagem("Resolução de exercícios em sala","Controladores",new Date().toString()));
+
+        consultaUsuario(mUser.getId_usuario());
+//        posts.add(new Postagem("Lista de exercício 1","Linguagem de Programação",new Date().toString()));
+//        posts.add(new Postagem("Resolução de exercícios em sala","Controladores",new Date().toString()));
     }
 
     @Override
@@ -135,5 +141,29 @@ public class PostsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private void consultaUsuario(int id_usuario){
+        FirebaseFirestore
+                .getInstance()
+                .collection("postagem")
+                .whereEqualTo("id_usuario", id_usuario)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        for(DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()){
+                            Postagem p = new Postagem(doc.getString("titulo"),doc.getString("componente"),doc.getString("data_cadastro"));
+                            p.setId_autor(doc.getLong("id_usuario").intValue());
+                            p.setId_postagem(doc.getId());
+                            p.setId_componente(doc.getLong("id_componente").intValue());
+                            p.setDescricao(doc.getString("descricao"));
+                            p.setAtivo(doc.getBoolean("ativo"));
+                            p.setUrl_autor(doc.getString("url_autor"));
+                            posts.add(p);
+
+                        }
+                        mViewHolder.mAdapter.notifyDataSetChanged();
+                    }
+                });
     }
 }
